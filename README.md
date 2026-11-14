@@ -30,7 +30,19 @@ No es necesario activar el entorno ni cambiar la política de ejecución.
 `requirements-lock.txt` fija el entorno de ejecución y pruebas verificado en
 Windows con Python 3.12.10. El empaquetador se resuelve mediante `pyproject.toml`.
 
-## Datos requeridos
+## JSON listo para compartir
+
+El equipo puede usar directamente
+[`lola_measurements.example.json`](NASA-Lunar-Studies/examples/lola_measurements.example.json)
+sin descargar los IMG ni instalar Python. Incluye elevación y rugosidad reales
+extraídas de LOLA para los dos puntos de prueba de `config/sites.example.json`.
+Ambos están marcados `is_example: true`; no son sitios de misión definitivos.
+
+La [guía de consumo y reproducción](NASA-Lunar-Studies/examples/README.md)
+explica el formato y cómo regenerarlo. Las variables todavía no procesadas
+mantienen valores nulos y estados explícitos. El JSON no calcula similitud.
+
+## Datos requeridos para regenerar las mediciones
 
 ```text
 NASA-Lunar-Studies/
