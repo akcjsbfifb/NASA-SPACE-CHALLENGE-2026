@@ -7,7 +7,8 @@ El único paquete está en `backend/processing/lunar_data/`; registro y medicion
 compartidas están en `data/moon/`, y las pruebas en `backend/tests/lunar/`.
 Los originales siguen en `NASA-Lunar-Studies/data/raw/`. Esta migración conserva
 el contrato JSON 1.0.0. La versión 0.2.0 agrega pendiente derivada, sin alterar
-elevación o rugosidad y sin endpoints ni exportación CSV.
+elevación o rugosidad y sin endpoints. La vista CSV posterior sólo transforma
+el JSON ya generado; no interviene en estos cálculos ni modifica el original.
 El flujo es: validación de coordenadas y registro → interpretación PDS4/PDS3 →
 validación estructural del IMG → lectura puntual de celdas nativas → conversión
 física → JSON estricto. No hay descargas, reproyección global ni interpolación

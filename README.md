@@ -51,6 +51,17 @@ la nueva registra las rutas actuales y agrega pendiente derivada sin modificar
 elevación ni rugosidad. El método y sus límites están en la
 [metodología LOLA](docs/moon/lola_methodology.md#pendiente-derivada-de-ldem).
 
+Para compartir una tabla ancha también está disponible
+[`lola_measurements.example.csv`](data/moon/lola_measurements.example.csv).
+Se genera desde el JSON completo, sin abrir datos NASA ni recalcular valores:
+
+```powershell
+.\.venv\Scripts\python.exe -m lunar_data.csv_export --input .\data\moon\lola_measurements.example.json --output .\output\moon_examples.csv
+```
+
+Elegir una salida nueva. El [formato CSV](docs/moon/README.md#csv-ancho-desde-el-json)
+conserva estados, coordenadas originales y SHA-256 del JSON fuente.
+
 ## Datos requeridos para regenerar las mediciones
 
 ```text

@@ -125,9 +125,11 @@ pendiente y los nuevos hashes del código. La versión de contrato sigue en
 1.0.0 con campos aditivos; consumidores deben seguir ignorando campos nuevos
 que no utilizan y comprobar disponibilidad antes de leer valores.
 
-La futura exportación CSV deberá derivarse de este JSON, conservando valor,
-unidad, estado, método y versión, referencia a elevación, distancias y claves
-de procedencia. No se implementa CSV en esta entrega.
+La exportación CSV posterior se realiza mediante `python -m lunar_data.csv_export`.
+Conserva los valores y coordenadas originales, estados y una referencia con
+SHA-256 al JSON completo, donde permanecen método, versión, distancias y fuentes.
+Es una tabla ancha por sitio; no cambia el lector ni las interfaces que usa el
+comparador. El formato y el comando están en [README.md](README.md#csv-ancho-desde-el-json).
 
 ## Registro durante la migración 0.1.0 (referencia histórica)
 

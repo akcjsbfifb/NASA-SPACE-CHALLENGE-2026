@@ -120,8 +120,9 @@ La resolución de la grilla no es la resolución instrumental. No se promedian
 los períodos ni se genera disponibilidad de agua. Fuente:
 [NASA/PDS LEND](https://pds-geosciences.wustl.edu/missions/lro/lend.htm).
 
-CSV, los lectores LEND/Diviner/iluminación, pendiente y la normalización no se
-implementan en esta etapa. El registro puede ampliarse sin crear procesadores.
+La pendiente derivada de LDEM y la vista CSV del JSON ya están implementadas.
+Los lectores LEND/Diviner/iluminación y la normalización permanecen pendientes.
+El registro puede ampliarse sin crear procesadores.
 La lectura remota de Diviner respondió 206 para tres rangos de 32 bytes durante
 la inspección previa; una ventana Rasterio/GDAL y su costo de transferencia
 siguen sin verificarse. Iluminación mantiene preferencia futura por COG.
