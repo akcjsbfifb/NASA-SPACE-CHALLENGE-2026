@@ -3,6 +3,10 @@
 ## Alcance y arquitectura
 
 La herramienta lee exclusivamente LDEM_16_FLOAT y LDRM_32_50_FLOAT locales.
+El único paquete está en `backend/processing/lunar_data/`; registro y mediciones
+compartidas están en `data/moon/`, y las pruebas en `backend/tests/lunar/`.
+Los originales siguen en `NASA-Lunar-Studies/data/raw/`. Esta migración conserva
+el contrato JSON 1.0.0 y los cálculos, sin endpoints ni exportación CSV.
 El flujo es: validación de coordenadas y registro → interpretación PDS4/PDS3 →
 validación estructural del IMG → lectura puntual de celdas nativas → conversión
 física → JSON estricto. No hay descargas, reproyección global ni interpolación
@@ -175,3 +179,18 @@ No se hizo todavía una comparación espacial externa con QGIS/GDAL ni una
 validación científica de campo. Las pruebas independientes de bytes verifican
 la lectura binaria, no constituyen por sí solas una verificación independiente
 de toda la georreferenciación. Ningún resultado implica seguridad de aterrizaje.
+
+## Referencia antes y después de la migración
+
+Se preservan los 60 casos originales y los imports públicos `lunar_data`.
+`metadata.py`, `lola.py` y `export.py` no cambian sus algoritmos. El CLI resuelve
+por defecto las rutas del checkout; los argumentos de rutas explícitas se
+mantienen. El registro 1.1.0 prepara LEND y pendiente externa con valores nulos;
+esas diferencias documentales no alteran los valores LOLA ni sus fuentes.
+
+La comparación registra por separado valores almacenados/convertidos, unidades,
+coordenadas, centros, índices, advertencias y fuentes. Los hashes de código y
+registro pueden cambiar legítimamente. La versión histórica publicada se
+conserva en `NASA-Lunar-Studies/examples/lola_measurements.example.json`.
+La guía y los pasos para el otro desarrollador están en
+[integration.md](integration.md).

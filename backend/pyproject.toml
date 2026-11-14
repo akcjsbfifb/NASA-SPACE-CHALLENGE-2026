@@ -16,9 +16,10 @@ dev = ["pytest>=8,<10"]
 lunar-data = "lunar_data.__main__:main"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["processing"]
+include = ["lunar_data*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/lunar"]
 addopts = "-ra"
 markers = ["local_data: comprobaciones con los IMG originales, si están disponibles"]

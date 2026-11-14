@@ -88,8 +88,8 @@ def test_mapping_is_read_only_and_released(metadata_pair):
 
 @pytest.mark.local_data
 @pytest.mark.parametrize("subdir,product", [("ldem", "ldem_16_float"), ("ldrm", "ldrm_32_50_float")])
-def test_real_pixels_against_independent_seek(module_root, subdir, product):
-    path = module_root / "data/raw/lola" / subdir / f"{product}.xml"
+def test_real_pixels_against_independent_seek(data_root, subdir, product):
+    path = data_root / subdir / f"{product}.xml"
     if not path.exists():
         pytest.skip("IMG locales no incluidos en Git")
     meta = load_metadata(path)

@@ -30,9 +30,13 @@ output/
 /NASA-Lunar-Studies/data/raw/
 /NASA-Lunar-Studies/data/processed/
 
-# Publish only the lunar methodology and variable registry documentation.
-# The planning PDF and other local notes remain ignored and on disk.
-!/NASA-Lunar-Studies/docs/
-/NASA-Lunar-Studies/docs/*
-!/NASA-Lunar-Studies/docs/lola_methodology.md
-!/NASA-Lunar-Studies/docs/variables.md
+# Original planning documents stay local; publish only the maintained lunar docs.
+/NASA-Lunar-Studies/docs/
+!/docs/
+/docs/*
+!/docs/moon/
+/docs/moon/*
+!/docs/moon/README.md
+!/docs/moon/variables.md
+!/docs/moon/lola_methodology.md
+!/docs/moon/integration.md

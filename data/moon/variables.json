@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "registry_version": "1.0.0",
-  "documentation": "docs/variables.md",
+  "registry_version": "1.1.0",
+  "documentation": "docs/moon/variables.md",
   "similarity_responsibility": "external_comparator",
   "variables": [
     {
@@ -126,16 +126,39 @@
       "id": "slope",
       "name": "Pendiente",
       "definition": "Inclinación local de la superficie respecto de la horizontal, a una escala definida.",
-      "scope": "excluded",
-      "selected_for_project": false,
+      "scope": "selected",
+      "selected_for_project": true,
       "implemented": false,
+      "implementation_status": "in_development_external",
       "used_in_similarity": null,
-      "similarity_eligibility": "excluded",
+      "similarity_eligibility": "requires_external_methodology_review",
       "unit": "deg",
       "coverage": "No evaluada.",
       "resolution": "Dependería del DEM y del procedimiento.",
       "source": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/document/rdrsis.htm",
-      "intended_use": "Futuro: movilidad y restricciones de operaciones; no se calcula en este MVP."
+      "intended_use": "En desarrollo por otro integrante. Incorporación pendiente de revisar metodología, unidades, resolución y procedencia; este paquete no calcula pendiente."
+    },
+    {
+      "id": "lend_neutron_indicator",
+      "name": "Indicadores neutrónicos LEND relacionados con hidrógeno",
+      "definition": "Familia de tasas relativas normalizadas, errores y exposiciones de productos ALDE; no constituye porcentaje de hidrógeno, agua o hielo.",
+      "scope": "selected",
+      "selected_for_project": true,
+      "implemented": false,
+      "implementation_status": "pending_future_stage",
+      "used_in_similarity": null,
+      "similarity_eligibility": "requires_channel_unit_and_methodology_validation",
+      "unit": null,
+      "unit_validation": "rate_unit_and_channel_selection_pending",
+      "latitude_bounds_deg": [-80, 80],
+      "native_pixels_per_degree": 1,
+      "coverage": "Grilla ALDE equatorial de 1 grado; no incluye los polos. Disponibilidad válida por canal no evaluada.",
+      "source": "https://pds-geosciences.wustl.edu/missions/lro/lend.htm",
+      "products": [
+        {"id": "lend_rdr_alde_20090915", "start": "2009-09-15T00:00:00Z", "stop": "2011-12-11T00:00:00Z"},
+        {"id": "lend_rdr_alde_20111211", "start": "2011-12-11T00:00:00Z", "stop": "2016-09-14T00:00:00Z"}
+      ],
+      "intended_use": "Preparación documental para un lector específico posterior. Mantener períodos y canales separados; no promediar ni convertir a recursos sin modelo validado."
     },
     {
       "id": "mineralogy",

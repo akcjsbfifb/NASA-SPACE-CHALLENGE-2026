@@ -1,7 +1,7 @@
 # NASA Space Apps Challenge 2026
 
 Repositorio compartido del equipo. Las instrucciones de este README corresponden
-al módulo lunar `NASA-Lunar-Studies/`; no sustituyen la configuración de los
+al paquete lunar `backend/processing/lunar_data/`; no sustituyen la configuración de los
 componentes de frontend, backend o procesamiento terrestre.
 
 ## MoonStudies — módulo de datos lunares
@@ -11,8 +11,10 @@ para coordenadas lunares. Exporta JSON con unidades, celdas consultadas,
 procedencia, hashes y calidad de procesamiento. No calcula similitud terrestre
 ni evalúa seguridad de aterrizaje.
 
-El código está en `NASA-Lunar-Studies/`. Los IMG y sus etiquetas originales
-permanecen en `data/raw/` y no se distribuyen mediante Git.
+El código está en `backend/processing/lunar_data/`. Los IMG y sus etiquetas
+permanecen en `NASA-Lunar-Studies/data/raw/`, intactos y excluidos de Git.
+El procesamiento es offline: la aplicación puede consumir los JSON pequeños de
+`data/moon/` sin abrir los rásteres. Los scripts terrestres no se modifican.
 
 ## Instalación en Windows / PowerShell
 
@@ -21,26 +23,30 @@ Desde la raíz de este repositorio, con Python 3.12:
 ```powershell
 # Crear el entorno solamente si no existe .venv:
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r .\NASA-Lunar-Studies\requirements-lock.txt
-.\.venv\Scripts\python.exe -m pip install --no-deps -e .\NASA-Lunar-Studies
-Set-Location .\NASA-Lunar-Studies
+.\.venv\Scripts\python.exe -m pip install -r .\backend\requirements-lunar.lock.txt
+.\.venv\Scripts\python.exe -m pip install --no-deps -e .\backend
 ```
 
 No es necesario activar el entorno ni cambiar la política de ejecución.
-`requirements-lock.txt` fija el entorno de ejecución y pruebas verificado en
+`backend/requirements-lunar.lock.txt` fija el entorno de ejecución y pruebas verificado en
 Windows con Python 3.12.10. El empaquetador se resuelve mediante `pyproject.toml`.
 
 ## JSON listo para compartir
 
 El equipo puede usar directamente
-[`lola_measurements.example.json`](NASA-Lunar-Studies/examples/lola_measurements.example.json)
+[`lola_measurements.example.json`](data/moon/lola_measurements.example.json)
 sin descargar los IMG ni instalar Python. Incluye elevación y rugosidad reales
-extraídas de LOLA para los dos puntos de prueba de `config/sites.example.json`.
+extraídas de LOLA para los dos puntos de prueba de
+`backend/tests/lunar/fixtures/sites.example.json`.
 Ambos están marcados `is_example: true`; no son sitios de misión definitivos.
 
-La [guía de consumo y reproducción](NASA-Lunar-Studies/examples/README.md)
+La [guía de consumo y reproducción](docs/moon/README.md)
 explica el formato y cómo regenerarlo. Las variables todavía no procesadas
 mantienen valores nulos y estados explícitos. El JSON no calcula similitud.
+
+El [JSON histórico publicado](NASA-Lunar-Studies/examples/lola_measurements.example.json)
+se conserva sin modificar. Las mediciones LOLA de ambas versiones son iguales;
+la nueva registra las rutas actuales y prepara los estados pendientes del proyecto.
 
 ## Datos requeridos para regenerar las mediciones
 
@@ -63,10 +69,10 @@ float, con su geometría y marco DE421. No se descargan datos automáticamente.
 
 ## Extracción real con coordenadas de ejemplo
 
-Desde `NASA-Lunar-Studies/`:
+Desde la raíz del repositorio:
 
 ```powershell
-..\.venv\Scripts\python.exe -m lunar_data `
+.\.venv\Scripts\python.exe -m lunar_data `
   --latitude 0 --longitude 0 --example `
   --site-id equatorial_test_only `
   --output .\output\lola_example.json
@@ -84,8 +90,8 @@ nombre. Nunca se sobrescriben entradas ni resultados existentes.
 Para procesar la lista de ejemplos incluida:
 
 ```powershell
-..\.venv\Scripts\python.exe -m lunar_data `
-  --sites .\config\sites.example.json `
+.\.venv\Scripts\python.exe .\scripts\extract_moon.py `
+  --sites .\backend\tests\lunar\fixtures\sites.example.json `
   --output .\output\lola_sites_example.json
 ```
 
@@ -95,13 +101,15 @@ este positivo; se aceptan negativas y se normalizan a [0, 360). El marco de
 entrada debe ser Mean Earth/Polar Axis de DE421; no se transforman otros marcos.
 
 `--data-root` permite indicar otra carpeta LOLA y `--registry` otro registro de
-variables compatible. Las rutas por defecto son relativas al directorio actual.
+variables compatible. Las rutas por defecto apuntan a las entradas locales
+originales y a `data/moon/variables.json` del checkout editable. Las rutas que
+se pasan explícitamente siguen siendo relativas al directorio actual.
 `--help` muestra todas las opciones.
 
 ## Pruebas
 
 ```powershell
-..\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m pytest .\backend\tests\lunar
 ```
 
 Las pruebas sintéticas no necesitan descargar archivos. Las pruebas marcadas
@@ -114,9 +122,10 @@ Con pvl 1.3.2 aparece un `PendingDeprecationWarning` al importar su clase intern
 
 ## Documentación científica y contrato de salida
 
-- [Registro de variables incluidas, pendientes y excluidas](NASA-Lunar-Studies/docs/variables.md).
-- [Metodología LOLA, contrato JSON y límites de validación](NASA-Lunar-Studies/docs/lola_methodology.md).
-- [Registro estructurado de variables](NASA-Lunar-Studies/config/variables.json).
+- [Registro de variables incluidas, pendientes y excluidas](docs/moon/variables.md).
+- [Metodología LOLA, contrato JSON y límites de validación](docs/moon/lola_methodology.md).
+- [Registro estructurado de variables](data/moon/variables.json).
+- [Migración y coordinación con la rama de comparación lunar](docs/moon/integration.md).
 
 El registro general contiene definiciones y estados. El JSON por sitio contiene
 mediciones y disponibilidad. `used_in_similarity: null` significa que este

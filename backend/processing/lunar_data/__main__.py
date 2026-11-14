@@ -1,4 +1,4 @@
-"""CLI local. Las rutas por defecto son relativas al directorio de trabajo."""
+"""CLI offline. Valores por defecto anclados al checkout, sin imports de FastAPI."""
 
 import argparse
 from pathlib import Path
@@ -8,10 +8,19 @@ from .export import build_document, read_json, validate_registry, validate_sites
 from .metadata import MetadataError, load_metadata
 
 
+def _repository_root():
+    """Encuentra el checkout editable; fuera de él se usan rutas explícitas/cwd."""
+    for parent in Path(__file__).resolve().parents:
+        if (parent / "backend/pyproject.toml").is_file() and (parent / "data/moon/variables.json").is_file():
+            return parent
+    return Path.cwd()
+
+
 def main(argv=None):
+    root = _repository_root()
     parser = argparse.ArgumentParser(description="Extraer elevación y rugosidad LOLA; no calcula similitud.")
-    parser.add_argument("--data-root", type=Path, default=Path("data/raw/lola"))
-    parser.add_argument("--registry", type=Path, default=Path("config/variables.json"))
+    parser.add_argument("--data-root", type=Path, default=root / "NASA-Lunar-Studies/data/raw/lola")
+    parser.add_argument("--registry", type=Path, default=root / "data/moon/variables.json")
     parser.add_argument("--output", required=True, type=Path)
     selection = parser.add_mutually_exclusive_group(required=True)
     selection.add_argument("--sites", type=Path, help="JSON con una lista de sitios")

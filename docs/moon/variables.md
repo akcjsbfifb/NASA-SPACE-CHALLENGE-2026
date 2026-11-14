@@ -1,6 +1,6 @@
-# Registro científico de variables — versión 1.0.0
+# Registro científico de variables — versión 1.1.0
 
-Este documento explica las decisiones científicas. `config/variables.json`
+Este documento explica las decisiones científicas. `data/moon/variables.json`
 mantiene identificadores, unidades previstas, fuentes y estados que el extractor
 usa para construir la salida. Las justificaciones generales se mantienen aquí
 para evitar repetirlas en cada sitio. Cambios científicos requieren actualizar
@@ -35,6 +35,8 @@ la clave exista en JSON. No corresponde asignar cero a variables pendientes.
 | `bolometric_temperature` / pendiente | Temperatura efectiva derivada de observaciones radiométricas, a medianoche ajustada por pendiente; K previstos | Diviner GHRM TBOL SAM seleccionado; 70° S–70° N, 128 px/°, ≈236,90 m en el ecuador | Caracterizar condiciones térmicas nocturnas de referencia | No mide el ciclo completo, amplitud día-noche ni mínimo nocturno absoluto. No es directamente intercambiable con temperatura del aire terrestre. |
 | `regolith_temperature` / pendiente | Temperatura del componente regolito inferida mediante separación térmica de rocas y regolito, a medianoche ajustada por pendiente; K previstos | Diviner GHRM TREG SAM seleccionado; 70° S–70° N, 128 px/°, ≈236,90 m en el ecuador | Caracterizar térmicamente el componente regolito | Es una inferencia dependiente del modelo; no representa por defecto una profundidad específica ni propiedades térmicas completas. Comparar con TBOL no reconstruye un ciclo térmico. |
 | `polar_solar_illumination` / pendiente, complementaria | Estadística de iluminación modelada sobre relieve polar, dependiente del período y producto; fracción normalizada prevista | NASA LOLA/Mazarico, PGDA 69; productos polares con coberturas distintas, incluidas resoluciones de 240, 120 y 60 m/px; producto aún no elegido | Contexto de iluminación y operaciones energéticas | No equivale a irradiancia, potencia eléctrica ni suministro continuo. Deben registrarse período, altura de evaluación, escala y proyección. No se extrapola a zonas sin cobertura. |
+| `slope` / en desarrollo por otro integrante | Inclinación local a una escala definida; grados previstos | Implementación externa todavía no revisada; cobertura y resolución no confirmadas | Movilidad y contexto operativo; se evita un cálculo paralelo | No se incorporan valores hasta verificar método, unidades y procedencia. Este procesador sigue sin calcular pendiente. |
+| `lend_neutron_indicator` / seleccionada, pendiente | Familia de tasas relativas normalizadas, errores y exposiciones ALDE; unidad de RATE pendiente de validar | LEND ALDE, grilla de 1° entre 80° S y 80° N; períodos 2009-09-15–2011-12-11 y 2011-12-11–2016-09-14 separados | Preparar indicadores neutrónicos relacionados con hidrógeno, sin estimar recursos | No hay lector LEND implementado. Mantener canales y períodos separados; no inferir porcentaje de hidrógeno, agua o hielo. |
 
 Las resoluciones métricas cilíndricas citadas son nominales ecuatoriales: el
 ancho superficial este-oeste disminuye aproximadamente con cos(latitud). El
@@ -54,7 +56,6 @@ lo que podemos concluir y deben acompañar cualquier presentación del proyecto.
 
 | Variable / qué representa | Relevancia científica u operativa | Motivo de exclusión actual | Limitación resultante | Fuente o procedimiento futuro |
 |---|---|---|---|---|
-| Pendiente: inclinación de la superficie respecto de la horizontal, en grados y a una escala definida | Movilidad, estabilidad y restricciones de aterrizaje | Tiempo disponible y complejidad de derivación, escala y distancias correctas | No podemos evaluar restricciones por inclinación ni inferirlas de elevación o rugosidad | Derivación desde un DEM lunar adecuado, con distancias métricas, tratamiento polar y validación independiente; también evaluar productos LOLA de pendiente |
 | Mineralogía: composición mineral, abundancias o indicadores espectrales | Geología y recursos para utilización in situ | Requiere productos adicionales, interpretación espectral y armonización | No identificamos composiciones favorables ni potencial minero | Seleccionar espectrometría orbital, por ejemplo M³/Chandrayaan-1 o Kaguya MI, y documentar calibración, cobertura y metodología; no hay un producto seleccionado en esta entrega |
 | Hielo y disponibilidad de agua: presencia, abundancia y accesibilidad, que no son equivalentes | Recursos y sostenibilidad de futuras bases | Necesita fuentes específicas y una interpretación científica diferente | No podemos identificar reservas, disponibilidad ni viabilidad de extracción. El frío o la sombra por sí solos no prueban agua | Evaluación conjunta de productos de volátiles/neutrones y evidencias complementarias. Hidrógeno no equivale por sí solo a hielo ni a agua accesible; requiere estudio y selección de fuentes |
 | Visibilidad directa de la Tierra: fracción/condición geométrica de visibilidad del disco terrestre | Contexto de comunicaciones | Excluida de la similitud terrestre por falta de equivalencia física; incorporación operativa opcional, todavía no implementada | No evaluamos cobertura de comunicaciones ni disponibilidad de enlaces | Mapas de Earth visibility de PGDA 69; después, modelo de enlaces, estaciones, geometría temporal y requisitos de la misión |
@@ -96,3 +97,35 @@ el comparador. Las métricas terrestres necesitan armonización física y de
 escala: la presencia de dos números con la misma unidad no demuestra que sean
 comparables. Cualquier porcentaje futuro debe indicar variables efectivamente
 usadas, faltantes y metodología. Este módulo no fija ni renormaliza pesos.
+
+## Preparación de fuentes posteriores a la migración
+
+Pendiente ya no es una exclusión definitiva del proyecto: está seleccionada y
+en desarrollo externo. `implemented: false` se refiere al procesador actual;
+`implementation_status` registra la coordinación pendiente. El JSON histórico
+conserva el registro 1.0.0 y su antigua exclusión; el registro mantenido es 1.1.0.
+La ausencia de mediciones nunca indica condiciones favorables.
+
+Los seis originales LEND siguen en
+`NASA-Lunar-Studies/data/raw/lola/lend/`. Cada DAT tiene 57600 registros de
+310 bytes (17856000 bytes), con floats big-endian y campos temporales ASCII.
+Su XML describe STN1–3, SETN, CSETN combinado y 16 elementos SHEN con tasas,
+errores y exposiciones. Los elementos SHEN incluyen sumas superpuestas y no se
+suman indiscriminadamente. SETN y CSETN son candidatos de estudio epitérmico;
+no se eligió una conversión a hidrógeno. Las exposiciones escalares tienen unidad
+s; RATE/ERR no declaran una unidad explícita en esos XML. El FMT referenciado por
+PDS3 no acompaña estas copias, aunque los XML describen los campos. Se necesita
+un lector específico y validación del marco, NoData y soporte de observaciones.
+La resolución de la grilla no es la resolución instrumental. No se promedian
+los períodos ni se genera disponibilidad de agua. Fuente:
+[NASA/PDS LEND](https://pds-geosciences.wustl.edu/missions/lro/lend.htm).
+
+CSV, los lectores LEND/Diviner/iluminación, pendiente y la normalización no se
+implementan en esta etapa. El registro puede ampliarse sin crear procesadores.
+La lectura remota de Diviner respondió 206 para tres rangos de 32 bytes durante
+la inspección previa; una ventana Rasterio/GDAL y su costo de transferencia
+siguen sin verificarse. Iluminación mantiene preferencia futura por COG.
+
+Las rutas `data/raw/...` citadas arriba se refieren a entradas bajo
+`NASA-Lunar-Studies/`, que se conservan localmente. Para ejecutar desde la raíz
+consultar [la guía actual](README.md).
