@@ -13,24 +13,20 @@ import type {
 	GlobePoint,
 } from './components/Globe/globe.types';
 
+import { getCopy, isLanguage } from './i18n';
+import type { Language } from './i18n';
+
 import './App.css';
 
-const ROCKS = [
-	['vb', 'basalto'],
-	['va', 'volcánico ácido'],
-	['vi', 'volcánico intermedio'],
-	['py', 'piroclástico'],
-	['pb', 'plutónico básico'],
-	['pa', 'plutónico ácido'],
-	['pi', 'plutónico intermedio'],
-	['su', 'sedimento suelto'],
-	['ss', 'sedimentaria'],
-	['sm', 'sedimentaria mixta'],
-	['sc', 'carbonato'],
-	['mt', 'metamórfica'],
-	['ev', 'evaporita'],
-	['ig', 'hielo'],
-] as const;
+const ROCKS = ['vb', 'va', 'vi', 'py', 'pb', 'pa', 'pi', 'su', 'ss', 'sm', 'sc', 'mt', 'ev', 'ig'] as const;
+
+type SearchSummary =
+	| { type: 'initial' }
+	| { type: 'searching' }
+	| { type: 'no-results'; closeness: number }
+	| { type: 'results'; count: number; lowest: number; highest: number; relativeCold: boolean }
+	| { type: 'offline' }
+	| { type: 'failed' };
 
 type SearchPoint = {
 	lat: number;
@@ -54,12 +50,12 @@ function colorFor(closeness: number) {
 	return '#e07a4a';
 }
 
-function toGlobePoint(point: SearchPoint): GlobePoint {
+function toGlobePoint(point: SearchPoint, rockLabel: string): GlobePoint {
 	return {
 		id: `${point.lat},${point.lon}`,
 		lat: point.lat,
 		lng: point.lon,
-		label: `${point.rock} · ${(point.closeness * 100).toFixed(0)}%`,
+		label: `${rockLabel} · ${(point.closeness * 100).toFixed(0)}%`,
 		color: colorFor(point.closeness),
 		size: 0.12 + point.closeness * 0.1,
 		altitude: 0.01,
@@ -69,6 +65,8 @@ function toGlobePoint(point: SearchPoint): GlobePoint {
 function App() {
 	const globe = useRef<GlobeController>(null);
 
+	const [language, setLanguage] = useState<Language>('es');
+	const copy = getCopy(language);
 	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
 
 	const [visibleLayers, setVisibleLayers] = useState({
@@ -85,9 +83,35 @@ function App() {
 	const [rock, setRock] = useState('vb');
 	const [precision, setPrecision] = useState(0.75);
 	const [points, setPoints] = useState<SearchPoint[]>([]);
-	const [summary, setSummary] = useState('Elegí los 5 números del sitio lunar y buscá.');
+	const [summary, setSummary] = useState<SearchSummary>({ type: 'initial' });
 	const [busy, setBusy] = useState(false);
 	const [selection, setSelection] = useState<SelectedPlace | null>(null);
+
+	useEffect(() => {
+		document.documentElement.lang = language;
+		document.title = copy.pageTitle;
+	}, [copy.pageTitle, language]);
+
+	const summaryText = (() => {
+		switch (summary.type) {
+			case 'initial':
+				return copy.initialSummary;
+			case 'searching':
+				return copy.searchingSummary;
+			case 'no-results':
+				return copy.noResults((summary.closeness * 100).toFixed(0));
+			case 'results':
+				return copy.resultSummary(
+					summary.count,
+					(summary.lowest * 100).toFixed(0),
+					(summary.highest * 100).toFixed(0),
+				) + (summary.relativeCold ? copy.relativeColdNote : '');
+			case 'offline':
+				return copy.serverOffline;
+			case 'failed':
+				return copy.searchFailed;
+		}
+	})();
 
 	function selectPlace(lat: number, lng: number, closeness?: number) {
 		setLocation({ lat, lng, altitude: 0 });
@@ -104,13 +128,15 @@ function App() {
 	useEffect(() => {
 		globe.current?.setPoints(
 			'analogs',
-			visibleLayers.points ? points.map(toGlobePoint) : [],
+			visibleLayers.points
+				? points.map(point => toGlobePoint(point, copy.rocks[point.rock] ?? point.rock))
+				: [],
 		);
-	}, [points, visibleLayers.points]);
+	}, [copy, points, visibleLayers.points]);
 
 	async function search() {
 		setBusy(true);
-		setSummary('Buscando en 82 millones de celdas…');
+		setSummary({ type: 'searching' });
 		const params = new URLSearchParams({
 			slope,
 			roughness,
@@ -121,27 +147,20 @@ function App() {
 		});
 		try {
 			const response = await fetch(`http://127.0.0.1:8787/search?${params}`);
-			const body = (await response.json()) as SearchResponse & { error?: string };
-			if (!response.ok) throw new Error(body.error || 'la búsqueda falló');
+			const body = (await response.json()) as SearchResponse;
+			if (!response.ok) throw new Error('Search request failed');
 			setPoints(body.points);
-			const tempNote =
-				body.temperature_mode === 'relative_cold'
-					? ' La temperatura lunar queda fuera del rango terrestre: el puntaje premia el frío relativo.'
-					: '';
-			setSummary(
-				body.returned === 0
-					? `Ningún lugar llega a ${(body.min_closeness * 100).toFixed(0)}% de cercanía. Bajá la precisión.`
-					: `${body.returned} lugares distintos, entre ${((body.loosest ?? 0) * 100).toFixed(0)}% y ${((body.closest ?? 0) * 100).toFixed(0)}% de cercanía.${tempNote}`,
-			);
+			setSummary(body.returned === 0
+				? { type: 'no-results', closeness: body.min_closeness }
+				: {
+					type: 'results',
+					count: body.returned,
+					lowest: body.loosest ?? 0,
+					highest: body.closest ?? 0,
+					relativeCold: body.temperature_mode === 'relative_cold',
+				});
 		} catch (error) {
-			const offline = error instanceof TypeError;
-			setSummary(
-				offline
-					? 'No llega al servidor de búsqueda (puerto 8787). En la raíz del repo: .venv/bin/python scripts/serve_search.py'
-					: error instanceof Error
-						? error.message
-						: 'no se pudo buscar',
-			);
+			setSummary(error instanceof TypeError ? { type: 'offline' } : { type: 'failed' });
 		} finally {
 			setBusy(false);
 		}
@@ -150,53 +169,66 @@ function App() {
 	return (
 		<main className="app">
 		<header className="topbar">
-		<strong>ORBITAL</strong>
-		<span>OBSERVATORIO</span>
+		<strong className="brand">ORBITAL</strong>
+			<select
+				className="language-select"
+				aria-label={copy.language}
+				value={language}
+				onChange={(event) => {
+					const selectedLanguage = event.target.value;
+					if (isLanguage(selectedLanguage)) setLanguage(selectedLanguage);
+				}}
+			>
+				<option value="es">Español</option>
+				<option value="en">English</option>
+				<option value="fr">Français</option>
+				<option value="it">Italiano</option>
+			</select>
 		</header>
 
 		<div className="workspace">
 
 		<aside className="sidebar">
 		<section className="sidebar-section">
-		<h4>Objetivo</h4>
-		<p className="muted">Cinco números del sitio lunar. La cercanía es el promedio de los cinco.</p>
+		<h4>{copy.objective}</h4>
+		<p className="muted">{copy.objectiveDescription}</p>
 
 		<label className="field">
-			Pendiente (°)
+			{copy.slope} (°)
 			<input value={slope} onChange={(event) => setSlope(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-			Rugosidad (m)
+			{copy.roughness} (m)
 			<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-			Temperatura nocturna (°C)
+			{copy.nightTemperature} (°C)
 			<input value={tmin} onChange={(event) => setTmin(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-			Hielo (m)
+			{copy.ice} (m)
 			<input value={ice} onChange={(event) => setIce(event.target.value)} inputMode="decimal" />
 		</label>
 			<label className="field">
-			Roca
+			{copy.rock}
 			<select value={rock} onChange={(event) => setRock(event.target.value)}>
-			{ROCKS.map(([code, label]) => (
-				<option key={code} value={code}>{label}</option>
-		))}
+			{ROCKS.map((code) => (
+				<option key={code} value={code}>{copy.rocks[code]}</option>
+			))}
 		</select>
 		</label>
 		<label className="field">
-			Precisión {precision.toFixed(2)}
+			{copy.precision} {precision.toFixed(2)}
 			<input type="range" min="0" max="1" step="0.05" value={precision} onChange={(event) => setPrecision(Number(event.target.value))} />
 		<span className="range-labels">
-		<span>más lugares</span>
-		<span>más precisos</span>
+		<span>{copy.morePlaces}</span>
+		<span>{copy.morePrecise}</span>
 		</span>
 		</label>
 			<button type="button" onClick={search} disabled={busy}>
-			{busy ? 'Buscando...' : 'Buscar análogos'}
+			{busy ? copy.searching : copy.searchAnalogs}
 			</button>
-			<p className="muted">{summary}</p>
+			<p className="muted">{summaryText}</p>
 			<div className="result-list">
 				{points.slice(0, 6).map((point) => (
 					<button
@@ -204,29 +236,29 @@ function App() {
 					type="button"
 					onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
 					>
-					{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
+					{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {copy.rocks[point.rock] ?? point.rock}
 					</button>
 				))}
 			</div>
 		</section>
 
 		<section className="sidebar-section">
-			<h4>Capas de visualización</h4>
+			<h4>{copy.visualizationLayers}</h4>
 
 			<label>
-				<input type="checkbox" checked={visibleLayers.points} onChange={() => toggleLayer('points')} /> Ubicaciones
+				<input type="checkbox" checked={visibleLayers.points} onChange={() => toggleLayer('points')} /> {copy.locations}
 			</label>
 
 			<label>
-				<input type="checkbox" checked={visibleLayers.heatmaps} onChange={() => toggleLayer('heatmaps')} /> Mapa de calor
+				<input type="checkbox" checked={visibleLayers.heatmaps} onChange={() => toggleLayer('heatmaps')} /> {copy.heatmap}
 			</label>
 
 			<label>
-				<input type="checkbox" checked={visibleLayers.polygons} onChange={() => toggleLayer('polygons')} /> Áreas
+				<input type="checkbox" checked={visibleLayers.polygons} onChange={() => toggleLayer('polygons')} /> {copy.areas}
 			</label>
 
 			<label>
-				<input type="checkbox" checked={visibleLayers.labels} onChange={() => toggleLayer('labels')} /> Etiquetas
+				<input type="checkbox" checked={visibleLayers.labels} onChange={() => toggleLayer('labels')} /> {copy.labels}
 			</label>
 
 		</section>
@@ -234,12 +266,12 @@ function App() {
 		<hr/>
 
 		<section className="sidebar-section">
-			<h4>Punto seleccionado</h4>
+			<h4>{copy.selectedPoint}</h4>
 
 			{location ? (<>
-				<p>Latitud: {location.lat.toFixed(5)}</p>
-				<p>Longitud: {location.lng.toFixed(5)}</p>
-			</>) : (<p>Ningún punto seleccionado.</p>)}
+				<p>{copy.latitude}: {location.lat.toFixed(5)}</p>
+				<p>{copy.longitude}: {location.lng.toFixed(5)}</p>
+			</>) : (<p>{copy.noPointSelected}</p>)}
 		</section>
 
 		</aside>
@@ -250,7 +282,7 @@ function App() {
 					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
 				);
 				selectPlace(point.lat, point.lng, hit?.closeness); }} />
-			<PointPanel place={selection} onClose={() => setSelection(null)} />
+			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} />
 		</section>
 
 		</div>
