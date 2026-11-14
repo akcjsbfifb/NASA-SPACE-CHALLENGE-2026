@@ -1,5 +1,63 @@
 # Migración al backend — primera etapa
 
+## Estado de integración después del cierre de LEND
+
+Se incorporó `origin/main` mediante merge normal, sin rebase ni force push.
+Los cuatro commits `fe4b5bf`, `37d0c71`, `4c6a992` y `ee5bde2` sólo cambian
+frontend (App, estilos, PointPanel, PrecisionDial, i18n e index.html). No hubo
+cambios recientes de backend, scripts o dependencias. El frontend coincide con
+`origin/main`; no se corrigieron problemas externos. La copia local y el stash
+de recuperación de LEND se conservaron después de verificar todos sus hashes.
+
+La rama `review/lunar-roughness-comparison` observada está en `b84c253`: añade
+memmap para columnas terrestres y conserva la comparación lunar por rugosidad.
+No se integró ni modificó. Requiere coordinar estos puntos antes del uso conjunto:
+
+- Conservar imports `lunar_data`, instalar el paquete desde `backend` y retirar
+  la inserción física `NASA-Lunar-Studies/src` de `scripts/serve_search.py`.
+  Esa ruta obsoleta puede quedar sin efecto si el paquete está bien instalado;
+  no se copia el lector ni se cambia la ruta de originales.
+- El buscador actual no importa CSV lunares: recibe parámetros `/search`.
+  Hace falta un adaptador del JSON/CSV que consulte disponibilidad, conserve
+  `site_id` y traduzca sólo variables comparables; no alimentar nulos como cero.
+  Las columnas `roughness_m` y `slope_deg` corresponden a parámetros `roughness`
+  y `slope`, pero no se habilitan automáticamente sus puntajes.
+  En main el endpoint exige los cinco parámetros slope/roughness/tmin/ice/rock;
+  no admite todavía la consulta lunar parcial sin inventar sustitutos. Review
+  sí acepta métricas opcionales y es la base de esa adaptación coordinada.
+- El catálogo del compañero tiene `id`, `lat`, `lng`; mapear a `site_id`,
+  `latitude_deg`, `longitude_deg`, confirmar marco/este positivo y conservar los
+  ids. Los dos fixtures `*_test_only` no reemplazan sus sitios Apolo.
+- La pendiente comparte grados y diferencias centrales, pero Tierra aplica
+  dx mínimo de 200 m y sustitución de faltantes/bordes. La rugosidad terrestre
+  RMS de diferencias de una grilla 3×3 no es LDRM de residuos sin plano.
+  La normalización exploratoria necesita distribuciones representativas,
+  máscara, escala y parámetros versionados. El shortlist filtrado no basta;
+  `rough_scale=max(0.25,abs(roughness)*(50/30))` no es calibración validada.
+- Elevación absoluta lunar sobre esfera y terrestre sobre referencia ETOPO no
+  son intercambiables. Diviner nocturno bolométrico/regolito en K no equivale
+  a WorldClim mínimo mensual de aire, aun convirtiendo a °C. RA no equivale a
+  litología; LEND no equivale a espesor de hielo. Iluminación queda contextual.
+
+Bloqueos operativos observados en este checkout: no están el Parquet terrestre
+ni `data/earth/columns/`; la versión de main usa PyArrow y la rama review exige
+el manifiesto/archivos memmap generados por `extract_earth_columns.py`. PyArrow,
+FastAPI y Uvicorn no están instalados en el entorno lunar, lo que no impide el
+procesador offline. No se instalaron para simular una prueba HTTP. El frontend
+no tiene `node_modules` local: su build y el flujo completo quedan sin verificar.
+
+Frontend y `serve_search.py` usan 127.0.0.1:8787 con rutas `/search`, `/cell`,
+`/scene`; el Makefile de FastAPI propone el mismo puerto, pero su router sólo
+registra health/network, no los endpoints terrestres. Es una colisión si se
+lanzan ambos servicios: acordar un único responsable del puerto. No es un
+conflicto de imports del lector lunar ni se solucionó silenciosamente aquí.
+
+Orden recomendado: revisar e integrar primero esta rama lunar en main; luego
+el responsable de review incorpora main, resuelve sus cambios de App/estilos
+y agrega el adaptador mínimo. Por último acordar normalización y activar sólo
+variables justificadas. No hay conflicto Git con main tras el merge realizado;
+la prueba extremo a extremo y las decisiones de comparación siguen pendientes.
+
 ## Rama y alcance
 
 Trabajo aislado en `feature/lunar-backend-integration`, creada desde `main`

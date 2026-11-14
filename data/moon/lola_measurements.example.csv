@@ -1,3 +1,3 @@
 site_id,latitude_deg,longitude_deg,elevation_m,roughness_m,slope_deg,elevation_status,elevation_available,elevation_reason,roughness_status,roughness_available,roughness_reason,slope_status,slope_available,slope_reason,source_json_file,source_json_sha256
-equatorial_test_only,0.0,0.0,-718.6850309371948,0.4296111762523651,0.1900942345716397,valid,true,,valid,true,,valid,true,,lola_measurements.example.json,7cb876634426416456983ba0f0dd99457945bcf86629d0964650f72be1074f9c
-southern_high_latitude_test_only,-85.0,-10.0,-351.0236144065857,0.3567740023136139,9.61866522327338,valid,true,,valid,true,,valid,true,,lola_measurements.example.json,7cb876634426416456983ba0f0dd99457945bcf86629d0964650f72be1074f9c
+equatorial_test_only,0.0,0.0,-718.6850309371948,0.4296111762523651,0.1900942345716397,valid,true,,valid,true,,valid,true,,lola_measurements.example.json,b0253219261c478c63441496a48b94ca4c6156577bd1f2527e88ae8d39000ed1
+southern_high_latitude_test_only,-85.0,-10.0,-351.0236144065857,0.3567740023136139,9.61866522327338,valid,true,,valid,true,,valid,true,,lola_measurements.example.json,b0253219261c478c63441496a48b94ca4c6156577bd1f2527e88ae8d39000ed1

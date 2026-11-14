@@ -67,6 +67,18 @@ def main(argv=None):
                         location = str(root / location)
                     processors[variable] = stack.enter_context(DivinerRaster(
                         variable, root / source["xml"], location, budget))
+                if config.get("lend"):
+                    from .lend import LendProduct, LendCollection
+                    selections = []
+                    for source in config["lend"]:
+                        product = stack.enter_context(LendProduct(root / source["xml"]))
+                        channels = source["channels"]
+                        if not channels or len(channels) != len(set(channels)):
+                            raise ValueError("Seleccionar canales LEND explícitos y no duplicados")
+                        selections.append((product, channels))
+                    if len({p.product for p, _ in selections}) != len(selections):
+                        raise ValueError("Producto LEND duplicado")
+                    processors["lend_neutron_indicator"] = LendCollection(selections)
                 protected.append(args.sources)
             document = build_document(metadata, sites, registry, args.registry, args.sites, processors)
             if args.sources:

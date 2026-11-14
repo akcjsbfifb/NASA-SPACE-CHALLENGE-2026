@@ -1,4 +1,4 @@
-# Registro científico de variables — versión 1.2.0
+# Registro científico de variables — versión 1.4.1
 
 Este documento explica las decisiones científicas. `data/moon/variables.json`
 mantiene identificadores, unidades previstas, fuentes y estados que el extractor
@@ -36,7 +36,7 @@ la clave exista en JSON. No corresponde asignar cero a variables pendientes.
 | `regolith_temperature` / implementada | Temperatura del componente regolito inferida mediante separación térmica de rocas y regolito, a medianoche ajustada por pendiente; K previstos | Diviner GHRM TREG SAM seleccionado; 70° S–70° N, 128 px/°, ≈236,90 m en el ecuador | Caracterizar térmicamente el componente regolito | Es una inferencia dependiente del modelo; no representa por defecto una profundidad específica ni propiedades térmicas completas. Comparar con TBOL no reconstruye un ciclo térmico. |
 | `polar_solar_illumination` / pendiente, complementaria | Estadística de iluminación modelada sobre relieve polar, dependiente del período y producto; fracción normalizada prevista | NASA LOLA/Mazarico, PGDA 69; productos polares con coberturas distintas, incluidas resoluciones de 240, 120 y 60 m/px; producto aún no elegido | Contexto de iluminación y operaciones energéticas | No equivale a irradiancia, potencia eléctrica ni suministro continuo. Deben registrarse período, altura de evaluación, escala y proyección. No se extrapola a zonas sin cobertura. |
 | `slope` / implementada, derivada | Inclinación del gradiente del DEM; grados sin normalización | LDEM_16_FLOAT; centro y cuatro vecinos, diferencias centrales; 0,0625°; pasos RΔθ y RΔθ cos(latitud central) | Contexto topográfico a escala de grilla; método adaptado del aporte de n.x | Sin resultado en polos exactos, filas extremas o faltantes. Distancias anisotrópicas, incertidumbre no determinada; no es producto NASA independiente ni garantía de transitabilidad. Comparabilidad terrestre pendiente. |
-| `lend_neutron_indicator` / seleccionada, pendiente | Familia de tasas relativas normalizadas, errores y exposiciones ALDE; unidad de RATE pendiente de validar | LEND ALDE, grilla de 1° entre 80° S y 80° N; períodos 2009-09-15–2011-12-11 y 2011-12-11–2016-09-14 separados | Preparar indicadores neutrónicos relacionados con hidrógeno, sin estimar recursos | No hay lector LEND implementado. Mantener canales y períodos separados; no inferir porcentaje de hidrógeno, agua o hielo. |
+| `lend_neutron_indicator` / implementada, colección | Tasas relativas, errores y exposiciones ALDE; RATE/ERR sin unidad declarada, exposición en s | Grilla de 1° estrictamente entre 80° S y 80° N; períodos 2009-09-15–2011-12-11 y 2011-12-11–2016-09-14 separados | Observable neutrónico indirecto; sin estimar recursos | No hay escalar combinado: cada canal/período conserva disponibilidad, crudos y procedencia. Sin conversión a hidrógeno, agua o hielo. |
 
 Las resoluciones métricas cilíndricas citadas son nominales ecuatoriales: el
 ancho superficial este-oeste disminuye aproximadamente con cos(latitud). El
@@ -122,12 +122,15 @@ los períodos ni se genera disponibilidad de agua. Fuente:
 
 La pendiente derivada de LDEM y la vista CSV del JSON ya están implementadas.
 Diviner RA/TBOL/TREG SAM ya se leen con ventanas, unidades contrastadas con
-el SIS v1.21 §11.1 y NaN declarado por PDS. LEND, iluminación y normalización
-permanecen pendientes. El registro actual es 1.3.0.
+el SIS v1.21 §11.1 y NaN declarado por PDS. LEND ALDE se implementa como
+colección de observables con períodos y canales separados, RATE/ERR sin unidad
+declarada y exposición en s. No es abundancia de hidrógeno. Iluminación y
+normalización permanecen pendientes. El registro actual es 1.4.1; iluminación
+es opcional y no seleccionada para el puntaje principal.
 El registro puede ampliarse sin crear procesadores.
-La lectura remota de Diviner respondió 206 para tres rangos de 32 bytes durante
-la inspección previa; una ventana Rasterio/GDAL y su costo de transferencia
-siguen sin verificarse. Iluminación mantiene preferencia futura por COG.
+La lectura remota Diviner ya fue contrastada con Rasterio y un segundo decoder
+TIFF: 1376256 bytes para consultar los tres productos en el ejemplo ecuatorial.
+La evidencia está en `validation.diviner.json`. No se descarga iluminación.
 
 Las rutas `data/raw/...` citadas arriba se refieren a entradas bajo
 `NASA-Lunar-Studies/`, que se conservan localmente. Para ejecutar desde la raíz

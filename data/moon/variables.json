@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "registry_version": "1.3.0",
+  "registry_version": "1.4.1",
   "documentation": "docs/moon/variables.md",
   "similarity_responsibility": "external_comparator",
   "variables": [
@@ -119,17 +119,17 @@
       "id": "polar_solar_illumination",
       "name": "Iluminación solar polar LOLA/Mazarico",
       "definition": "Estadística de iluminación solar modelada considerando geometría y relieve polar, dependiente del producto y período.",
-      "scope": "selected",
-      "selected_for_project": true,
+      "scope": "optional_operational",
+      "selected_for_project": false,
       "implemented": false,
       "used_in_similarity": null,
-      "similarity_eligibility": "complementary_requires_comparator_methodology",
+      "similarity_eligibility": "excluded_from_main_similarity_context_only",
       "unit": "1",
       "unit_validation": "planned_fraction_requires_product_scale_validation",
       "coverage": "Regiones polares; seleccionar producto específico antes de procesar.",
       "resolution": "Productos de 240, 120 y 60 m/píxel, con coberturas distintas; ninguno seleccionado todavía.",
       "source": "https://pgda.gsfc.nasa.gov/products/69",
-      "intended_use": "Información complementaria de iluminación y operaciones energéticas."
+      "intended_use": "Fuente complementaria no implementada y pospuesta: productos polares, aproximadamente 65 a 90 grados; no representa iluminación global ni entra en el puntaje principal. Falta de medición no significa oscuridad permanente."
     },
     {
       "id": "earth_visibility",
@@ -167,22 +167,22 @@
     },
     {
       "id": "lend_neutron_indicator",
-      "name": "Indicadores neutrónicos LEND relacionados con hidrógeno",
-      "definition": "Familia de tasas relativas normalizadas, errores y exposiciones de productos ALDE; no constituye porcentaje de hidrógeno, agua o hielo.",
+      "name": "Observables neutrónicos relativos LEND (no abundancia de hidrógeno)",
+      "definition": "Tasas relativas, errores estadísticos y exposiciones ALDE; períodos y canales separados, sin estimar hidrógeno, agua o hielo.",
       "scope": "selected",
       "selected_for_project": true,
-      "implemented": false,
-      "implementation_status": "pending_future_stage",
+      "implemented": true,
+      "implementation_status": "implemented_collection",
       "used_in_similarity": null,
       "similarity_eligibility": "requires_channel_unit_and_methodology_validation",
       "unit": null,
-      "unit_validation": "rate_unit_and_channel_selection_pending",
+      "unit_validation": "rate_error_units_not_declared_retained_unknown_exposure_seconds",
       "latitude_bounds_deg": [
         -80,
         80
       ],
       "native_pixels_per_degree": 1,
-      "coverage": "Grilla ALDE equatorial de 1 grado; no incluye los polos. Disponibilidad válida por canal no evaluada.",
+      "coverage": "Grilla ALDE de 1 grado, estrictamente entre -80 y 80 grados. Disponibilidad evaluada por exposición, error y finitud para cada período y canal solicitado.",
       "source": "https://pds-geosciences.wustl.edu/missions/lro/lend.htm",
       "products": [
         {
@@ -196,7 +196,7 @@
           "stop": "2016-09-14T00:00:00Z"
         }
       ],
-      "intended_use": "Preparación documental para un lector específico posterior. Mantener períodos y canales separados; no promediar ni convertir a recursos sin modelo validado."
+      "intended_use": "Observables neutrónicos indirectos; RATE/ERR sin unidad declarada en PDS4, exposición en segundos. No se combinan períodos ni sensores."
     },
     {
       "id": "mineralogy",

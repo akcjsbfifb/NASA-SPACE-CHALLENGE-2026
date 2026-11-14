@@ -88,8 +88,9 @@ La salida conserva el contrato 1.0.0 con campos aditivos de método, entradas y
 distancias. `sources.slope` referencia `elevation`: no es otro producto NASA.
 `input_samples` conserva las cinco alturas originales y convertidas, índices,
 centros, unidades y estados. Una altura ausente invalida la pendiente completa.
-Diviner GHRM SAM está implementado con ventanas locales/remotas; iluminación,
-LEND y normalización siguen en etapas independientes.
+Diviner GHRM SAM está implementado con ventanas locales/remotas. LEND está
+implementado como colección, descrita al final; iluminación queda pospuesta y
+normalización permanece pendiente.
 
 ## Fuentes adicionales: Diviner
 
@@ -229,5 +230,104 @@ conocida; no se oculta. Las comprobaciones externas QGIS/GDAL siguen pendientes.
 - [Definiciones, selección y exclusiones](variables.md).
 - [Metodología científica y contrato JSON](lola_methodology.md).
 - [Compatibilidad, migración y evidencia](integration.md).
+
+## LEND ALDE: observables separados por período y canal
+
+El registro 1.4.1 implementa `lend_neutron_indicator` como colección, **no como
+abundancia de hidrógeno**. Conserva la clave histórica. El contenedor tiene
+`kind: collection`, `value: null` y `available: false`: no existe un escalar
+agregado. `has_available_observations` y `observations` muestran los resultados
+individuales; se evita que un consumidor antiguo trate una colección como número.
+No se promedian períodos ni se combinan sensores.
+
+`sources.example.json` selecciona SETN y CSETN de
+`lend_rdr_alde_20090915` (2009-09-15–2011-12-11) y
+`lend_rdr_alde_20111211` (2011-12-11–2016-09-14). También se admiten STN1–3 si
+se solicitan explícitamente. No se interpretan ni suman los 16 elementos SHEN
+con bandas superpuestas. SETN es epitérmico y CSETN corresponde al canal combinado
+provisto por NASA; su relación con hidrógeno es indirecta, sin conversión aquí.
+
+Se validan PDS3/PDS4, tamaño 57600×310 bytes, float32 big-endian, dos fechas
+ASCII de 23 bytes y coordenadas almacenadas. La muestra sólo lee un registro
+de 310 bytes; los hashes se calculan por bloques. El índice es
+`floor(80-lat)*360 + floor(lon % 360)`, con protección de redondeo en los bordes.
+La cobertura estricta es −80° < lat < 80°; los centros van de 79,5°N a 79,5°S
+y de 0,5°E a 359,5°E. La grilla de 1° no es resolución instrumental.
+
+RATE y ERR conservan tasa relativa y error estadístico **en su codificación
+original**. El XML no declara sus unidades: se exportan `unit: null` y
+`unit_status: not_declared_in_product_label`. No se inventan counts/s,
+porcentajes, un nivel sigma ni incertidumbre sistemática. Exposición sí declara
+segundos en PDS4. El SIS antiguo muestra una unidad contradictoria para
+exposición, aunque su descripción dice segundos; se usa el XML estructurado y
+se registra esa limitación.
+
+No existe una constante NoData explícita para RATE/ERR en estos XML. Exposición
+no positiva implica falta de soporte; se conservan los crudos, incluidos −1.
+Error negativo es inválido y campos no finitos son faltantes. Una tasa negativa
+con exposición y error válidos se conserva con advertencia, pues el producto
+describe sustracción de fondo; no se inventa un sentinel para cualquier negativo.
+
+| Ejemplo ecuatorial | Canal | Tasa original | Error original | Exposición (s) |
+|---|---|---:|---:|---:|
+| 2009–2011 | SETN | 9.123088836669922 | 0.12276305258274078 | 599 |
+| 2009–2011 | CSETN | 5.262941360473633 | 0.10784836858510971 | 730 |
+| 2011–2016 | SETN | nulo | nulo | 0 |
+| 2011–2016 | CSETN | 4.812496662139893 | 0.08047634363174438 | 2053 |
+
+SETN del segundo período tiene RATE/ERR crudos −1 y exposición cero en los
+tres puntos inspeccionados; no se afirma ausencia global de ese canal. El
+ejemplo austral está fuera de cobertura en ambos períodos. Se contrastan los
+DAT con otro `seek`+`struct.unpack`, offsets e índices independientes. Evidencia:
+`data/moon/validation.lend.json`; no es validación geodésica externa.
+
+```powershell
+.\.venv\Scripts\python.exe -m lunar_data.validation --lend --sources .\data\moon\sources.example.json --sites .\backend\tests\lunar\fixtures\sites.example.json --output .\output\lend_validation.json
+.\.venv\Scripts\python.exe -m lunar_data.csv_export --input .\data\moon\lola_measurements.example.json --profile lend --output .\output\lend_observations.csv
+```
+
+El archivo canónico `data/moon/lend_observations.example.csv` tiene 8 filas y
+23 columnas: una fila por sitio/producto/canal, con período, tasa, error,
+exposición, crudos, unidades, estados, índice y SHA del JSON. Celdas no disponibles
+quedan vacías; cero válido y crudos negativos se preservan. Se une a los CSV
+anchos por `site_id` y hash; sus interfaces de 17 y 29 columnas se mantienen.
+
+Fuentes: [SIS LEND v1.10](https://pds-geosciences.wustl.edu/lro/lro-l-lend-2-edr-v1/lrolen_0xxx/document/lend_rdr_sis.pdf)
+§3.4 y §5.7 y etiquetas locales intactas. La realización del marco fijo lunar no
+está declarada: no se aplica conversión ni se afirma alineación externa con LOLA.
+No se modifica el comparador ni se atribuye a estos observables agua o hielo.
+
+## Cierre local de LEND e iluminación pospuesta
+
+La diferencia entre el JSON temporal final y el canónico anterior era únicamente
+el tamaño/hash del registro de variables corregido; las mediciones coincidían.
+El cierre reconstruye el documento con LOLA y LEND locales y las mediciones de
+`validation.diviner.json` ya verificadas, sin HTTP. El hash de esa evidencia
+queda en `reproducibility.configuration.reused_diviner_evidence`. Las pruebas de
+consolidación comprueban igualdad científica y reproducibilidad de los bytes en
+el mismo entorno, además de los tres CSV. Cambios de versión de Python, librerías
+o finales de línea del código pueden modificar la procedencia sin cambiar las
+mediciones; se distingue de igualdad numérica y de validación externa.
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest .\backend\tests\lunar\test_lend.py .\backend\tests\lunar\test_consolidation.py -q
+.\.venv\Scripts\python.exe -m pytest .\backend\tests\lunar -q
+```
+
+La iluminación polar es ahora `optional_operational`, no implementada, no
+seleccionada para el puntaje principal. PGDA 69 ofrece productos polares, no
+fracción de iluminación global. No se descarga ni implementa esta fuente.
+No hay valor ecuatorial inferido, y un nulo no significa oscuridad permanente.
+Reflectancia, albedo y temperatura no sustituyen fracción de tiempo iluminado.
+No se identificó ni validó aquí una distribución oficial global para proponerla.
+
+Los dos puntos publicados siguen siendo ejemplos. No se agregaron sitios ni
+se modificó el catálogo de los compañeros. El CSV core conserva 17 columnas;
+el full 29; la tabla LEND tiene 23 columnas y 8 filas, con unidades no declaradas
+vacías y períodos/canales separados. No se normalizó rugosidad.
+La suite final tiene 215 casos aprobados: 179 previos, 31 de LEND y 5 de
+consolidación. Incluye rechazo de disponibilidad contradictoria en el CSV
+auxiliar. La advertencia conocida de `pvl` permanece visible. No se ejecutó
+una nueva consulta Diviner para este cierre, ni validación geodésica externa.
 
 Ninguna salida evalúa la seguridad integral de aterrizaje.

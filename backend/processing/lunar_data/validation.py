@@ -7,6 +7,36 @@ from pathlib import Path
 import struct
 
 
+def validate_lend(root, config, sites):
+    from .lend import LendProduct
+    results=[]
+    for source in config.get("lend",[]):
+        with LendProduct(root/source["xml"]) as product, product.data_path.open("rb") as independent:
+            checks=[]
+            for site in sites:
+                for channel in source["channels"]:
+                    lat,lon=site["latitude_deg"],site["longitude_deg"]
+                    measured=product.sample(lat,lon,channel)
+                    check={"site_id":site["id"],"channel":channel,"measurement":measured}
+                    if abs(lat)>=80:
+                        check["independent_status"]="OUTSIDE_COVERAGE"
+                    else:
+                        row=int(math.floor(80-lat));column=int(math.floor(lon%360))
+                        independent.seek((row*360+column)*310)
+                        record=independent.read(310)
+                        offset={"SETN":70,"CSETN":106,"STN1":58,"STN2":82,"STN3":94}[channel]
+                        exposure,rate,error=struct.unpack_from(">fff",record,offset)
+                        assert (measured["raw_exposure_s"],measured["raw_value"],measured["raw_statistical_error"]) == (exposure,rate,error)
+                        assert struct.unpack_from(">ff",record,46)==(79.5-row,column+.5)
+                        check.update(independent_status="PASS",independent_raw_exposure_s=exposure,
+                                     independent_raw_rate=rate,independent_raw_error=error,
+                                     independent_method="separate seek/struct big-endian decoder and grid calculation")
+                    checks.append(check)
+            results.append({"source":product.manifest(),"checks":checks})
+    return {"products":results,"external_validation":"PENDING; binary decoder checks are internal numeric validation",
+            "unit_policy":"RATE/ERR units not declared; exposure seconds per PDS4; no hydrogen conversion"}
+
+
 def validate_diviner(root, config, sites):
     import rasterio
     import tifffile
@@ -54,6 +84,7 @@ def validate_diviner(root, config, sites):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Verificaciones lunares reales; red sólo con --remote-diviner")
     parser.add_argument("--remote-diviner", action="store_true")
+    parser.add_argument("--lend", action="store_true", help="Comprobación local independiente ALDE")
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--sites", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -61,15 +92,19 @@ def main(argv=None):
     if args.output.exists():
         parser.error("La salida debe ser nueva")
     root = Path(__file__).resolve().parents[3]
-    if not args.remote_diviner:
+    if not args.remote_diviner and not args.lend:
         parser.error("Elegir una comprobación explícita; --remote-diviner autoriza HTTP acotado")
-    result = validate_diviner(root, json.loads(args.sources.read_text(encoding="utf-8")),
-                              json.loads(args.sites.read_text(encoding="utf-8")))
+    config=json.loads(args.sources.read_text(encoding="utf-8"))
+    sites=json.loads(args.sites.read_text(encoding="utf-8"))
+    if args.remote_diviner:
+        result=validate_diviner(root,config,sites)
+    else:
+        result=validate_lend(root,config,sites)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x", encoding="utf-8", newline="\n") as stream:
         json.dump(result, stream, ensure_ascii=False, allow_nan=False, indent=2, sort_keys=True)
         stream.write("\n")
-    print(f"Diviner verificado: {result['http_body_bytes_received']} bytes HTTP; {args.output}")
+    print(f"Validación ejecutada: {args.output}")
     return 0
 
 

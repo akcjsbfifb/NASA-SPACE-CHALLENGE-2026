@@ -23,14 +23,14 @@
         "sha256": "df1617e2a730b9d9874658ba31e7c3d1cd2bd65a0211dd246ea0d6c511b38a2b"
       },
       {
-        "bytes": 4322,
+        "bytes": 5137,
         "file_name": "__main__.py",
-        "sha256": "8ffa41f6aeae27a757142d1e7061cfed9c24436f8dc98c0748791e5ab2af7659"
+        "sha256": "98db81b6f6cb1c6bf0b7b5bd3061af3872e2b7c9dc15bb5cb5e6f0c45961708b"
       },
       {
-        "bytes": 7443,
+        "bytes": 10083,
         "file_name": "csv_export.py",
-        "sha256": "9d586708c27816a5ba0f98a8f34ef19da6ddc712f90685e8e9048fe2c7bb5f6f"
+        "sha256": "12173de0283ad596ad3bf24edabb4a9ede83f6dfa3dc65e6fc30f9a64766d2af"
       },
       {
         "bytes": 8784,
@@ -38,14 +38,19 @@
         "sha256": "e09b736437b6124744324aaaa0af4d1772c996acb8c3881f2ced4c709d39adcf"
       },
       {
-        "bytes": 10772,
+        "bytes": 10910,
         "file_name": "export.py",
-        "sha256": "b526faac49892204d153e9ccdf7b7b89913226c0b76ed5533c3d2237d347d6d1"
+        "sha256": "0e208482f8fa060bee3cd2ece7562c8d23d5595c973bf7e61b124ad365a4dfa3"
       },
       {
         "bytes": 4663,
         "file_name": "http_range.py",
         "sha256": "b2455b1e57b0edf46bb108eec462425881a16ce91024e89c5165e08f8c934d0e"
+      },
+      {
+        "bytes": 9819,
+        "file_name": "lend.py",
+        "sha256": "2adb98488525925ec694f7cd58611acf54c15b15ba7dfda5945f7385a3d3678a"
       },
       {
         "bytes": 9291,
@@ -63,16 +68,21 @@
         "sha256": "7a297d0eb6786c5b61733fa558056b5176ef36c7e8e8135a052a5d2ed02d71a8"
       },
       {
-        "bytes": 4200,
+        "bytes": 6321,
         "file_name": "validation.py",
-        "sha256": "962e2925737b0afecc9fe45d3f4c6116ca33f95cb6bd800f13753f7bfa7fa59b"
+        "sha256": "5aa844e5e448e945a010da127a307ae1b183d26e784747fc25ceced1aa0df138"
       }
     ],
     "configuration": {
       "additional_sources": {
-        "bytes": 441,
+        "bytes": 801,
         "file_name": "sources.example.json",
-        "sha256": "d052416d3930e91ef276680ce5058d38bc5d9b9d2b0891514f0792fd66fe3943"
+        "sha256": "c2882393ac12277e9fb1ae50663dce9ca1d2152963f35a3cc837967d56eba19c"
+      },
+      "reused_diviner_evidence": {
+        "bytes": 20989,
+        "file_name": "validation.diviner.json",
+        "sha256": "4e10a531287c3ffa657280927e6868b9a88ada1bbe5795a4e7b57fcb6c86f483"
       },
       "sites_input": {
         "bytes": 436,
@@ -80,9 +90,9 @@
         "sha256": "73a9d0ee2d6ee8798b733726c9052669baed090cf40d70e3a6203ecb8f9eceaa"
       },
       "variable_registry": {
-        "bytes": 12689,
+        "bytes": 12913,
         "file_name": "variables.json",
-        "sha256": "64825a91a022fe7b80624f303787a47bf819fa7afd9d99e67a8fb2eefc1e4b5b"
+        "sha256": "1421b1f887111eba17cf1d565548a884ffe6866b2f92cfa14676ef7c0bc6e8a2"
       }
     },
     "policy": "deterministic_output_no_execution_timestamp",
@@ -196,16 +206,192 @@
           "value": null
         },
         "lend_neutron_indicator": {
-          "available": null,
-          "implemented": false,
-          "reason": "processor_not_implemented",
+          "available": false,
+          "has_available_observations": true,
+          "implemented": true,
+          "kind": "collection",
+          "observations": [
+            {
+              "available": true,
+              "channel": "SETN",
+              "exposure_s": 599.0,
+              "period": {
+                "start": "2009-09-15T00:00:00Z",
+                "stop": "2011-12-11T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20090915",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": 599.0,
+              "raw_statistical_error": 0.12276305258274078,
+              "raw_value": 9.123088836669922,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 1,
+                "byte_offset": 8928000,
+                "center_latitude_deg": -0.5,
+                "center_longitude_deg_east": 0.5,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_1_degree_cell",
+                "record_index": 28800,
+                "record_start_utc": "2009-09-15T00:00:00.000",
+                "record_stop_utc": "2011-12-11T00:00:00.000",
+                "row": 80
+              },
+              "source_ref": "lend_rdr_alde_20090915",
+              "statistical_error": 0.12276305258274078,
+              "status": "valid",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": 9.123088836669922
+            },
+            {
+              "available": true,
+              "channel": "CSETN",
+              "exposure_s": 730.0,
+              "period": {
+                "start": "2009-09-15T00:00:00Z",
+                "stop": "2011-12-11T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20090915",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": 730.0,
+              "raw_statistical_error": 0.10784836858510971,
+              "raw_value": 5.262941360473633,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 1,
+                "byte_offset": 8928000,
+                "center_latitude_deg": -0.5,
+                "center_longitude_deg_east": 0.5,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_1_degree_cell",
+                "record_index": 28800,
+                "record_start_utc": "2009-09-15T00:00:00.000",
+                "record_stop_utc": "2011-12-11T00:00:00.000",
+                "row": 80
+              },
+              "source_ref": "lend_rdr_alde_20090915",
+              "statistical_error": 0.10784836858510971,
+              "status": "valid",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": 5.262941360473633
+            },
+            {
+              "available": false,
+              "channel": "SETN",
+              "exposure_s": 0.0,
+              "period": {
+                "start": "2011-12-11T00:00:00Z",
+                "stop": "2016-09-14T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20111211",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": 0.0,
+              "raw_statistical_error": -1.0,
+              "raw_value": -1.0,
+              "reason": "non_positive_exposure_no_supported_measurement",
+              "sampling": {
+                "angular_resolution_deg": 1,
+                "byte_offset": 8928000,
+                "center_latitude_deg": -0.5,
+                "center_longitude_deg_east": 0.5,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_1_degree_cell",
+                "record_index": 28800,
+                "record_start_utc": "2011-12-11T00:00:00.000",
+                "record_stop_utc": "2016-09-14T00:00:00.000",
+                "row": 80
+              },
+              "source_ref": "lend_rdr_alde_20111211",
+              "statistical_error": null,
+              "status": "missing",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": null
+            },
+            {
+              "available": true,
+              "channel": "CSETN",
+              "exposure_s": 2053.0,
+              "period": {
+                "start": "2011-12-11T00:00:00Z",
+                "stop": "2016-09-14T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20111211",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": 2053.0,
+              "raw_statistical_error": 0.08047634363174438,
+              "raw_value": 4.812496662139893,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 1,
+                "byte_offset": 8928000,
+                "center_latitude_deg": -0.5,
+                "center_longitude_deg_east": 0.5,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_1_degree_cell",
+                "record_index": 28800,
+                "record_start_utc": "2011-12-11T00:00:00.000",
+                "record_stop_utc": "2016-09-14T00:00:00.000",
+                "row": 80
+              },
+              "source_ref": "lend_rdr_alde_20111211",
+              "statistical_error": 0.08047634363174438,
+              "status": "valid",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": 4.812496662139893
+            }
+          ],
+          "quantity": "collection_of_relative_neutron_count_rates",
+          "reason": "no_single_scalar_periods_and_channels_kept_in_observations",
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_implemented",
+          "source_ref": "lend_neutron_indicator",
+          "status": "not_sampled",
           "unit": null,
           "used_in_similarity": null,
-          "value": null,
-          "within_declared_latitude_bounds": true
+          "value": null
         },
         "mineralogy": {
           "available": null,
@@ -222,7 +408,7 @@
           "available": null,
           "implemented": false,
           "reason": "processor_not_implemented",
-          "selected_for_project": true,
+          "selected_for_project": false,
           "source_ref": null,
           "status": "not_implemented",
           "unit": "1",
@@ -694,15 +880,143 @@
         },
         "lend_neutron_indicator": {
           "available": false,
-          "implemented": false,
-          "reason": "outside_declared_latitude_coverage",
+          "has_available_observations": false,
+          "implemented": true,
+          "kind": "collection",
+          "observations": [
+            {
+              "available": false,
+              "channel": "SETN",
+              "exposure_s": null,
+              "period": {
+                "start": "2009-09-15T00:00:00Z",
+                "stop": "2011-12-11T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20090915",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": null,
+              "raw_statistical_error": null,
+              "raw_value": null,
+              "reason": "outside_declared_latitude_coverage",
+              "sampling": null,
+              "source_ref": "lend_rdr_alde_20090915",
+              "statistical_error": null,
+              "status": "not_sampled",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": null
+            },
+            {
+              "available": false,
+              "channel": "CSETN",
+              "exposure_s": null,
+              "period": {
+                "start": "2009-09-15T00:00:00Z",
+                "stop": "2011-12-11T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20090915",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": null,
+              "raw_statistical_error": null,
+              "raw_value": null,
+              "reason": "outside_declared_latitude_coverage",
+              "sampling": null,
+              "source_ref": "lend_rdr_alde_20090915",
+              "statistical_error": null,
+              "status": "not_sampled",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": null
+            },
+            {
+              "available": false,
+              "channel": "SETN",
+              "exposure_s": null,
+              "period": {
+                "start": "2011-12-11T00:00:00Z",
+                "stop": "2016-09-14T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20111211",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": null,
+              "raw_statistical_error": null,
+              "raw_value": null,
+              "reason": "outside_declared_latitude_coverage",
+              "sampling": null,
+              "source_ref": "lend_rdr_alde_20111211",
+              "statistical_error": null,
+              "status": "not_sampled",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": null
+            },
+            {
+              "available": false,
+              "channel": "CSETN",
+              "exposure_s": null,
+              "period": {
+                "start": "2011-12-11T00:00:00Z",
+                "stop": "2016-09-14T00:00:00Z"
+              },
+              "product_id": "lend_rdr_alde_20111211",
+              "quality": {
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "not_hydrogen_water_or_ice_abundance",
+                  "rate_and_error_units_not_declared",
+                  "grid_spacing_not_instrument_resolution",
+                  "body_fixed_frame_realization_not_declared_in_label"
+                ]
+              },
+              "quantity": "relative_neutron_count_rate",
+              "raw_exposure_s": null,
+              "raw_statistical_error": null,
+              "raw_value": null,
+              "reason": "outside_declared_latitude_coverage",
+              "sampling": null,
+              "source_ref": "lend_rdr_alde_20111211",
+              "statistical_error": null,
+              "status": "not_sampled",
+              "unit": null,
+              "unit_status": "not_declared_in_product_label",
+              "value": null
+            }
+          ],
+          "quantity": "collection_of_relative_neutron_count_rates",
+          "reason": "no_single_scalar_periods_and_channels_kept_in_observations",
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_implemented",
+          "source_ref": "lend_neutron_indicator",
+          "status": "not_sampled",
           "unit": null,
           "used_in_similarity": null,
-          "value": null,
-          "within_declared_latitude_bounds": false
+          "value": null
         },
         "mineralogy": {
           "available": null,
@@ -719,7 +1033,7 @@
           "available": null,
           "implemented": false,
           "reason": "processor_not_implemented",
-          "selected_for_project": true,
+          "selected_for_project": false,
           "source_ref": null,
           "status": "not_implemented",
           "unit": "1",
@@ -1222,6 +1536,116 @@
         "ldem_reference_sphere_offset_not_added_to_height"
       ]
     },
+    "lend_neutron_indicator": {
+      "combination_applied": false,
+      "kind": "collection",
+      "products": [
+        "lend_rdr_alde_20090915",
+        "lend_rdr_alde_20111211"
+      ],
+      "selections": [
+        {
+          "channels": [
+            "SETN",
+            "CSETN"
+          ],
+          "product": "lend_rdr_alde_20090915"
+        },
+        {
+          "channels": [
+            "SETN",
+            "CSETN"
+          ],
+          "product": "lend_rdr_alde_20111211"
+        }
+      ]
+    },
+    "lend_rdr_alde_20090915": {
+      "angular_resolution_deg": 1,
+      "byte_order": "big_endian",
+      "coverage_latitude_deg": {
+        "north_exclusive": 80,
+        "south_exclusive": -80
+      },
+      "documentation_url": "https://pds-geosciences.wustl.edu/lro/lro-l-lend-2-edr-v1/lrolen_0xxx/document/lend_rdr_sis.pdf",
+      "exposure_unit": "s",
+      "files": [
+        {
+          "bytes": 19257,
+          "file_name": "lend_rdr_alde_20090915.xml",
+          "sha256": "7f029ede2670028642ce568da9686ce7b75cb88bd5445385b1bfc91d84d426cb"
+        },
+        {
+          "bytes": 2613,
+          "file_name": "lend_rdr_alde_20090915.lbl",
+          "sha256": "58fc5d4362b826f3259b7221d3f42ab4b316b7707b45d338df7d6b0b38d19a4f"
+        },
+        {
+          "bytes": 17856000,
+          "file_name": "lend_rdr_alde_20090915.dat",
+          "sha256": "0fd30a01c99c644c431c6538e778e814bab692663a312dc82b08d860110261aa"
+        }
+      ],
+      "limitations": [
+        "indirect_neutron_observable_not_abundance",
+        "no_period_or_sensor_combination",
+        "legacy_sis_exposure_unit_text_conflicts_with_seconds_description_xml_used"
+      ],
+      "pds_logical_identifier": "urn:nasa:pds:lro_lend:data_science_averaged:lend_rdr_alde_20090915",
+      "period": {
+        "start": "2009-09-15T00:00:00Z",
+        "stop": "2011-12-11T00:00:00Z"
+      },
+      "product_id": "lend_rdr_alde_20090915",
+      "rate_unit": null,
+      "record_length_bytes": 310,
+      "statistical_error_unit": null,
+      "unit_policy": "PDS4 structured fields; no RATE/ERR unit inferred from ambiguous legacy SIS",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lend-2-edr-v1/lrolen_0xxx/data/2009/20090915/lend_rdr_alde_20090915.dat"
+    },
+    "lend_rdr_alde_20111211": {
+      "angular_resolution_deg": 1,
+      "byte_order": "big_endian",
+      "coverage_latitude_deg": {
+        "north_exclusive": 80,
+        "south_exclusive": -80
+      },
+      "documentation_url": "https://pds-geosciences.wustl.edu/lro/lro-l-lend-2-edr-v1/lrolen_0xxx/document/lend_rdr_sis.pdf",
+      "exposure_unit": "s",
+      "files": [
+        {
+          "bytes": 19257,
+          "file_name": "lend_rdr_alde_20111211.xml",
+          "sha256": "fb8293a5e0a532bf384dada60103c430fb372bdd59d2e6c638105c24f95e6db1"
+        },
+        {
+          "bytes": 2613,
+          "file_name": "lend_rdr_alde_20111211.lbl",
+          "sha256": "db040260407fc7c774a04102cbfb70a00fa2c610b0d41415babd85245d98fb5a"
+        },
+        {
+          "bytes": 17856000,
+          "file_name": "lend_rdr_alde_20111211.dat",
+          "sha256": "dd47542c70c3ef2d925ac7bd251a836404b0088075dbf36b105a5bfaa554a3c7"
+        }
+      ],
+      "limitations": [
+        "indirect_neutron_observable_not_abundance",
+        "no_period_or_sensor_combination",
+        "legacy_sis_exposure_unit_text_conflicts_with_seconds_description_xml_used"
+      ],
+      "pds_logical_identifier": "urn:nasa:pds:lro_lend:data_science_averaged:lend_rdr_alde_20111211",
+      "period": {
+        "start": "2011-12-11T00:00:00Z",
+        "stop": "2016-09-14T00:00:00Z"
+      },
+      "product_id": "lend_rdr_alde_20111211",
+      "rate_unit": null,
+      "record_length_bytes": 310,
+      "statistical_error_unit": null,
+      "unit_policy": "PDS4 structured fields; no RATE/ERR unit inferred from ambiguous legacy SIS",
+      "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lend-2-edr-v1/lrolen_0xxx/data/2011/20111211/lend_rdr_alde_20111211.dat"
+    },
     "regolith_temperature": {
       "angular_resolution_deg": 0.0078125,
       "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
@@ -1477,5 +1901,5 @@
       "output_unit": "deg"
     }
   },
-  "variable_registry_version": "1.3.0"
+  "variable_registry_version": "1.4.1"
 }
