@@ -8,10 +8,10 @@ venv:
 	$(VENV)/bin/pip install -r requirements.txt
 
 dev:
-	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8000 --log-level debug
+	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787 --log-level debug
 
 release:
-	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787
 
 clean:
 	rm -rf $(VENV) .pytest_cache

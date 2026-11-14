@@ -151,7 +151,7 @@ function App() {
 		<main className="app">
 		<header className="topbar">
 		<strong>ORBITAL</strong>
-		<span>EARTH OBSERVATION SYSTEM</span>
+		<span>OBSERVATORIO</span>
 		</header>
 
 		<div className="workspace">
@@ -162,127 +162,95 @@ function App() {
 		<p className="muted">Cinco números del sitio lunar. La cercanía es el promedio de los cinco.</p>
 
 		<label className="field">
-		Pendiente (°)
-		<input value={slope} onChange={(event) => setSlope(event.target.value)} inputMode="decimal" />
+			Pendiente (°)
+			<input value={slope} onChange={(event) => setSlope(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-		Rugosidad (m)
-		<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
+			Rugosidad (m)
+			<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-		Temperatura nocturna (°C)
-		<input value={tmin} onChange={(event) => setTmin(event.target.value)} inputMode="decimal" />
+			Temperatura nocturna (°C)
+			<input value={tmin} onChange={(event) => setTmin(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
-		Hielo (m)
-		<input value={ice} onChange={(event) => setIce(event.target.value)} inputMode="decimal" />
+			Hielo (m)
+			<input value={ice} onChange={(event) => setIce(event.target.value)} inputMode="decimal" />
 		</label>
-		<label className="field">
-		Roca
-		<select value={rock} onChange={(event) => setRock(event.target.value)}>
-		{ROCKS.map(([code, label]) => (
-			<option key={code} value={code}>{label}</option>
+			<label className="field">
+			Roca
+			<select value={rock} onChange={(event) => setRock(event.target.value)}>
+			{ROCKS.map(([code, label]) => (
+				<option key={code} value={code}>{label}</option>
 		))}
 		</select>
 		</label>
 		<label className="field">
-		Precisión {precision.toFixed(2)}
-		<input
-		type="range"
-		min="0"
-		max="1"
-		step="0.05"
-		value={precision}
-		onChange={(event) => setPrecision(Number(event.target.value))}
-		/>
+			Precisión {precision.toFixed(2)}
+			<input type="range" min="0" max="1" step="0.05" value={precision} onChange={(event) => setPrecision(Number(event.target.value))} />
 		<span className="range-labels">
 		<span>más lugares</span>
 		<span>más precisos</span>
 		</span>
 		</label>
-		<button type="button" onClick={search} disabled={busy}>
-		{busy ? 'Buscando…' : 'Buscar análogos'}
-		</button>
-		<p className="muted">{summary}</p>
-		<div className="result-list">
-		{points.slice(0, 6).map((point) => (
-			<button
-			key={`${point.lat},${point.lon}`}
-			type="button"
-			onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
-			>
-			{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
+			<button type="button" onClick={search} disabled={busy}>
+			{busy ? 'Buscando...' : 'Buscar análogos'}
 			</button>
-		))}
-		</div>
+			<p className="muted">{summary}</p>
+			<div className="result-list">
+				{points.slice(0, 6).map((point) => (
+					<button
+					key={`${point.lat},${point.lon}`}
+					type="button"
+					onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
+					>
+					{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
+					</button>
+				))}
+			</div>
 		</section>
 
 		<section className="sidebar-section">
-		<h4>Visualization layers</h4>
+			<h4>Capas de visualización</h4>
 
-		<label>
-		<input
-		type="checkbox"
-		checked={visibleLayers.points}
-		onChange={() => toggleLayer('points')}
-		/>
-		Locations
-		</label>
+			<label>
+				<input type="checkbox" checked={visibleLayers.points} onChange={() => toggleLayer('points')} /> Ubicaciones
+			</label>
 
-		<label>
-		<input
-		type="checkbox"
-		checked={visibleLayers.heatmaps}
-		onChange={() => toggleLayer('heatmaps')}
-		/>
-		Heatmap
-		</label>
+			<label>
+				<input type="checkbox" checked={visibleLayers.heatmaps} onChange={() => toggleLayer('heatmaps')} /> Mapa de calor
+			</label>
 
-		<label>
-		<input
-		type="checkbox"
-		checked={visibleLayers.polygons}
-		onChange={() => toggleLayer('polygons')}
-		/>
-		Areas
-		</label>
+			<label>
+				<input type="checkbox" checked={visibleLayers.polygons} onChange={() => toggleLayer('polygons')} /> Áreas
+			</label>
 
-		<label>
-		<input
-		type="checkbox"
-		checked={visibleLayers.labels}
-		onChange={() => toggleLayer('labels')}
-		/>
-		Labels
-		</label>
+			<label>
+				<input type="checkbox" checked={visibleLayers.labels} onChange={() => toggleLayer('labels')} /> Etiquetas
+			</label>
+
 		</section>
 
-		<hr />
+		<hr/>
 
-		<h3>SELECTED LOCATION</h3>
+		<section className="sidebar-section">
+			<h4>Punto seleccionado</h4>
 
-		{location ? (
-			<>
-			<p>Latitude: {location.lat.toFixed(5)}</p>
-			<p>Longitude: {location.lng.toFixed(5)}</p>
-			</>
-		) : (
-		<p>Click the globe to select a location.</p>
-		)}
+			{location ? (<>
+				<p>Latitud: {location.lat.toFixed(5)}</p>
+				<p>Longitud: {location.lng.toFixed(5)}</p>
+			</>) : (<p>Ningún punto seleccionado.</p>)}
+		</section>
+
 		</aside>
 
 		<section className="globe-container">
-		<InteractiveGlobe
-		ref={globe}
-		onLocationSelect={(coords) => selectPlace(coords.lat, coords.lng)}
-		onPointSelect={(point) => {
-			const hit = points.find(
-				(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
-			);
-			selectPlace(point.lat, point.lng, hit?.closeness);
-		}}
-		/>
-		<PointPanel place={selection} onClose={() => setSelection(null)} />
+			<InteractiveGlobe ref={globe} onLocationSelect={(coords) => selectPlace(coords.lat, coords.lng)} onPointSelect={(point) => {
+				const hit = points.find(
+					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
+				);
+				selectPlace(point.lat, point.lng, hit?.closeness); }} />
+			<PointPanel place={selection} onClose={() => setSelection(null)} />
 		</section>
 
 		</div>
