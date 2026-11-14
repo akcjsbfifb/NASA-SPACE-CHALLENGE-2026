@@ -1,0 +1,99 @@
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #050914;
+  color: #e5eaf3;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+}
+
+.topbar {
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid #1c293c;
+  background: #080f1c;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.topbar-status {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #71839b;
+}
+
+.workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding: 24px;
+  background: #080f1c;
+  border-right: 1px solid #1c293c;
+  z-index: 2;
+}
+
+.sidebar h3 {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.sidebar-section {
+  margin-top: 32px;
+}
+
+.sidebar-section h4 {
+  font-size: 11px;
+  color: #8193aa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar-section label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 16px 0;
+  font-size: 13px;
+}
+
+.sidebar-section p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.muted {
+  color: #71839b;
+}
+
+.globe-container {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.globe-overlay {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  color: #8193aa;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
