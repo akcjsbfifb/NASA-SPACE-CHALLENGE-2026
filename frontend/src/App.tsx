@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import InteractiveGlobe from './components/Globe/InteractiveGlobe';
 import PointPanel from './components/PointPanel';
+import PrecisionDial from './components/PrecisionDial';
 import type { SelectedPlace } from './components/PointPanel';
 
 import type {
@@ -217,18 +218,22 @@ function App() {
 			))}
 		</select>
 		</label>
-		<label className="field">
-			{copy.precision} {precision.toFixed(2)}
-			<input type="range" min="0" max="1" step="0.05" value={precision} onChange={(event) => setPrecision(Number(event.target.value))} />
-		<span className="range-labels">
-		<span>{copy.morePlaces}</span>
-		<span>{copy.morePrecise}</span>
-		</span>
-		</label>
+		<div className="precision-control">
+			<span className="precision-label">{copy.precision}</span>
+			<PrecisionDial
+				value={Math.round(precision * 100)}
+				label={copy.precision}
+				onChange={(value) => setPrecision(value / 100)}
+			/>
+			<div className="range-labels">
+				<span>{copy.morePlaces}</span>
+				<span>{copy.morePrecise}</span>
+			</div>
+		</div>
 			<button type="button" onClick={search} disabled={busy}>
 			{busy ? copy.searching : copy.searchAnalogs}
 			</button>
-			<p className="muted">{summaryText}</p>
+			<p className="muted search-summary">{summaryText}</p>
 			<div className="result-list">
 				{points.slice(0, 6).map((point) => (
 					<button
@@ -242,7 +247,7 @@ function App() {
 			</div>
 		</section>
 
-		<section className="sidebar-section">
+		{/* <section className="sidebar-section">
 			<h4>{copy.visualizationLayers}</h4>
 
 			<label>
@@ -262,7 +267,7 @@ function App() {
 			</label>
 
 		</section>
-
+ */}
 		<hr/>
 
 		<section className="sidebar-section">
