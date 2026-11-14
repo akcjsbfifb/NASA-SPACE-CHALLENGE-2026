@@ -36,6 +36,8 @@ interface GlobeRuntime {
 
 type LayerData<T> = Record<string, T[]>;
 
+const HIGH_RESOLUTION_ALTITUDE = 1.5;
+
 function InteractiveGlobe(
 	{
 		config = {},
@@ -65,6 +67,8 @@ function InteractiveGlobe(
 		...DEFAULT_GLOBE_CONFIG.earth!,
 		...config.earth,
 	} as GlobeEarthConfig);
+
+	const [highResolution, setHighResolution] = useState(false);
 
 	const [points, setPoints] = useState<LayerData<GlobePoint>>({});
 
@@ -274,7 +278,7 @@ function InteractiveGlobe(
 		width={dimensions.width}
 		height={dimensions.height}
 
-		globeImageUrl={earth.textureUrl}
+		globeImageUrl={highResolution ? earth.highResolutionTextureUrl : earth.textureUrl}
 		bumpImageUrl={earth.bumpImageUrl}
 		backgroundImageUrl={earth.backgroundImageUrl}
 		backgroundColor={earth.backgroundColor}
@@ -334,7 +338,9 @@ function InteractiveGlobe(
 
 		onZoom={(nextView) => {
 			currentViewRef.current = nextView;
-			setView(nextView);
+			const shouldUseHighResolution = nextView.altitude < HIGH_RESOLUTION_ALTITUDE;
+			setHighResolution(previous => previous === shouldUseHighResolution?
+				previous : shouldUseHighResolution);
 		}}
 
 		animateIn
