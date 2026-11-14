@@ -11,7 +11,9 @@ The general closeness is the average of five scores, each from 0 to 1:
 
 from __future__ import annotations
 
+import bisect
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -59,6 +61,7 @@ class EarthIndex:
             columns=[
                 "lat",
                 "lon",
+                "elevation_m",
                 "slope_deg",
                 "roughness_m",
                 "tmin_coldest_month_c",
@@ -68,6 +71,7 @@ class EarthIndex:
         )
         self.lat = table.column("lat").to_numpy()
         self.lon = table.column("lon").to_numpy()
+        self.elevation = table.column("elevation_m").to_numpy()
         self.slope = table.column("slope_deg").to_numpy()
         self.roughness = table.column("roughness_m").to_numpy()
         self.tmin = table.column("tmin_coldest_month_c").to_numpy()
@@ -78,6 +82,85 @@ class EarthIndex:
         self.hot_ref = float(np.percentile(finite, 95))
         self.group_ids = _group_ids()
         self.labels = rock_labels()
+
+    def nearest(self, lat: float, lon: float) -> dict | None:
+        """Land cell closest to a click. Rows are stored north to south."""
+        if self.lat.size == 0:
+            return None
+        lon = ((lon + 180.0) % 360.0) - 180.0
+        seed = self._closest_lat_index(lat)
+        spans = []
+        seen: set[float] = set()
+        for index in (seed, self._step_row(seed, -1), self._step_row(seed, 1)):
+            if index is None:
+                continue
+            row_lat = float(self.lat[index])
+            if row_lat in seen:
+                continue
+            seen.add(row_lat)
+            spans.append(self._row_span(index))
+
+        best: int | None = None
+        best_distance = math.inf
+        for start, end in spans:
+            index = self._closest_lon(start, end, lon)
+            distance = self._distance_km(index, lat, lon)
+            if distance < best_distance:
+                best = index
+                best_distance = distance
+        if best is None:
+            return None
+        return self._cell(best, best_distance)
+
+    def _closest_lat_index(self, lat: float) -> int:
+        index = bisect.bisect_left(self.lat, -lat, key=lambda value: -float(value))
+        index = min(max(index, 0), int(self.lat.size) - 1)
+        if index > 0 and abs(float(self.lat[index - 1]) - lat) < abs(float(self.lat[index]) - lat):
+            return index - 1
+        return index
+
+    def _step_row(self, index: int, direction: int) -> int | None:
+        start, end = self._row_span(index)
+        neighbor = start - 1 if direction < 0 else end
+        if neighbor < 0 or neighbor >= self.lat.size:
+            return None
+        return neighbor
+
+    def _row_span(self, index: int) -> tuple[int, int]:
+        row_lat = self.lat[index]
+        start = index
+        while start > 0 and self.lat[start - 1] == row_lat:
+            start -= 1
+        end = index + 1
+        while end < self.lat.size and self.lat[end] == row_lat:
+            end += 1
+        return start, end
+
+    def _closest_lon(self, start: int, end: int, lon: float) -> int:
+        index = bisect.bisect_left(self.lon, lon, start, end)
+        choices = [item for item in (index - 1, index) if start <= item < end]
+        return min(choices, key=lambda item: abs(float(self.lon[item]) - lon))
+
+    def _distance_km(self, index: int, lat: float, lon: float) -> float:
+        scale = 111.32 * math.cos(math.radians(lat))
+        dlat = (float(self.lat[index]) - lat) * 111.32
+        dlon = (float(self.lon[index]) - lon) * scale
+        return math.hypot(dlat, dlon)
+
+    def _cell(self, index: int, distance_km: float) -> dict:
+        tmin = float(self.tmin[index])
+        elevation = float(self.elevation[index])
+        return {
+            "lat": round(float(self.lat[index]), 4),
+            "lon": round(float(self.lon[index]), 4),
+            "distance_km": round(distance_km, 2),
+            "elevation_m": None if not math.isfinite(elevation) else round(elevation, 0),
+            "slope_deg": round(float(self.slope[index]), 2),
+            "roughness_m": round(float(self.roughness[index]), 1),
+            "tmin_c": None if not math.isfinite(tmin) else round(tmin, 1),
+            "ice_thickness_m": round(float(self.ice[index]), 0),
+            "rock": self.labels.get(int(self.rock[index]), "?"),
+        }
 
     def search(
         self,

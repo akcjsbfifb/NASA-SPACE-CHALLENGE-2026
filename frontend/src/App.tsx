@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 import InteractiveGlobe from './components/Globe/InteractiveGlobe';
+import PointPanel from './components/PointPanel';
+import type { SelectedPlace } from './components/PointPanel';
 
 import type {
 	GlobeController,
@@ -85,6 +87,12 @@ function App() {
 	const [points, setPoints] = useState<SearchPoint[]>([]);
 	const [summary, setSummary] = useState('Elegí los 5 números del sitio lunar y buscá.');
 	const [busy, setBusy] = useState(false);
+	const [selection, setSelection] = useState<SelectedPlace | null>(null);
+
+	function selectPlace(lat: number, lng: number, closeness?: number) {
+		setLocation({ lat, lng, altitude: 0 });
+		setSelection({ lat, lng, closeness });
+	}
 
 	function toggleLayer(layer: keyof typeof visibleLayers) {
 		setVisibleLayers(previous => ({
@@ -196,11 +204,17 @@ function App() {
 		{busy ? 'Buscando…' : 'Buscar análogos'}
 		</button>
 		<p className="muted">{summary}</p>
+		<div className="result-list">
 		{points.slice(0, 6).map((point) => (
-			<p key={`${point.lat},${point.lon}`}>
+			<button
+			key={`${point.lat},${point.lon}`}
+			type="button"
+			onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
+			>
 			{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
-			</p>
+			</button>
 		))}
+		</div>
 		</section>
 
 		<section className="sidebar-section">
@@ -260,8 +274,15 @@ function App() {
 		<section className="globe-container">
 		<InteractiveGlobe
 		ref={globe}
-		onLocationSelect={setLocation}
+		onLocationSelect={(coords) => selectPlace(coords.lat, coords.lng)}
+		onPointSelect={(point) => {
+			const hit = points.find(
+				(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
+			);
+			selectPlace(point.lat, point.lng, hit?.closeness);
+		}}
 		/>
+		<PointPanel place={selection} onClose={() => setSelection(null)} />
 		</section>
 
 		</div>
