@@ -17,12 +17,23 @@ import math
 from pathlib import Path
 
 import numpy as np
-import pyarrow.parquet as pq
-
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "earth" / "land_60s.parquet"
+COLUMNS_DIR = DATA.parent / "columns"
 COLUMNS = ROOT / "data" / "earth" / "columns.json"
 SHORTLIST = ROOT / "data" / "earth" / "shortlist.json"
+EXTRACT_CMD = ".venv/bin/python scripts/extract_earth_columns.py"
+
+_COLUMN_ATTR: dict[str, str] = {
+    "lat": "lat",
+    "lon": "lon",
+    "elevation_m": "elevation",
+    "slope_deg": "slope",
+    "roughness_m": "roughness",
+    "tmin_coldest_month_c": "tmin",
+    "ice_thickness_m": "ice",
+    "lithology_code": "rock",
+}
 
 ROCK_GROUPS: dict[str, set[int]] = {
     "volcanic": {2, 7, 10, 12},
@@ -55,28 +66,40 @@ def _group_ids() -> np.ndarray:
 
 
 class EarthIndex:
-    def __init__(self) -> None:
-        table = pq.read_table(
-            DATA,
-            columns=[
-                "lat",
-                "lon",
-                "elevation_m",
-                "slope_deg",
-                "roughness_m",
-                "tmin_coldest_month_c",
-                "ice_thickness_m",
-                "lithology_code",
-            ],
-        )
-        self.lat = table.column("lat").to_numpy()
-        self.lon = table.column("lon").to_numpy()
-        self.elevation = table.column("elevation_m").to_numpy()
-        self.slope = table.column("slope_deg").to_numpy()
-        self.roughness = table.column("roughness_m").to_numpy()
-        self.tmin = table.column("tmin_coldest_month_c").to_numpy()
-        self.ice = table.column("ice_thickness_m").to_numpy()
-        self.rock = table.column("lithology_code").to_numpy()
+    def __init__(self, columns_dir: Path | None = None) -> None:
+        directory = COLUMNS_DIR if columns_dir is None else Path(columns_dir)
+        if not directory.is_dir():
+            raise FileNotFoundError(
+                f"column directory missing: {directory}\n"
+                f"Run: {EXTRACT_CMD}"
+            )
+        manifest_path = directory / "manifest.json"
+        if not manifest_path.is_file():
+            raise FileNotFoundError(
+                f"column manifest missing: {manifest_path}\n"
+                f"Run: {EXTRACT_CMD}"
+            )
+        manifest = json.loads(manifest_path.read_text())
+        rows = int(manifest["rows"])
+        for entry in manifest["columns"]:
+            name = entry["name"]
+            filename = entry["file"]
+            dtype = np.dtype(entry["dtype"])
+            path = directory / filename
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"column file missing: {path}\n"
+                    f"Run: {EXTRACT_CMD}"
+                )
+            expected = rows * dtype.itemsize
+            actual = path.stat().st_size
+            if actual != expected:
+                raise ValueError(
+                    f"column file size mismatch for {path.name}: "
+                    f"got {actual} bytes, expected {expected} ({rows} rows x {dtype.itemsize})"
+                )
+            mmap = np.memmap(path, dtype=dtype, mode="r", shape=(rows,))
+            setattr(self, _COLUMN_ATTR[name], mmap)
         finite = self.tmin[np.isfinite(self.tmin)]
         self.cold_ref = float(np.percentile(finite, 5))
         self.hot_ref = float(np.percentile(finite, 95))
