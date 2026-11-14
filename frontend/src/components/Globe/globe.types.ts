@@ -79,6 +79,7 @@ export interface GlobeEarthConfig {
 	backgroundColor?: string;
 	atmosphereColor?: string;
 	atmosphereAltitude?: number;
+	showAtmosphere?: boolean;
 }
 
 /**

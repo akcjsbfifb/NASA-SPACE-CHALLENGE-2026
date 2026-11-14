@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 import InteractiveGlobe from './components/Globe/InteractiveGlobe';
+import MoonPage from './components/MoonPage';
+import type { EarthAnalogSet, LunarSelection } from './components/MoonPage';
+import { listPreview } from './components/MoonPage';
 import PointPanel from './components/PointPanel';
 import type { SelectedPlace } from './components/PointPanel';
 
@@ -36,6 +39,7 @@ type SearchPoint = {
 	lat: number;
 	lon: number;
 	closeness: number;
+	roughness_m: number;
 	rock: string;
 };
 
@@ -66,9 +70,23 @@ function toGlobePoint(point: SearchPoint): GlobePoint {
 	};
 }
 
+type SearchInputs = {
+	slope?: string;
+	roughness?: string;
+	tmin?: string;
+	ice?: string;
+	rock?: string;
+	precision: number;
+};
+
+function pageFromHash(): 'moon' | 'earth' {
+	return window.location.hash === '#luna' ? 'moon' : 'earth';
+}
+
 function App() {
 	const globe = useRef<GlobeController>(null);
 
+	const [page, setPage] = useState<'moon' | 'earth'>(pageFromHash);
 	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
 
 	const [visibleLayers, setVisibleLayers] = useState({
@@ -88,6 +106,21 @@ function App() {
 	const [summary, setSummary] = useState('Elegí los 5 números del sitio lunar y buscá.');
 	const [busy, setBusy] = useState(false);
 	const [selection, setSelection] = useState<SelectedPlace | null>(null);
+	const [lunarLabel, setLunarLabel] = useState<string | null>(null);
+	const [lunarElevation, setLunarElevation] = useState<number | null>(null);
+	const [roughnessOnly, setRoughnessOnly] = useState(false);
+
+	function openPage(next: 'moon' | 'earth') {
+		setPage(next);
+		const hash = next === 'moon' ? '#luna' : '#tierra';
+		if (window.location.hash !== hash) window.history.replaceState(null, '', hash);
+	}
+
+	useEffect(() => {
+		const onHash = () => setPage(pageFromHash());
+		window.addEventListener('hashchange', onHash);
+		return () => window.removeEventListener('hashchange', onHash);
+	}, []);
 
 	function selectPlace(lat: number, lng: number, closeness?: number) {
 		setLocation({ lat, lng, altitude: 0 });
@@ -102,37 +135,71 @@ function App() {
 	}
 
 	useEffect(() => {
+		if (page !== 'earth') return;
 		globe.current?.setPoints(
 			'analogs',
 			visibleLayers.points ? points.map(toGlobePoint) : [],
 		);
-	}, [points, visibleLayers.points]);
+	}, [points, visibleLayers.points, page]);
 
-	async function search() {
+	function leaveLunarQuery() {
+		setLunarLabel(null);
+		setLunarElevation(null);
+		setRoughnessOnly(false);
+		setSlope('8');
+		setRoughness('30');
+		setTmin('-20');
+		setIce('0');
+		setRock('vb');
+		setPoints([]);
+		setSummary('Elegí los 5 números del sitio lunar y buscá.');
+	}
+
+	function editField<T>(setter: (value: T) => void) {
+		return (value: T) => {
+			setLunarLabel(null);
+			setRoughnessOnly(false);
+			setLunarElevation(null);
+			setter(value);
+		};
+	}
+
+	function describe(
+		body: Pick<SearchResponse, 'returned' | 'min_closeness' | 'closest' | 'loosest'> & {
+			temperature_mode?: string;
+		},
+		originName: string | null,
+	) {
+		const tempNote =
+			body.temperature_mode === 'relative_cold'
+				? ' La temperatura lunar queda fuera del rango terrestre: el puntaje premia el frío relativo.'
+				: '';
+		const origin = originName ? ` Origen lunar: ${originName}.` : '';
+		return body.returned === 0
+			? `Ningún lugar llega a ${(body.min_closeness * 100).toFixed(0)}% de cercanía. Bajá la precisión.${origin}`
+			: `${body.returned} lugares distintos, entre ${((body.loosest ?? 0) * 100).toFixed(0)}% y ${((body.closest ?? 0) * 100).toFixed(0)}% de cercanía.${tempNote}${origin}`;
+	}
+
+	async function search(override?: SearchInputs, originLabel?: string | null) {
+		const query = override ?? (
+			roughnessOnly
+				? { roughness, precision }
+				: { slope, roughness, tmin, ice, rock, precision }
+		);
+		const originName = originLabel === undefined ? lunarLabel : originLabel;
 		setBusy(true);
 		setSummary('Buscando en 82 millones de celdas…');
-		const params = new URLSearchParams({
-			slope,
-			roughness,
-			tmin,
-			ice,
-			rock,
-			precision: String(precision),
-		});
+		const params = new URLSearchParams({ precision: String(query.precision) });
+		for (const [key, value] of Object.entries(query)) {
+			if (key === 'precision' || value === undefined || value === '') continue;
+			params.set(key, String(value));
+		}
 		try {
 			const response = await fetch(`http://127.0.0.1:8787/search?${params}`);
 			const body = (await response.json()) as SearchResponse & { error?: string };
 			if (!response.ok) throw new Error(body.error || 'la búsqueda falló');
 			setPoints(body.points);
-			const tempNote =
-				body.temperature_mode === 'relative_cold'
-					? ' La temperatura lunar queda fuera del rango terrestre: el puntaje premia el frío relativo.'
-					: '';
-			setSummary(
-				body.returned === 0
-					? `Ningún lugar llega a ${(body.min_closeness * 100).toFixed(0)}% de cercanía. Bajá la precisión.`
-					: `${body.returned} lugares distintos, entre ${((body.loosest ?? 0) * 100).toFixed(0)}% y ${((body.closest ?? 0) * 100).toFixed(0)}% de cercanía.${tempNote}`,
-			);
+			setSummary(describe(body, originName));
 		} catch (error) {
 			const offline = error instanceof TypeError;
 			setSummary(
@@ -147,44 +214,113 @@ function App() {
 		}
 	}
 
+	function compareFromMoon(lunar: LunarSelection, analogs: EarthAnalogSet | null) {
+		if (lunar.sample.roughness === null) return;
+		const next = {
+			roughness: String(lunar.sample.roughness),
+			precision,
+		};
+		setSlope('');
+		setTmin('');
+		setIce('');
+		setRock('');
+		setRoughness(next.roughness);
+		setLunarElevation(lunar.sample.elevation);
+		setRoughnessOnly(true);
+		setLunarLabel(lunar.label);
+		openPage('earth');
+		if (analogs) {
+			setPoints(analogs.points);
+			setSummary(describe(analogs, lunar.label));
+			return;
+		}
+		void search(next, lunar.label);
+	}
+
 	return (
 		<main className="app">
 		<header className="topbar">
 		<strong>ORBITAL</strong>
-		<span>EARTH OBSERVATION SYSTEM</span>
+		<nav className="page-nav" aria-label="Cuerpo">
+		<button type="button" aria-current={page === 'moon' ? 'page' : undefined} onClick={() => openPage('moon')}>
+		Luna
+		</button>
+		<button type="button" aria-current={page === 'earth' ? 'page' : undefined} onClick={() => openPage('earth')}>
+		Tierra
+		</button>
+		</nav>
+		<span>{page === 'moon' ? 'SITIOS TRIPULADOS' : 'EARTH OBSERVATION SYSTEM'}</span>
 		</header>
 
 		<div className="workspace">
+		{page === 'moon' ? (
+			<MoonPage precision={precision} onCompare={compareFromMoon} />
+		) : (
+		<>
 
 		<aside className="sidebar">
 		<section className="sidebar-section">
 		<h4>Objetivo</h4>
-		<p className="muted">Cinco números del sitio lunar. La cercanía es el promedio de los cinco.</p>
+		<p className="muted">
+		{lunarLabel
+			? `Rugosidad LOLA de ${lunarLabel}${lunarElevation === null ? '' : `, elevación ${lunarElevation.toFixed(1)} m`}. La comparación usa solo esa rugosidad.`
+			: 'Cinco números del sitio lunar. La cercanía es el promedio de los cinco.'}
+		</p>
 
+		{roughnessOnly ? (
+		<>
+		<dl className="cell-facts">
+		<div>
+		<dt>Pendiente</dt>
+		<dd>sin dato</dd>
+		</div>
+		<div>
+		<dt>Temperatura nocturna</dt>
+		<dd>sin dato</dd>
+		</div>
+		<div>
+		<dt>Hielo</dt>
+		<dd>sin dato</dd>
+		</div>
+		<div>
+		<dt>Roca</dt>
+		<dd>sin dato</dd>
+		</div>
+		</dl>
+		<p className="muted">Esos mapas no están. No forman parte de esta búsqueda.</p>
+		<label className="field">
+		Rugosidad LOLA (m)
+		<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
+		</label>
+		</>
+		) : (
+		<>
 		<label className="field">
 		Pendiente (°)
-		<input value={slope} onChange={(event) => setSlope(event.target.value)} inputMode="decimal" />
+		<input value={slope} onChange={(event) => editField(setSlope)(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
 		Rugosidad (m)
-		<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
+		<input value={roughness} onChange={(event) => editField(setRoughness)(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
 		Temperatura nocturna (°C)
-		<input value={tmin} onChange={(event) => setTmin(event.target.value)} inputMode="decimal" />
+		<input value={tmin} onChange={(event) => editField(setTmin)(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
 		Hielo (m)
-		<input value={ice} onChange={(event) => setIce(event.target.value)} inputMode="decimal" />
+		<input value={ice} onChange={(event) => editField(setIce)(event.target.value)} inputMode="decimal" />
 		</label>
 		<label className="field">
 		Roca
-		<select value={rock} onChange={(event) => setRock(event.target.value)}>
+		<select value={rock} onChange={(event) => editField(setRock)(event.target.value)}>
 		{ROCKS.map(([code, label]) => (
 			<option key={code} value={code}>{label}</option>
 		))}
 		</select>
 		</label>
+		</>
+		)}
 		<label className="field">
 		Precisión {precision.toFixed(2)}
 		<input
@@ -200,18 +336,23 @@ function App() {
 		<span>más precisos</span>
 		</span>
 		</label>
-		<button type="button" onClick={search} disabled={busy}>
+		<button type="button" onClick={() => void search()} disabled={busy}>
 		{busy ? 'Buscando…' : 'Buscar análogos'}
 		</button>
+		{roughnessOnly && (
+		<button type="button" onClick={leaveLunarQuery}>
+		Buscar con otros datos
+		</button>
+		)}
 		<p className="muted">{summary}</p>
 		<div className="result-list">
-		{points.slice(0, 6).map((point) => (
+		{listPreview(points).map((point) => (
 			<button
 			key={`${point.lat},${point.lon}`}
 			type="button"
 			onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
 			>
-			{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
+			{(point.closeness * 100).toFixed(0)}% · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {point.rock}
 			</button>
 		))}
 		</div>
@@ -284,6 +425,8 @@ function App() {
 		/>
 		<PointPanel place={selection} onClose={() => setSelection(null)} />
 		</section>
+		</>
+		)}
 
 		</div>
 		</main>

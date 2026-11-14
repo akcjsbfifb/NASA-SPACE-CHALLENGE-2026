@@ -8,12 +8,18 @@ from __future__ import annotations
 import json
 import math
 import os
+import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
 from similarity import EarthIndex, write_shortlist
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "NASA-Lunar-Studies" / "src"))
+from lunar_data.lola import LolaRaster
+from lunar_data.metadata import MetadataError, load_metadata
 
 INDEX = EarthIndex()
 print(f"earth grid ready: {INDEX.lat.size:,} cells", flush=True)
@@ -43,6 +49,44 @@ print(
 )
 
 
+class MoonSampler:
+    """LOLA elevation and roughness for any lunar coordinate. Other variables stay absent."""
+
+    def __init__(self) -> None:
+        self.error = ""
+        self.elevation: LolaRaster | None = None
+        self.roughness: LolaRaster | None = None
+        root = ROOT / "NASA-Lunar-Studies" / "data" / "raw" / "lola"
+        try:
+            self.elevation = LolaRaster(load_metadata(root / "ldem" / "ldem_16_float.xml")).__enter__()
+            self.roughness = LolaRaster(load_metadata(root / "ldrm" / "ldrm_32_50_float.xml")).__enter__()
+        except (OSError, MetadataError, ValueError) as error:
+            self.error = str(error)
+
+    def sample(self, lat: float, lon: float) -> dict:
+        if self.error or self.elevation is None or self.roughness is None:
+            raise RuntimeError(self.error or "mapas LOLA no cargados")
+        elevation = self.elevation.sample(lat, lon)
+        roughness = self.roughness.sample(lat, lon)
+        return {
+            "lat": lat,
+            "lon": lon,
+            "elevation_m": elevation["value"] if elevation.get("available") else None,
+            "roughness_m": roughness["value"] if roughness.get("available") else None,
+            "elevation_status": elevation.get("status"),
+            "roughness_status": roughness.get("status"),
+            "compared": ["roughness"] if roughness.get("available") else [],
+            "unavailable": ["slope", "tmin", "ice", "rock"],
+        }
+
+
+MOON = MoonSampler()
+print(
+    "lola ready" if not MOON.error else f"lola unavailable: {MOON.error}",
+    flush=True,
+)
+
+
 def scene_bbox(lat: float, lon: float, half_m: float = 400.0) -> tuple[float, float, float, float]:
     dlat = half_m / 111_320
     dlon = half_m / max(111_320 * math.cos(math.radians(lat)), 50)
@@ -59,16 +103,19 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/scene":
             self._scene(query)
             return
+        if parsed.path == "/moon":
+            self._moon(query)
+            return
         if parsed.path != "/search":
             self._send(404, {"error": "not found"})
             return
         try:
             result = INDEX.search(
-                slope=float(query["slope"][0]),
-                roughness=float(query["roughness"][0]),
-                tmin=float(query["tmin"][0]),
-                ice=float(query["ice"][0]),
-                rock=query["rock"][0],
+                slope=self._optional_float(query, "slope"),
+                roughness=self._optional_float(query, "roughness"),
+                tmin=self._optional_float(query, "tmin"),
+                ice=self._optional_float(query, "ice"),
+                rock=query["rock"][0] if query.get("rock") and query["rock"][0] else None,
                 precision=float(query.get("precision", ["0.7"])[0]),
             )
         except (KeyError, ValueError) as error:
@@ -85,6 +132,24 @@ class Handler(BaseHTTPRequestHandler):
 
     def _coordinates(self, query: dict[str, list[str]]) -> tuple[float, float]:
         return float(query["lat"][0]), float(query["lon"][0])
+
+    def _optional_float(self, query: dict[str, list[str]], name: str) -> float | None:
+        values = query.get(name)
+        if not values or values[0] == "":
+            return None
+        return float(values[0])
+
+    def _moon(self, query: dict[str, list[str]]) -> None:
+        try:
+            lat, lon = self._coordinates(query)
+            sample = MOON.sample(lat, lon)
+        except (KeyError, ValueError) as error:
+            self._send(400, {"error": str(error)})
+            return
+        except Exception as error:
+            self._send(503, {"error": str(error)})
+            return
+        self._send(200, sample)
 
     def _cell(self, query: dict[str, list[str]]) -> None:
         try:

@@ -281,6 +281,7 @@ function InteractiveGlobe(
 		backgroundColor={earth.backgroundColor}
 		atmosphereColor={earth.atmosphereColor}
 		atmosphereAltitude={earth.atmosphereAltitude}
+		showAtmosphere={earth.showAtmosphere ?? true}
 
 		pointsData={allPoints}
 		pointLat="lat"

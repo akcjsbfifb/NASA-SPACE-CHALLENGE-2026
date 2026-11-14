@@ -162,52 +162,114 @@ class EarthIndex:
             "rock": self.labels.get(int(self.rock[index]), "?"),
         }
 
-    def search(
+    def _shortlist(
         self,
-        *,
-        slope: float,
-        roughness: float,
-        tmin: float,
-        ice: float,
-        rock: str,
-        precision: float,
-    ) -> dict:
-        precision = float(np.clip(precision, 0.0, 1.0))
-        codes = rock_names()
-        if rock not in codes:
-            raise ValueError(f"unknown rock {rock}")
-        rock_code = codes[rock]
-        min_closeness = 0.55 + 0.35 * precision
-        limit = int(round(40 + (1.0 - precision) * 460))
+        closeness: np.ndarray,
+        min_closeness: float,
+        limit: int,
+        step: float,
+    ) -> list[int]:
+        """One land cell per map step, best scores first.
 
-        slope_s = np.exp(-np.abs(self.slope - slope) / 8.0)
-        rough_s = np.exp(-np.abs(self.roughness - roughness) / 50.0)
-        temp_s, temp_mode = self._temperature(tmin)
-        ice_s = np.exp(-np.abs(np.log1p(self.ice) - np.log1p(ice)) / 1.2)
-        same = self.rock == rock_code
-        related = self.group_ids[self.rock] == self.group_ids[rock_code]
-        rock_s = np.where(same, 1.0, np.where(related, 0.45, 0.0)).astype(np.float32)
+        When the best cells share one score, a second pass caps how many
+        results can sit in the same 0.02 band and reads a wider pool. That
+        keeps a 0.3 m roughness search from returning a list that is 100%
+        all the way down.
+        """
+        chosen = self._take(closeness, min_closeness, limit, step, pool=250_000, per_band=None)
+        if len(chosen) < 2:
+            return chosen
+        spread = float(closeness[chosen[0]] - closeness[chosen[-1]])
+        if spread >= 0.01 or len(chosen) < limit:
+            return chosen
+        per_band = max(3, limit // 8)
+        return self._take(closeness, min_closeness, limit, step, pool=2_000_000, per_band=per_band)
 
-        closeness = ((slope_s + rough_s + temp_s + ice_s + rock_s) / 5.0).astype(np.float32)
-        # Keep one place per map cell. Strict searches use small cells inside
-        # the best matches. Loose searches use large cells, so the shortlist
-        # reaches other regions instead of hundreds of neighboring pixels.
-        step = 0.4 + (1.0 - precision) * 2.2
-        pool = min(250_000, closeness.size - 1)
+    def _take(
+        self,
+        closeness: np.ndarray,
+        min_closeness: float,
+        limit: int,
+        step: float,
+        pool: int,
+        per_band: int | None,
+    ) -> list[int]:
+        pool = min(pool, int(closeness.size) - 1)
         picked = np.argpartition(closeness, -pool)[-pool:]
         picked = picked[np.argsort(-closeness[picked])]
         seen: set[tuple[int, int]] = set()
-        chosen_list: list[int] = []
+        band_counts: dict[int, int] = {}
+        chosen: list[int] = []
         for index in picked:
-            if float(closeness[index]) < min_closeness:
+            score = float(closeness[index])
+            if score < min_closeness:
                 break
+            band = int(score / 0.02)
+            if per_band is not None and band_counts.get(band, 0) >= per_band:
+                continue
             cell = (int(self.lat[index] // step), int(self.lon[index] // step))
             if cell in seen:
                 continue
             seen.add(cell)
-            chosen_list.append(int(index))
-            if len(chosen_list) == limit:
+            if per_band is not None:
+                band_counts[band] = band_counts.get(band, 0) + 1
+            chosen.append(int(index))
+            if len(chosen) == limit:
                 break
+        return chosen
+
+    def search(
+        self,
+        *,
+        slope: float | None = None,
+        roughness: float | None = None,
+        tmin: float | None = None,
+        ice: float | None = None,
+        rock: str | None = None,
+        precision: float = 0.7,
+    ) -> dict:
+        precision = float(np.clip(precision, 0.0, 1.0))
+        min_closeness = 0.55 + 0.35 * precision
+        limit = int(round(40 + (1.0 - precision) * 460))
+
+        parts: list[np.ndarray] = []
+        slope_s = rough_s = temp_s = ice_s = rock_s = None
+        temp_mode = "not_used"
+        if slope is not None:
+            slope_s = np.exp(-np.abs(self.slope - slope) / 8.0)
+            parts.append(slope_s)
+        if roughness is not None:
+            # A fixed 50 m scale scores 0.3 m and tens of meters almost the same.
+            # Scale with the target: 30 m keeps the old 50 m tolerance, while
+            # 0.3 m uses 0.5 m. Then 0.1 m off is about 82%, 1 m off is about 14%,
+            # and 10 m off is about 0.
+            rough_scale = max(0.25, abs(roughness) * (50.0 / 30.0))
+            rough_s = np.exp(-np.abs(self.roughness - roughness) / rough_scale)
+            parts.append(rough_s)
+        if tmin is not None:
+            temp_s, temp_mode = self._temperature(tmin)
+            parts.append(temp_s)
+        if ice is not None:
+            ice_s = np.exp(-np.abs(np.log1p(self.ice) - np.log1p(ice)) / 1.2)
+            parts.append(ice_s)
+        if rock is not None:
+            codes = rock_names()
+            if rock not in codes:
+                raise ValueError(f"unknown rock {rock}")
+            rock_code = codes[rock]
+            same = self.rock == rock_code
+            related = self.group_ids[self.rock] == self.group_ids[rock_code]
+            rock_s = np.where(same, 1.0, np.where(related, 0.45, 0.0)).astype(np.float32)
+            parts.append(rock_s)
+        if not parts:
+            raise ValueError("falta al menos una medición")
+
+        closeness = (sum(parts) / len(parts)).astype(np.float32)
+        # Keep one place per map cell. Strict searches use small cells inside
+        # the best matches. Loose searches use large cells, so the shortlist
+        # reaches other regions instead of hundreds of neighboring pixels.
+        step = 0.4 + (1.0 - precision) * 2.2
+        chosen_list = self._shortlist(closeness, min_closeness, limit, step)
         chosen = np.asarray(chosen_list, dtype=np.int64)
 
         points = []
@@ -223,14 +285,29 @@ class EarthIndex:
                     "ice_thickness_m": round(float(self.ice[index]), 0),
                     "rock": self.labels.get(int(self.rock[index]), "?"),
                     "scores": {
-                        "slope": round(float(slope_s[index]), 3),
-                        "roughness": round(float(rough_s[index]), 3),
-                        "temperature": round(float(temp_s[index]), 3),
-                        "ice": round(float(ice_s[index]), 3),
-                        "rock": round(float(rock_s[index]), 3),
+                        name: round(float(series[index]), 3)
+                        for name, series in (
+                            ("slope", slope_s),
+                            ("roughness", rough_s),
+                            ("temperature", temp_s),
+                            ("ice", ice_s),
+                            ("rock", rock_s),
+                        )
+                        if series is not None
                     },
                 }
             )
+        used = [
+            name
+            for name, series in (
+                ("slope", slope_s),
+                ("roughness", rough_s),
+                ("temperature", temp_s),
+                ("ice", ice_s),
+                ("rock", rock_s),
+            )
+            if series is not None
+        ]
 
         return {
             "target": {
@@ -240,6 +317,7 @@ class EarthIndex:
                 "ice_thickness_m": ice,
                 "rock": rock,
             },
+            "variables": used,
             "precision": round(precision, 3),
             "min_closeness": round(min_closeness, 3),
             "limit": limit,

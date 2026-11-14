@@ -30,6 +30,28 @@
   color: #71839b;
 }
 
+.page-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.page-nav button {
+  background: transparent;
+  color: #8193aa;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 6px 12px;
+  letter-spacing: 1px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.page-nav button[aria-current='page'] {
+  color: #e5eaf3;
+  border-color: #1c293c;
+  background: #050914;
+}
+
 .workspace {
   flex: 1;
   min-height: 0;
@@ -46,7 +68,8 @@
   overflow: auto;
 }
 
-.sidebar h3 {
+.sidebar h3,
+.sidebar h4 {
   font-size: 12px;
   letter-spacing: 2px;
 }
@@ -254,6 +277,11 @@
   margin: 0;
   text-align: left;
   cursor: pointer;
+}
+
+.result-list button.active {
+  border-color: #7dffe1;
+  color: #7dffe1;
 }
 
 .globe-overlay {
