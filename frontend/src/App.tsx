@@ -267,8 +267,7 @@ function App() {
 			</label>
 
 		</section>
- */}
-		<hr/>
+ */}	
 
 		<section className="sidebar-section">
 			<h4>{copy.selectedPoint}</h4>

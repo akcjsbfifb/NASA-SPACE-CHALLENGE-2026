@@ -15,11 +15,20 @@ const RADIUS = 80;
 const DEAD_ZONE = 44;
 const SWEEP = 320;
 const START = 110;
-const STEP = 5;
+const STEP = 1;
 const TRAIL_SEGMENTS = 8;
 
 function clamp(value: number, min: number, max: number) {
 	return Math.min(max, Math.max(min, value));
+}
+
+function mixColor(from: string, to: string, amount: number) {
+	const channels = [1, 3, 5].map((index) => {
+		const start = Number.parseInt(from.slice(index, index + 2), 16);
+		const end = Number.parseInt(to.slice(index, index + 2), 16);
+		return Math.round(start + (end - start) * amount).toString(16).padStart(2, '0');
+	});
+	return `#${channels.join('')}`;
 }
 
 function pointAt(degrees: number): [number, number] {
@@ -140,17 +149,36 @@ export default function PrecisionDial({ value, label, unit = '%', onChange }: Pr
 			onKeyDown={handleKeyDown}
 		>
 			<path className="precision-dial__track" d={arcPath(START, START + SWEEP)} />
-			<path className="precision-dial__value-arc" d={progress > 0 ? arcPath(START, angle) : ''} />
+			<path
+				className="precision-dial__value-arc"
+				d={progress > 0 ? arcPath(START, angle) : ''}
+				style={{
+					opacity: progress,
+					filter: `drop-shadow(0 0 ${progress * 8}px #7dffe1)`,
+				}}
+			/>
 			<g className="precision-dial__comet">
 				{trails.map((trail, index) => (
 					<path
 						key={index}
 						d={trail.visible ? trail.path : ''}
-						style={{ opacity: dragging && trail.visible ? trail.opacity * 0.8 : 0 }}
+						style={{
+							opacity: dragging && trail.visible ? trail.opacity * (0.2 + progress * 0.8) : 0,
+						}}
 					/>
 				))}
 			</g>
-			<circle className="precision-dial__head" cx={headX} cy={headY} r="9" />
+			<circle
+				className="precision-dial__head"
+				cx={headX}
+				cy={headY}
+				r="9"
+				style={{
+					fill: mixColor('#71839b', '#7dffe1', progress),
+					opacity: 0.35 + progress * 0.65,
+					filter: `drop-shadow(0 0 ${progress * 8}px #7dffe1)`,
+				}}
+			/>
 			<text className="precision-dial__readout" x={CENTER} y={CENTER + 7} textAnchor="middle">
 				{value}{unit}
 			</text>
