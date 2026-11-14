@@ -1,0 +1,11 @@
+{
+  "grid": "ETOPO 2022 v1, 60 arc-second, land and ice sheets",
+  "slope_deg": "gradient of surface elevation, degrees, ~1.8 km baseline",
+  "roughness_m": "RMS elevation difference to the 8 neighbors, meters, ~5.5 km window",
+  "tmin_coldest_month_c": "WorldClim 2.1 10 arc-minute coldest-month mean daily minimum air temperature, degrees C. Null where WorldClim has no land value (Antarctica).",
+  "ice_thickness_m": "ETOPO surface minus bedrock where thicker than 50 m. Proxy for ground ice, not neutron-derived soil hydrogen. 0 means no ice sheet.",
+  "lithology_code": "GLiM v1 0.5 degree class (Hartmann & Moosdorf 2012). 0 = ocean or no data.",
+  "lithology": "{\"1\": \"su\", \"2\": \"vb\", \"3\": \"ss\", \"4\": \"pb\", \"5\": \"sm\", \"6\": \"sc\", \"7\": \"va\", \"8\": \"mt\", \"9\": \"pa\", \"10\": \"vi\", \"11\": \"wb\", \"12\": \"py\", \"13\": \"pi\", \"14\": \"ev\", \"15\": \"nd\", \"16\": \"ig\"}",
+  "lithology_name": "{\"su\": \"unconsolidated sediment\", \"vb\": \"basic volcanic (basalt)\", \"ss\": \"siliciclastic sedimentary\", \"pb\": \"basic plutonic\", \"sm\": \"mixed sedimentary\", \"sc\": \"carbonate sedimentary\", \"va\": \"acid volcanic\", \"mt\": \"metamorphic\", \"pa\": \"acid plutonic\", \"vi\": \"intermediate volcanic\", \"wb\": \"water\", \"py\": \"pyroclastic\", \"pi\": \"intermediate plutonic\", \"ev\": \"evaporite\", \"nd\": \"no data\", \"ig\": \"ice and glaciers\"}",
+  "rows": 82710267
+}
