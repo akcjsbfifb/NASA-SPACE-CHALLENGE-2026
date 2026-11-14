@@ -1,0 +1,16 @@
+[
+  {
+    "id": "equatorial_test_only",
+    "name": "Ejemplo ecuatorial de prueba; no es un sitio de misión seleccionado",
+    "is_example": true,
+    "latitude_deg": 0.0,
+    "longitude_deg": 0.0
+  },
+  {
+    "id": "southern_high_latitude_test_only",
+    "name": "Ejemplo de latitud austral alta; no identifica Shackleton ni un sitio de aterrizaje",
+    "is_example": true,
+    "latitude_deg": -85.0,
+    "longitude_deg": -10.0
+  }
+]

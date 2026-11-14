@@ -1,0 +1,38 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Earth and Moon rasters, and the built land grid
+data/raw/
+data/**/*.parquet
+
+# Local notes
+docs/
+
+# Frontend build output if it lands at the repo root
+node_modules/
+dist/
+*.local
+.env
+
+.DS_Store
+
+# Additional local Python, output, and environment exclusions
+*.egg-info/
+data/processed/
+output/
+.env.*
+!.env.example
+
+# Lunar inputs and derived data (the module is nested below the repo root)
+/NASA-Lunar-Studies/data/raw/
+/NASA-Lunar-Studies/data/processed/
+
+# Publish only the lunar methodology and variable registry documentation.
+# The planning PDF and other local notes remain ignored and on disk.
+!/NASA-Lunar-Studies/docs/
+/NASA-Lunar-Studies/docs/*
+!/NASA-Lunar-Studies/docs/lola_methodology.md
+!/NASA-Lunar-Studies/docs/variables.md

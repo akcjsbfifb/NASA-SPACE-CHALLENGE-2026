@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moonstudies-lunar-data"
+version = "0.1.0"
+description = "Extracción puntual reproducible de LOLA LDEM y LDRM"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2.0,<3", "pvl>=1.3.2,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+lunar-data = "lunar_data.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["local_data: comprobaciones con los IMG originales, si están disponibles"]
