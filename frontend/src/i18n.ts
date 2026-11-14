@@ -53,7 +53,7 @@ const translations = {
 		language: 'Idioma',
 		pageTitle: 'ORBITAL',
 		objective: 'Objetivo',
-		objectiveDescription: 'Cinco números del sitio lunar. La cercanía es el promedio de los cinco.',
+		objectiveDescription: 'Ingresar los valores de las 5 medidas del sitio lunar. La cercanía es el promedio de las cinco.',
 		slope: 'Pendiente',
 		roughness: 'Rugosidad',
 		nightTemperature: 'Temperatura nocturna',
