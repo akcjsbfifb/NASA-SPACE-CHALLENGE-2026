@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Earth and Moon rasters, and the built land grid
+data/raw/
+data/**/*.parquet
+
+# Local notes
+docs/
+
+# Frontend build output if it lands at the repo root
+node_modules/
+dist/
+*.local
+
+.DS_Store

@@ -96,16 +96,13 @@ function InteractiveGlobe(
 	}, []);
 
 	useEffect(() => {
-		const globe = globeRef.current;
-
-		if (!globe) return;
-
-		globe.pointOfView(initialView.current, 0);
-	});
+		globeRef.current?.pointOfView(currentViewRef.current, 0);
+	}, []);
 
 	const flyTo = (nextView: GlobeView, transitionDuration = 1000) => {
 		currentViewRef.current = nextView;
 		setView(nextView);
+		setHighResolution(nextView.altitude < HIGH_RESOLUTION_ALTITUDE);
 
 		globeRef.current?.pointOfView(nextView, transitionDuration);
 	};

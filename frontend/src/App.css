@@ -37,12 +37,13 @@
 }
 
 .sidebar {
-  width: 240px;
+  width: 300px;
   flex-shrink: 0;
-  padding: 24px;
+  padding: 20px 24px 32px;
   background: #080f1c;
   border-right: 1px solid #1c293c;
   z-index: 2;
+  overflow: auto;
 }
 
 .sidebar h3 {
@@ -76,6 +77,50 @@
 
 .muted {
   color: #71839b;
+}
+
+.sidebar-section label.field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: #8193aa;
+}
+
+.field input,
+.field select,
+.sidebar button {
+  background: #050914;
+  color: #e5eaf3;
+  border: 1px solid #1c293c;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.sidebar button:disabled {
+  cursor: wait;
+  color: #71839b;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+}
+
+.globe-host {
+  width: 100%;
+  height: 100%;
 }
 
 .globe-container {

@@ -1,0 +1,6954 @@
+{
+  "target": {
+    "slope_deg": 8.0,
+    "roughness_m": 30.0,
+    "tmin_c": -20.0,
+    "ice_thickness_m": 0.0,
+    "rock": "vb"
+  },
+  "precision": 0.2,
+  "min_closeness": 0.62,
+  "limit": 408,
+  "returned": 408,
+  "closest": 0.9709,
+  "loosest": 0.7673,
+  "temperature_mode": "absolute",
+  "points": [
+    {
+      "lat": 78.7583,
+      "lon": 20.8917,
+      "closeness": 0.9709,
+      "slope_deg": 7.93,
+      "roughness_m": 34.5,
+      "tmin_c": -19.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.991,
+        "roughness": 0.915,
+        "temperature": 0.949,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 81.875,
+      "lon": -26.5083,
+      "closeness": 0.9559,
+      "slope_deg": 6.68,
+      "roughness_m": 26.6,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.848,
+        "roughness": 0.935,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 80.8917,
+      "lon": -23.9583,
+      "closeness": 0.9433,
+      "slope_deg": 6.43,
+      "roughness_m": 24.5,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.822,
+        "roughness": 0.895,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 79.5083,
+      "lon": 18.5917,
+      "closeness": 0.9393,
+      "slope_deg": 6.85,
+      "roughness_m": 37.1,
+      "tmin_c": -20.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.866,
+        "roughness": 0.868,
+        "temperature": 0.963,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 79.9917,
+      "lon": 18.775,
+      "closeness": 0.9304,
+      "slope_deg": 5.25,
+      "roughness_m": 30.1,
+      "tmin_c": -20.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.709,
+        "roughness": 0.999,
+        "temperature": 0.944,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.5417,
+      "lon": -25.9083,
+      "closeness": 0.9195,
+      "slope_deg": 4.96,
+      "roughness_m": 33.7,
+      "tmin_c": -19.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.684,
+        "roughness": 0.928,
+        "temperature": 0.986,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.5417,
+      "lon": -26.1917,
+      "closeness": 0.9111,
+      "slope_deg": 7.34,
+      "roughness_m": 50.3,
+      "tmin_c": -19.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.921,
+        "roughness": 0.666,
+        "temperature": 0.969,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.725,
+      "lon": 25.4917,
+      "closeness": 0.9039,
+      "slope_deg": 3.63,
+      "roughness_m": 31.5,
+      "tmin_c": -19.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.579,
+        "roughness": 0.971,
+        "temperature": 0.97,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.6917,
+      "lon": 23.3917,
+      "closeness": 0.9025,
+      "slope_deg": 2.94,
+      "roughness_m": 29.5,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.532,
+        "roughness": 0.989,
+        "temperature": 0.992,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.8417,
+      "lon": -163.5917,
+      "closeness": 0.9013,
+      "slope_deg": 3.45,
+      "roughness_m": 32.7,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.566,
+        "roughness": 0.947,
+        "temperature": 0.993,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -69.8583,
+      "lon": -70.775,
+      "closeness": 0.9,
+      "slope_deg": 3.72,
+      "roughness_m": 33.2,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.586,
+        "roughness": 0.938,
+        "temperature": 0.976,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.5583,
+      "lon": 152.675,
+      "closeness": 0.8994,
+      "slope_deg": 3.11,
+      "roughness_m": 32.1,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.543,
+        "roughness": 0.959,
+        "temperature": 0.995,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 74.275,
+      "lon": -19.825,
+      "closeness": 0.8973,
+      "slope_deg": 6.98,
+      "roughness_m": 42.0,
+      "tmin_c": -22.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.881,
+        "roughness": 0.786,
+        "temperature": 0.82,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.4083,
+      "lon": 27.3417,
+      "closeness": 0.8968,
+      "slope_deg": 3.98,
+      "roughness_m": 31.1,
+      "tmin_c": -18.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.605,
+        "roughness": 0.978,
+        "temperature": 0.901,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.475,
+      "lon": -31.2417,
+      "closeness": 0.8966,
+      "slope_deg": 4.96,
+      "roughness_m": 39.2,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.684,
+        "roughness": 0.831,
+        "temperature": 0.968,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.575,
+      "lon": -29.4083,
+      "closeness": 0.896,
+      "slope_deg": 7.34,
+      "roughness_m": 56.5,
+      "tmin_c": -19.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.921,
+        "roughness": 0.588,
+        "temperature": 0.97,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 73.6583,
+      "lon": -21.675,
+      "closeness": 0.895,
+      "slope_deg": 6.8,
+      "roughness_m": 42.8,
+      "tmin_c": -22.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.861,
+        "roughness": 0.774,
+        "temperature": 0.839,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.875,
+      "lon": -148.125,
+      "closeness": 0.8939,
+      "slope_deg": 2.19,
+      "roughness_m": 29.8,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.484,
+        "roughness": 0.996,
+        "temperature": 0.99,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.1417,
+      "lon": 169.975,
+      "closeness": 0.8938,
+      "slope_deg": 2.07,
+      "roughness_m": 30.2,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.997,
+        "temperature": 0.995,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.6583,
+      "lon": 160.7917,
+      "closeness": 0.8937,
+      "slope_deg": 2.45,
+      "roughness_m": 29.4,
+      "tmin_c": -19.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.499,
+        "roughness": 0.987,
+        "temperature": 0.982,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.925,
+      "lon": -27.5417,
+      "closeness": 0.892,
+      "slope_deg": 7.97,
+      "roughness_m": 64.8,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.996,
+        "roughness": 0.498,
+        "temperature": 0.965,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.6417,
+      "lon": -68.7417,
+      "closeness": 0.8911,
+      "slope_deg": 2.06,
+      "roughness_m": 30.2,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.476,
+        "roughness": 0.996,
+        "temperature": 0.983,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.6083,
+      "lon": -162.1583,
+      "closeness": 0.8898,
+      "slope_deg": 4.28,
+      "roughness_m": 34.1,
+      "tmin_c": -21.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.628,
+        "roughness": 0.922,
+        "temperature": 0.898,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 63.0583,
+      "lon": -161.7417,
+      "closeness": 0.8897,
+      "slope_deg": 3.25,
+      "roughness_m": 30.4,
+      "tmin_c": -18.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.553,
+        "roughness": 0.991,
+        "temperature": 0.905,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.1417,
+      "lon": -132.0917,
+      "closeness": 0.889,
+      "slope_deg": 2.74,
+      "roughness_m": 29.9,
+      "tmin_c": -19.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.518,
+        "roughness": 0.998,
+        "temperature": 0.929,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.625,
+      "lon": -148.125,
+      "closeness": 0.8887,
+      "slope_deg": 2.19,
+      "roughness_m": 30.8,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.484,
+        "roughness": 0.985,
+        "temperature": 0.975,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.375,
+      "lon": 158.8417,
+      "closeness": 0.8874,
+      "slope_deg": 1.61,
+      "roughness_m": 29.5,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.99,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 57.6083,
+      "lon": -61.675,
+      "closeness": 0.8865,
+      "slope_deg": 1.83,
+      "roughness_m": 30.1,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.462,
+        "roughness": 0.999,
+        "temperature": 0.972,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.7083,
+      "lon": -146.6583,
+      "closeness": 0.886,
+      "slope_deg": 2.39,
+      "roughness_m": 29.8,
+      "tmin_c": -20.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.496,
+        "roughness": 0.995,
+        "temperature": 0.939,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.8083,
+      "lon": 24.475,
+      "closeness": 0.8856,
+      "slope_deg": 3.65,
+      "roughness_m": 28.6,
+      "tmin_c": -18.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.58,
+        "roughness": 0.972,
+        "temperature": 0.875,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 56.675,
+      "lon": 161.5417,
+      "closeness": 0.8855,
+      "slope_deg": 2.23,
+      "roughness_m": 30.4,
+      "tmin_c": -19.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.486,
+        "roughness": 0.991,
+        "temperature": 0.95,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.1083,
+      "lon": 114.375,
+      "closeness": 0.8837,
+      "slope_deg": 1.75,
+      "roughness_m": 30.7,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.458,
+        "roughness": 0.986,
+        "temperature": 0.975,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.6083,
+      "lon": 157.1917,
+      "closeness": 0.8834,
+      "slope_deg": 1.91,
+      "roughness_m": 31.5,
+      "tmin_c": -19.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.467,
+        "roughness": 0.97,
+        "temperature": 0.98,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.5417,
+      "lon": 100.5583,
+      "closeness": 0.8833,
+      "slope_deg": 1.29,
+      "roughness_m": 30.7,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.432,
+        "roughness": 0.987,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.6083,
+      "lon": -88.6917,
+      "closeness": 0.8823,
+      "slope_deg": 2.32,
+      "roughness_m": 33.2,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.491,
+        "roughness": 0.939,
+        "temperature": 0.981,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 30.7583,
+      "lon": 80.4583,
+      "closeness": 0.8817,
+      "slope_deg": 0.93,
+      "roughness_m": 30.1,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.413,
+        "roughness": 0.998,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.9417,
+      "lon": -52.2417,
+      "closeness": 0.8817,
+      "slope_deg": 3.1,
+      "roughness_m": 29.8,
+      "tmin_c": -21.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.542,
+        "roughness": 0.996,
+        "temperature": 0.87,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.625,
+      "lon": 160.7583,
+      "closeness": 0.8816,
+      "slope_deg": 3.4,
+      "roughness_m": 31.2,
+      "tmin_c": -21.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.563,
+        "roughness": 0.976,
+        "temperature": 0.869,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.1417,
+      "lon": 76.1583,
+      "closeness": 0.8814,
+      "slope_deg": 1.81,
+      "roughness_m": 30.1,
+      "tmin_c": -19.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.461,
+        "roughness": 0.997,
+        "temperature": 0.949,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.425,
+      "lon": 112.8083,
+      "closeness": 0.8813,
+      "slope_deg": 1.84,
+      "roughness_m": 32.3,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.463,
+        "roughness": 0.956,
+        "temperature": 0.988,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.8083,
+      "lon": -87.9917,
+      "closeness": 0.8809,
+      "slope_deg": 1.88,
+      "roughness_m": 29.8,
+      "tmin_c": -19.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.465,
+        "roughness": 0.996,
+        "temperature": 0.943,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.2583,
+      "lon": 139.8417,
+      "closeness": 0.8807,
+      "slope_deg": 1.8,
+      "roughness_m": 28.4,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.461,
+        "roughness": 0.969,
+        "temperature": 0.973,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.1917,
+      "lon": -91.6083,
+      "closeness": 0.8806,
+      "slope_deg": 1.22,
+      "roughness_m": 29.3,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.429,
+        "roughness": 0.986,
+        "temperature": 0.988,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.525,
+      "lon": 157.8583,
+      "closeness": 0.8802,
+      "slope_deg": 1.78,
+      "roughness_m": 29.1,
+      "tmin_c": -20.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.46,
+        "roughness": 0.982,
+        "temperature": 0.96,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.4417,
+      "lon": -123.9583,
+      "closeness": 0.8801,
+      "slope_deg": 1.73,
+      "roughness_m": 30.1,
+      "tmin_c": -19.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.457,
+        "roughness": 0.998,
+        "temperature": 0.945,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.0417,
+      "lon": -85.475,
+      "closeness": 0.8798,
+      "slope_deg": 1.55,
+      "roughness_m": 29.3,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.447,
+        "roughness": 0.985,
+        "temperature": 0.967,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.5417,
+      "lon": 157.0417,
+      "closeness": 0.8787,
+      "slope_deg": 2.35,
+      "roughness_m": 29.2,
+      "tmin_c": -21.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.493,
+        "roughness": 0.984,
+        "temperature": 0.916,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.9083,
+      "lon": 153.425,
+      "closeness": 0.8774,
+      "slope_deg": 2.43,
+      "roughness_m": 29.8,
+      "tmin_c": -21.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.498,
+        "roughness": 0.996,
+        "temperature": 0.892,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 63.0917,
+      "lon": -162.4083,
+      "closeness": 0.8772,
+      "slope_deg": 3.07,
+      "roughness_m": 33.1,
+      "tmin_c": -18.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.54,
+        "roughness": 0.94,
+        "temperature": 0.906,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.0583,
+      "lon": 114.4917,
+      "closeness": 0.877,
+      "slope_deg": 1.01,
+      "roughness_m": 30.4,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.418,
+        "roughness": 0.992,
+        "temperature": 0.975,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.1083,
+      "lon": 164.2583,
+      "closeness": 0.8769,
+      "slope_deg": 3.73,
+      "roughness_m": 39.1,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.586,
+        "roughness": 0.833,
+        "temperature": 0.965,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -71.525,
+      "lon": -74.4583,
+      "closeness": 0.8768,
+      "slope_deg": 2.73,
+      "roughness_m": 31.3,
+      "tmin_c": -18.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.518,
+        "roughness": 0.975,
+        "temperature": 0.891,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.8083,
+      "lon": -90.8083,
+      "closeness": 0.8767,
+      "slope_deg": 0.94,
+      "roughness_m": 29.1,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.414,
+        "roughness": 0.981,
+        "temperature": 0.988,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.025,
+      "lon": 20.425,
+      "closeness": 0.8754,
+      "slope_deg": 3.89,
+      "roughness_m": 29.6,
+      "tmin_c": -17.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.598,
+        "roughness": 0.992,
+        "temperature": 0.787,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.1917,
+      "lon": 100.6417,
+      "closeness": 0.8752,
+      "slope_deg": 1.29,
+      "roughness_m": 31.3,
+      "tmin_c": -19.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.432,
+        "roughness": 0.974,
+        "temperature": 0.971,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.8417,
+      "lon": -23.2417,
+      "closeness": 0.8748,
+      "slope_deg": 4.21,
+      "roughness_m": 32.9,
+      "tmin_c": -17.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.622,
+        "roughness": 0.943,
+        "temperature": 0.808,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.0583,
+      "lon": -161.7583,
+      "closeness": 0.8744,
+      "slope_deg": 3.95,
+      "roughness_m": 32.5,
+      "tmin_c": -22.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.603,
+        "roughness": 0.952,
+        "temperature": 0.817,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.1417,
+      "lon": 164.125,
+      "closeness": 0.8734,
+      "slope_deg": 5.96,
+      "roughness_m": 54.0,
+      "tmin_c": -20.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.775,
+        "roughness": 0.619,
+        "temperature": 0.972,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.6583,
+      "lon": 117.8917,
+      "closeness": 0.8733,
+      "slope_deg": 2.2,
+      "roughness_m": 31.1,
+      "tmin_c": -21.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.484,
+        "roughness": 0.978,
+        "temperature": 0.904,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.125,
+      "lon": 22.9583,
+      "closeness": 0.8708,
+      "slope_deg": 2.18,
+      "roughness_m": 30.5,
+      "tmin_c": -18.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.483,
+        "roughness": 0.991,
+        "temperature": 0.88,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 81.1917,
+      "lon": -23.5083,
+      "closeness": 0.8705,
+      "slope_deg": 7.12,
+      "roughness_m": 36.1,
+      "tmin_c": -26.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.895,
+        "roughness": 0.886,
+        "temperature": 0.571,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 39.7583,
+      "lon": 73.9917,
+      "closeness": 0.8703,
+      "slope_deg": 1.61,
+      "roughness_m": 34.6,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.912,
+        "temperature": 0.989,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.8583,
+      "lon": -159.0583,
+      "closeness": 0.8693,
+      "slope_deg": 1.73,
+      "roughness_m": 29.8,
+      "tmin_c": -18.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.457,
+        "roughness": 0.996,
+        "temperature": 0.893,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.2083,
+      "lon": -54.8417,
+      "closeness": 0.8688,
+      "slope_deg": 2.07,
+      "roughness_m": 29.4,
+      "tmin_c": -21.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.476,
+        "roughness": 0.989,
+        "temperature": 0.879,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.4083,
+      "lon": -161.0083,
+      "closeness": 0.8685,
+      "slope_deg": 2.88,
+      "roughness_m": 30.4,
+      "tmin_c": -22.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.527,
+        "roughness": 0.992,
+        "temperature": 0.824,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 66.475,
+      "lon": 22.725,
+      "closeness": 0.8684,
+      "slope_deg": 3.71,
+      "roughness_m": 31.5,
+      "tmin_c": -17.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.585,
+        "roughness": 0.97,
+        "temperature": 0.787,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.4583,
+      "lon": -125.5583,
+      "closeness": 0.8683,
+      "slope_deg": 7.58,
+      "roughness_m": 48.1,
+      "tmin_c": -24.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.949,
+        "roughness": 0.696,
+        "temperature": 0.697,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.125,
+      "lon": -157.075,
+      "closeness": 0.8679,
+      "slope_deg": 3.2,
+      "roughness_m": 30.0,
+      "tmin_c": -22.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.549,
+        "roughness": 1.0,
+        "temperature": 0.79,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.325,
+      "lon": -143.3083,
+      "closeness": 0.8665,
+      "slope_deg": 1.2,
+      "roughness_m": 28.9,
+      "tmin_c": -20.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.427,
+        "roughness": 0.978,
+        "temperature": 0.926,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.6583,
+      "lon": 128.1083,
+      "closeness": 0.8659,
+      "slope_deg": 1.0,
+      "roughness_m": 32.4,
+      "tmin_c": -20.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.417,
+        "roughness": 0.954,
+        "temperature": 0.959,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -67.5583,
+      "lon": 164.9417,
+      "closeness": 0.8658,
+      "slope_deg": 2.74,
+      "roughness_m": 35.7,
+      "tmin_c": -19.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.518,
+        "roughness": 0.893,
+        "temperature": 0.918,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.875,
+      "lon": -84.1417,
+      "closeness": 0.8658,
+      "slope_deg": 2.0,
+      "roughness_m": 28.5,
+      "tmin_c": -18.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.473,
+        "roughness": 0.97,
+        "temperature": 0.886,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.0917,
+      "lon": -129.7083,
+      "closeness": 0.8655,
+      "slope_deg": 1.31,
+      "roughness_m": 34.5,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.433,
+        "roughness": 0.915,
+        "temperature": 0.98,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.4583,
+      "lon": -71.025,
+      "closeness": 0.8643,
+      "slope_deg": 2.1,
+      "roughness_m": 30.5,
+      "tmin_c": -18.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.479,
+        "roughness": 0.991,
+        "temperature": 0.852,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.4083,
+      "lon": 104.1583,
+      "closeness": 0.8638,
+      "slope_deg": 1.07,
+      "roughness_m": 30.1,
+      "tmin_c": -21.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.42,
+        "roughness": 0.998,
+        "temperature": 0.901,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.0917,
+      "lon": -61.175,
+      "closeness": 0.8637,
+      "slope_deg": 1.5,
+      "roughness_m": 29.9,
+      "tmin_c": -21.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.444,
+        "roughness": 0.998,
+        "temperature": 0.877,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 71.625,
+      "lon": -55.6583,
+      "closeness": 0.8634,
+      "slope_deg": 7.99,
+      "roughness_m": 55.5,
+      "tmin_c": -24.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.999,
+        "roughness": 0.6,
+        "temperature": 0.718,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 57.2917,
+      "lon": 159.6583,
+      "closeness": 0.8628,
+      "slope_deg": 2.19,
+      "roughness_m": 30.5,
+      "tmin_c": -22.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.484,
+        "roughness": 0.99,
+        "temperature": 0.84,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.3083,
+      "lon": 140.4417,
+      "closeness": 0.8622,
+      "slope_deg": 1.77,
+      "roughness_m": 28.7,
+      "tmin_c": -21.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.459,
+        "roughness": 0.974,
+        "temperature": 0.878,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.6083,
+      "lon": -146.025,
+      "closeness": 0.8616,
+      "slope_deg": 2.92,
+      "roughness_m": 36.6,
+      "tmin_c": -21.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.53,
+        "roughness": 0.877,
+        "temperature": 0.901,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.2583,
+      "lon": -71.475,
+      "closeness": 0.8615,
+      "slope_deg": 2.05,
+      "roughness_m": 29.7,
+      "tmin_c": -17.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.995,
+        "temperature": 0.837,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.9917,
+      "lon": 128.8583,
+      "closeness": 0.8605,
+      "slope_deg": 1.4,
+      "roughness_m": 29.7,
+      "tmin_c": -21.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.438,
+        "roughness": 0.994,
+        "temperature": 0.871,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.725,
+      "lon": 121.5917,
+      "closeness": 0.8598,
+      "slope_deg": 1.38,
+      "roughness_m": 29.8,
+      "tmin_c": -18.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.437,
+        "roughness": 0.997,
+        "temperature": 0.865,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.0917,
+      "lon": -141.9583,
+      "closeness": 0.8575,
+      "slope_deg": 2.25,
+      "roughness_m": 27.6,
+      "tmin_c": -22.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.487,
+        "roughness": 0.953,
+        "temperature": 0.847,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.525,
+      "lon": -82.7083,
+      "closeness": 0.857,
+      "slope_deg": 1.18,
+      "roughness_m": 30.2,
+      "tmin_c": -21.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.426,
+        "roughness": 0.995,
+        "temperature": 0.863,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -66.8917,
+      "lon": 163.3083,
+      "closeness": 0.8559,
+      "slope_deg": 3.13,
+      "roughness_m": 31.6,
+      "tmin_c": -16.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.544,
+        "roughness": 0.969,
+        "temperature": 0.766,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -74.625,
+      "lon": 165.025,
+      "closeness": 0.8548,
+      "slope_deg": 8.14,
+      "roughness_m": 48.9,
+      "tmin_c": -26.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.983,
+        "roughness": 0.685,
+        "temperature": 0.606,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -64.4917,
+      "lon": -57.925,
+      "closeness": 0.8541,
+      "slope_deg": 1.28,
+      "roughness_m": 29.7,
+      "tmin_c": -18.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.432,
+        "roughness": 0.995,
+        "temperature": 0.844,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.575,
+      "lon": -153.3083,
+      "closeness": 0.8534,
+      "slope_deg": 4.22,
+      "roughness_m": 32.3,
+      "tmin_c": -24.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.623,
+        "roughness": 0.956,
+        "temperature": 0.688,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.625,
+      "lon": 179.8917,
+      "closeness": 0.8531,
+      "slope_deg": 3.84,
+      "roughness_m": 32.6,
+      "tmin_c": -23.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.595,
+        "roughness": 0.95,
+        "temperature": 0.721,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.4083,
+      "lon": -89.575,
+      "closeness": 0.8528,
+      "slope_deg": 2.11,
+      "roughness_m": 32.6,
+      "tmin_c": -17.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.479,
+        "roughness": 0.95,
+        "temperature": 0.835,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.425,
+      "lon": -93.875,
+      "closeness": 0.8524,
+      "slope_deg": 0.75,
+      "roughness_m": 29.7,
+      "tmin_c": -21.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.404,
+        "roughness": 0.994,
+        "temperature": 0.864,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.425,
+      "lon": -125.825,
+      "closeness": 0.8519,
+      "slope_deg": 1.58,
+      "roughness_m": 30.7,
+      "tmin_c": -22.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.448,
+        "roughness": 0.986,
+        "temperature": 0.825,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.5917,
+      "lon": -159.6917,
+      "closeness": 0.8517,
+      "slope_deg": 3.57,
+      "roughness_m": 31.5,
+      "tmin_c": -24.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.575,
+        "roughness": 0.97,
+        "temperature": 0.713,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 66.2583,
+      "lon": 25.0417,
+      "closeness": 0.8517,
+      "slope_deg": 3.36,
+      "roughness_m": 32.5,
+      "tmin_c": -16.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.56,
+        "roughness": 0.95,
+        "temperature": 0.748,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.6917,
+      "lon": -153.625,
+      "closeness": 0.8507,
+      "slope_deg": 3.18,
+      "roughness_m": 29.5,
+      "tmin_c": -24.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.547,
+        "roughness": 0.99,
+        "temperature": 0.716,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.5917,
+      "lon": 130.6583,
+      "closeness": 0.8498,
+      "slope_deg": 2.14,
+      "roughness_m": 29.6,
+      "tmin_c": -23.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.481,
+        "roughness": 0.992,
+        "temperature": 0.777,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.8417,
+      "lon": -95.375,
+      "closeness": 0.848,
+      "slope_deg": 0.93,
+      "roughness_m": 27.6,
+      "tmin_c": -21.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.413,
+        "roughness": 0.954,
+        "temperature": 0.873,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.025,
+      "lon": 114.4917,
+      "closeness": 0.848,
+      "slope_deg": 1.31,
+      "roughness_m": 39.2,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.433,
+        "roughness": 0.832,
+        "temperature": 0.975,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.925,
+      "lon": -84.2417,
+      "closeness": 0.8469,
+      "slope_deg": 1.79,
+      "roughness_m": 33.6,
+      "tmin_c": -18.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.46,
+        "roughness": 0.93,
+        "temperature": 0.844,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.1417,
+      "lon": -135.975,
+      "closeness": 0.8466,
+      "slope_deg": 1.89,
+      "roughness_m": 30.0,
+      "tmin_c": -23.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.466,
+        "roughness": 1.0,
+        "temperature": 0.767,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.9917,
+      "lon": 129.175,
+      "closeness": 0.8463,
+      "slope_deg": 2.04,
+      "roughness_m": 30.5,
+      "tmin_c": -23.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.99,
+        "temperature": 0.767,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.1917,
+      "lon": -164.075,
+      "closeness": 0.8461,
+      "slope_deg": 1.3,
+      "roughness_m": 32.3,
+      "tmin_c": -17.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.433,
+        "roughness": 0.955,
+        "temperature": 0.843,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.075,
+      "lon": 159.8083,
+      "closeness": 0.846,
+      "slope_deg": 2.18,
+      "roughness_m": 29.9,
+      "tmin_c": -23.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.483,
+        "roughness": 0.999,
+        "temperature": 0.748,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -74.2083,
+      "lon": -131.725,
+      "closeness": 0.8448,
+      "slope_deg": 3.24,
+      "roughness_m": 28.9,
+      "tmin_c": -24.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.551,
+        "roughness": 0.979,
+        "temperature": 0.694,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 37.4583,
+      "lon": 102.775,
+      "closeness": 0.8441,
+      "slope_deg": 1.33,
+      "roughness_m": 30.4,
+      "tmin_c": -17.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.434,
+        "roughness": 0.992,
+        "temperature": 0.794,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.2583,
+      "lon": -164.2583,
+      "closeness": 0.8437,
+      "slope_deg": 1.17,
+      "roughness_m": 27.5,
+      "tmin_c": -17.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.426,
+        "roughness": 0.952,
+        "temperature": 0.841,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.025,
+      "lon": -25.575,
+      "closeness": 0.8435,
+      "slope_deg": 6.2,
+      "roughness_m": 45.8,
+      "tmin_c": -15.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.799,
+        "roughness": 0.729,
+        "temperature": 0.689,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.975,
+      "lon": -88.5083,
+      "closeness": 0.8432,
+      "slope_deg": 0.68,
+      "roughness_m": 28.9,
+      "tmin_c": -17.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.401,
+        "roughness": 0.978,
+        "temperature": 0.838,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.175,
+      "lon": 137.7583,
+      "closeness": 0.8431,
+      "slope_deg": 1.45,
+      "roughness_m": 37.4,
+      "tmin_c": -18.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.441,
+        "roughness": 0.863,
+        "temperature": 0.912,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.425,
+      "lon": 105.475,
+      "closeness": 0.8429,
+      "slope_deg": 1.67,
+      "roughness_m": 30.5,
+      "tmin_c": -16.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.453,
+        "roughness": 0.991,
+        "temperature": 0.771,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 72.025,
+      "lon": -53.475,
+      "closeness": 0.8428,
+      "slope_deg": 5.01,
+      "roughness_m": 41.5,
+      "tmin_c": -23.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.689,
+        "roughness": 0.795,
+        "temperature": 0.731,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.675,
+      "lon": -123.1917,
+      "closeness": 0.8426,
+      "slope_deg": 2.53,
+      "roughness_m": 32.8,
+      "tmin_c": -16.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.505,
+        "roughness": 0.946,
+        "temperature": 0.762,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.975,
+      "lon": -81.0083,
+      "closeness": 0.8423,
+      "slope_deg": 1.75,
+      "roughness_m": 29.9,
+      "tmin_c": -23.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.458,
+        "roughness": 0.999,
+        "temperature": 0.755,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.9917,
+      "lon": -153.075,
+      "closeness": 0.8419,
+      "slope_deg": 3.66,
+      "roughness_m": 30.7,
+      "tmin_c": -25.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.581,
+        "roughness": 0.987,
+        "temperature": 0.641,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.1417,
+      "lon": 125.1417,
+      "closeness": 0.8411,
+      "slope_deg": 1.13,
+      "roughness_m": 30.0,
+      "tmin_c": -22.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.424,
+        "roughness": 1.0,
+        "temperature": 0.782,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.175,
+      "lon": 178.925,
+      "closeness": 0.8401,
+      "slope_deg": 2.92,
+      "roughness_m": 31.0,
+      "tmin_c": -24.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.53,
+        "roughness": 0.981,
+        "temperature": 0.69,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -74.375,
+      "lon": -132.325,
+      "closeness": 0.84,
+      "slope_deg": 2.48,
+      "roughness_m": 30.0,
+      "tmin_c": -24.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.502,
+        "roughness": 0.999,
+        "temperature": 0.699,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.825,
+      "lon": -153.725,
+      "closeness": 0.8399,
+      "slope_deg": 2.27,
+      "roughness_m": 29.7,
+      "tmin_c": -24.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.489,
+        "roughness": 0.994,
+        "temperature": 0.717,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 54.9417,
+      "lon": -123.5083,
+      "closeness": 0.8385,
+      "slope_deg": 2.47,
+      "roughness_m": 29.3,
+      "tmin_c": -15.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.501,
+        "roughness": 0.986,
+        "temperature": 0.705,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.9583,
+      "lon": -155.8917,
+      "closeness": 0.837,
+      "slope_deg": 2.19,
+      "roughness_m": 31.3,
+      "tmin_c": -23.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.484,
+        "roughness": 0.974,
+        "temperature": 0.727,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.4583,
+      "lon": 141.3583,
+      "closeness": 0.8356,
+      "slope_deg": 0.5,
+      "roughness_m": 30.2,
+      "tmin_c": -22.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.392,
+        "roughness": 0.996,
+        "temperature": 0.79,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.025,
+      "lon": 105.0917,
+      "closeness": 0.8352,
+      "slope_deg": 1.0,
+      "roughness_m": 29.0,
+      "tmin_c": -17.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.417,
+        "roughness": 0.98,
+        "temperature": 0.779,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.1583,
+      "lon": 125.2917,
+      "closeness": 0.8344,
+      "slope_deg": 1.43,
+      "roughness_m": 28.7,
+      "tmin_c": -23.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.44,
+        "roughness": 0.973,
+        "temperature": 0.759,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.325,
+      "lon": -78.425,
+      "closeness": 0.8342,
+      "slope_deg": 1.43,
+      "roughness_m": 31.8,
+      "tmin_c": -23.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.44,
+        "roughness": 0.964,
+        "temperature": 0.767,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.375,
+      "lon": 173.125,
+      "closeness": 0.8341,
+      "slope_deg": 2.96,
+      "roughness_m": 29.9,
+      "tmin_c": -25.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.533,
+        "roughness": 0.998,
+        "temperature": 0.64,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.1583,
+      "lon": 107.9583,
+      "closeness": 0.8339,
+      "slope_deg": 1.19,
+      "roughness_m": 30.0,
+      "tmin_c": -23.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.427,
+        "roughness": 0.999,
+        "temperature": 0.743,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.7583,
+      "lon": 177.8083,
+      "closeness": 0.8336,
+      "slope_deg": 2.71,
+      "roughness_m": 30.3,
+      "tmin_c": -25.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.516,
+        "roughness": 0.995,
+        "temperature": 0.657,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -74.775,
+      "lon": -99.875,
+      "closeness": 0.8336,
+      "slope_deg": 7.51,
+      "roughness_m": 69.3,
+      "tmin_c": -23.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.941,
+        "roughness": 0.455,
+        "temperature": 0.772,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 54.225,
+      "lon": -61.125,
+      "closeness": 0.8335,
+      "slope_deg": 2.32,
+      "roughness_m": 30.7,
+      "tmin_c": -24.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.492,
+        "roughness": 0.986,
+        "temperature": 0.691,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.8417,
+      "lon": -144.5917,
+      "closeness": 0.8333,
+      "slope_deg": 3.16,
+      "roughness_m": 33.1,
+      "tmin_c": -24.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.546,
+        "roughness": 0.94,
+        "temperature": 0.681,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -78.4917,
+      "lon": 164.025,
+      "closeness": 0.833,
+      "slope_deg": 7.85,
+      "roughness_m": 34.2,
+      "tmin_c": -35.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.981,
+        "roughness": 0.919,
+        "temperature": 0.265,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -77.6583,
+      "lon": 166.325,
+      "closeness": 0.8324,
+      "slope_deg": 8.36,
+      "roughness_m": 41.1,
+      "tmin_c": -30.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.956,
+        "roughness": 0.801,
+        "temperature": 0.405,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.5583,
+      "lon": 101.825,
+      "closeness": 0.8318,
+      "slope_deg": 1.72,
+      "roughness_m": 31.2,
+      "tmin_c": -23.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.456,
+        "roughness": 0.977,
+        "temperature": 0.727,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.5917,
+      "lon": -76.8583,
+      "closeness": 0.8315,
+      "slope_deg": 2.41,
+      "roughness_m": 30.4,
+      "tmin_c": -24.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.497,
+        "roughness": 0.992,
+        "temperature": 0.668,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 66.6083,
+      "lon": -148.975,
+      "closeness": 0.8314,
+      "slope_deg": 3.14,
+      "roughness_m": 31.3,
+      "tmin_c": -25.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.544,
+        "roughness": 0.973,
+        "temperature": 0.639,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.1417,
+      "lon": 159.925,
+      "closeness": 0.8314,
+      "slope_deg": 2.57,
+      "roughness_m": 32.9,
+      "tmin_c": -24.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.507,
+        "roughness": 0.944,
+        "temperature": 0.706,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.775,
+      "lon": -123.1083,
+      "closeness": 0.8312,
+      "slope_deg": 1.02,
+      "roughness_m": 29.1,
+      "tmin_c": -16.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.418,
+        "roughness": 0.982,
+        "temperature": 0.756,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.4583,
+      "lon": -111.5417,
+      "closeness": 0.831,
+      "slope_deg": 0.92,
+      "roughness_m": 30.1,
+      "tmin_c": -16.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.413,
+        "roughness": 0.998,
+        "temperature": 0.745,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.7417,
+      "lon": -149.8083,
+      "closeness": 0.8305,
+      "slope_deg": 3.93,
+      "roughness_m": 29.8,
+      "tmin_c": -27.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.601,
+        "roughness": 0.996,
+        "temperature": 0.556,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.3583,
+      "lon": -89.4917,
+      "closeness": 0.8303,
+      "slope_deg": 0.87,
+      "roughness_m": 24.8,
+      "tmin_c": -17.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.41,
+        "roughness": 0.901,
+        "temperature": 0.841,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.7583,
+      "lon": 116.0917,
+      "closeness": 0.8297,
+      "slope_deg": 1.98,
+      "roughness_m": 31.3,
+      "tmin_c": -24.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.471,
+        "roughness": 0.974,
+        "temperature": 0.703,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.775,
+      "lon": -137.9583,
+      "closeness": 0.8294,
+      "slope_deg": 1.37,
+      "roughness_m": 27.9,
+      "tmin_c": -16.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.436,
+        "roughness": 0.96,
+        "temperature": 0.751,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.3083,
+      "lon": -56.225,
+      "closeness": 0.8292,
+      "slope_deg": 2.18,
+      "roughness_m": 30.0,
+      "tmin_c": -15.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.483,
+        "roughness": 1.0,
+        "temperature": 0.663,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -78.0917,
+      "lon": 165.5583,
+      "closeness": 0.8288,
+      "slope_deg": 5.92,
+      "roughness_m": 29.3,
+      "tmin_c": -31.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.771,
+        "roughness": 0.986,
+        "temperature": 0.387,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.8917,
+      "lon": 42.575,
+      "closeness": 0.8286,
+      "slope_deg": 1.0,
+      "roughness_m": 30.3,
+      "tmin_c": -16.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.417,
+        "roughness": 0.993,
+        "temperature": 0.733,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.3583,
+      "lon": -88.4917,
+      "closeness": 0.8283,
+      "slope_deg": 0.71,
+      "roughness_m": 27.4,
+      "tmin_c": -17.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.402,
+        "roughness": 0.949,
+        "temperature": 0.79,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.8417,
+      "lon": -105.8917,
+      "closeness": 0.8283,
+      "slope_deg": 1.16,
+      "roughness_m": 29.8,
+      "tmin_c": -16.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.425,
+        "roughness": 0.996,
+        "temperature": 0.72,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.9417,
+      "lon": -92.6083,
+      "closeness": 0.8282,
+      "slope_deg": 0.59,
+      "roughness_m": 28.7,
+      "tmin_c": -23.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.396,
+        "roughness": 0.975,
+        "temperature": 0.77,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.975,
+      "lon": -122.925,
+      "closeness": 0.8279,
+      "slope_deg": 1.85,
+      "roughness_m": 28.4,
+      "tmin_c": -15.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.464,
+        "roughness": 0.968,
+        "temperature": 0.708,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 81.675,
+      "lon": -28.2917,
+      "closeness": 0.8279,
+      "slope_deg": 7.24,
+      "roughness_m": 28.2,
+      "tmin_c": -35.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.909,
+        "roughness": 0.965,
+        "temperature": 0.265,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.8417,
+      "lon": -125.5083,
+      "closeness": 0.827,
+      "slope_deg": 2.3,
+      "roughness_m": 29.6,
+      "tmin_c": -14.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.49,
+        "roughness": 0.991,
+        "temperature": 0.653,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -77.7917,
+      "lon": 166.825,
+      "closeness": 0.827,
+      "slope_deg": 6.15,
+      "roughness_m": 44.4,
+      "tmin_c": -26.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.793,
+        "roughness": 0.75,
+        "temperature": 0.591,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -66.1083,
+      "lon": -60.6583,
+      "closeness": 0.8269,
+      "slope_deg": 2.43,
+      "roughness_m": 33.5,
+      "tmin_c": -15.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.499,
+        "roughness": 0.933,
+        "temperature": 0.703,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.9917,
+      "lon": -105.775,
+      "closeness": 0.8262,
+      "slope_deg": 1.08,
+      "roughness_m": 28.4,
+      "tmin_c": -16.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.421,
+        "roughness": 0.969,
+        "temperature": 0.741,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.5083,
+      "lon": -93.0083,
+      "closeness": 0.8259,
+      "slope_deg": 0.9,
+      "roughness_m": 19.7,
+      "tmin_c": -21.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.412,
+        "roughness": 0.815,
+        "temperature": 0.903,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.825,
+      "lon": -88.675,
+      "closeness": 0.8257,
+      "slope_deg": 1.93,
+      "roughness_m": 27.8,
+      "tmin_c": -24.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.468,
+        "roughness": 0.957,
+        "temperature": 0.703,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.3417,
+      "lon": 13.1583,
+      "closeness": 0.8255,
+      "slope_deg": 2.49,
+      "roughness_m": 29.9,
+      "tmin_c": -14.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.502,
+        "roughness": 0.998,
+        "temperature": 0.628,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 39.4917,
+      "lon": 72.2083,
+      "closeness": 0.8249,
+      "slope_deg": 0.94,
+      "roughness_m": 43.4,
+      "tmin_c": -19.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.414,
+        "roughness": 0.765,
+        "temperature": 0.946,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.175,
+      "lon": -56.1417,
+      "closeness": 0.8248,
+      "slope_deg": 2.24,
+      "roughness_m": 31.2,
+      "tmin_c": -15.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.487,
+        "roughness": 0.976,
+        "temperature": 0.661,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.675,
+      "lon": -105.975,
+      "closeness": 0.8248,
+      "slope_deg": 1.35,
+      "roughness_m": 30.7,
+      "tmin_c": -15.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.436,
+        "roughness": 0.986,
+        "temperature": 0.702,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.6583,
+      "lon": 140.875,
+      "closeness": 0.8242,
+      "slope_deg": 1.08,
+      "roughness_m": 26.9,
+      "tmin_c": -23.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.421,
+        "roughness": 0.939,
+        "temperature": 0.761,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.425,
+      "lon": -133.4917,
+      "closeness": 0.8241,
+      "slope_deg": 2.47,
+      "roughness_m": 32.7,
+      "tmin_c": -24.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.501,
+        "roughness": 0.948,
+        "temperature": 0.672,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.1417,
+      "lon": 42.825,
+      "closeness": 0.824,
+      "slope_deg": 1.95,
+      "roughness_m": 32.7,
+      "tmin_c": -15.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.948,
+        "temperature": 0.702,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.1417,
+      "lon": 123.025,
+      "closeness": 0.823,
+      "slope_deg": 1.96,
+      "roughness_m": 30.8,
+      "tmin_c": -25.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.984,
+        "temperature": 0.66,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.275,
+      "lon": 112.225,
+      "closeness": 0.821,
+      "slope_deg": 1.55,
+      "roughness_m": 30.5,
+      "tmin_c": -24.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.447,
+        "roughness": 0.99,
+        "temperature": 0.669,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -74.525,
+      "lon": -99.2083,
+      "closeness": 0.8207,
+      "slope_deg": 2.06,
+      "roughness_m": 30.8,
+      "tmin_c": -25.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.476,
+        "roughness": 0.985,
+        "temperature": 0.643,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.3417,
+      "lon": 112.4583,
+      "closeness": 0.8204,
+      "slope_deg": 1.19,
+      "roughness_m": 30.1,
+      "tmin_c": -24.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.427,
+        "roughness": 0.998,
+        "temperature": 0.677,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.4417,
+      "lon": 112.475,
+      "closeness": 0.8202,
+      "slope_deg": 1.2,
+      "roughness_m": 29.8,
+      "tmin_c": -24.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.427,
+        "roughness": 0.996,
+        "temperature": 0.677,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.175,
+      "lon": -129.5583,
+      "closeness": 0.8202,
+      "slope_deg": 8.0,
+      "roughness_m": 124.0,
+      "tmin_c": -20.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 1.0,
+        "roughness": 0.153,
+        "temperature": 0.949,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.9417,
+      "lon": 115.675,
+      "closeness": 0.8197,
+      "slope_deg": 1.53,
+      "roughness_m": 30.0,
+      "tmin_c": -25.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.445,
+        "roughness": 0.999,
+        "temperature": 0.654,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.5917,
+      "lon": -125.2417,
+      "closeness": 0.8193,
+      "slope_deg": 1.29,
+      "roughness_m": 29.4,
+      "tmin_c": -24.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.432,
+        "roughness": 0.989,
+        "temperature": 0.676,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.025,
+      "lon": 123.1417,
+      "closeness": 0.819,
+      "slope_deg": 1.65,
+      "roughness_m": 29.1,
+      "tmin_c": -25.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.452,
+        "roughness": 0.983,
+        "temperature": 0.66,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 54.0583,
+      "lon": -122.925,
+      "closeness": 0.8188,
+      "slope_deg": 2.39,
+      "roughness_m": 30.9,
+      "tmin_c": -14.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.496,
+        "roughness": 0.982,
+        "temperature": 0.615,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.5083,
+      "lon": 139.1083,
+      "closeness": 0.8184,
+      "slope_deg": 0.47,
+      "roughness_m": 46.6,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.39,
+        "roughness": 0.717,
+        "temperature": 0.985,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.575,
+      "lon": 119.775,
+      "closeness": 0.8178,
+      "slope_deg": 1.98,
+      "roughness_m": 30.3,
+      "tmin_c": -25.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.471,
+        "roughness": 0.994,
+        "temperature": 0.625,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.7417,
+      "lon": -76.9083,
+      "closeness": 0.8178,
+      "slope_deg": 0.96,
+      "roughness_m": 30.9,
+      "tmin_c": -24.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.415,
+        "roughness": 0.983,
+        "temperature": 0.691,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.8917,
+      "lon": -73.7083,
+      "closeness": 0.8173,
+      "slope_deg": 3.03,
+      "roughness_m": 28.3,
+      "tmin_c": -26.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.537,
+        "roughness": 0.966,
+        "temperature": 0.584,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.775,
+      "lon": -88.125,
+      "closeness": 0.8172,
+      "slope_deg": 2.05,
+      "roughness_m": 30.7,
+      "tmin_c": -25.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.987,
+        "temperature": 0.624,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.7083,
+      "lon": -85.6083,
+      "closeness": 0.817,
+      "slope_deg": 1.25,
+      "roughness_m": 30.3,
+      "tmin_c": -25.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.43,
+        "roughness": 0.995,
+        "temperature": 0.66,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.875,
+      "lon": -75.025,
+      "closeness": 0.817,
+      "slope_deg": 2.17,
+      "roughness_m": 31.6,
+      "tmin_c": -25.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.483,
+        "roughness": 0.968,
+        "temperature": 0.634,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.4083,
+      "lon": 112.2083,
+      "closeness": 0.8168,
+      "slope_deg": 1.1,
+      "roughness_m": 30.2,
+      "tmin_c": -24.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.422,
+        "roughness": 0.996,
+        "temperature": 0.666,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.9917,
+      "lon": -112.375,
+      "closeness": 0.8168,
+      "slope_deg": 1.55,
+      "roughness_m": 29.6,
+      "tmin_c": -14.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.992,
+        "temperature": 0.646,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.1417,
+      "lon": 104.3583,
+      "closeness": 0.8162,
+      "slope_deg": 2.04,
+      "roughness_m": 31.2,
+      "tmin_c": -14.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.977,
+        "temperature": 0.629,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.2083,
+      "lon": -29.825,
+      "closeness": 0.8161,
+      "slope_deg": 4.94,
+      "roughness_m": 45.9,
+      "tmin_c": -24.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.682,
+        "roughness": 0.727,
+        "temperature": 0.671,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 46.4583,
+      "lon": 109.575,
+      "closeness": 0.8152,
+      "slope_deg": 1.65,
+      "roughness_m": 30.5,
+      "tmin_c": -25.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.452,
+        "roughness": 0.989,
+        "temperature": 0.635,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.675,
+      "lon": 172.0583,
+      "closeness": 0.815,
+      "slope_deg": 2.9,
+      "roughness_m": 30.3,
+      "tmin_c": -27.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.528,
+        "roughness": 0.993,
+        "temperature": 0.553,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.975,
+      "lon": -67.4417,
+      "closeness": 0.8145,
+      "slope_deg": 1.96,
+      "roughness_m": 30.3,
+      "tmin_c": -14.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.993,
+        "temperature": 0.609,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.8583,
+      "lon": -155.8417,
+      "closeness": 0.8142,
+      "slope_deg": 1.85,
+      "roughness_m": 29.7,
+      "tmin_c": -14.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.464,
+        "roughness": 0.994,
+        "temperature": 0.614,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.6083,
+      "lon": 172.0417,
+      "closeness": 0.8141,
+      "slope_deg": 3.83,
+      "roughness_m": 35.2,
+      "tmin_c": -26.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.594,
+        "roughness": 0.902,
+        "temperature": 0.575,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.2083,
+      "lon": 100.275,
+      "closeness": 0.814,
+      "slope_deg": 1.98,
+      "roughness_m": 32.8,
+      "tmin_c": -25.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.471,
+        "roughness": 0.946,
+        "temperature": 0.653,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.1083,
+      "lon": 151.1917,
+      "closeness": 0.8125,
+      "slope_deg": 0.97,
+      "roughness_m": 32.7,
+      "tmin_c": -24.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.415,
+        "roughness": 0.948,
+        "temperature": 0.699,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.8417,
+      "lon": -78.5583,
+      "closeness": 0.8122,
+      "slope_deg": 0.42,
+      "roughness_m": 24.0,
+      "tmin_c": -22.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.388,
+        "roughness": 0.886,
+        "temperature": 0.787,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.3917,
+      "lon": -76.825,
+      "closeness": 0.812,
+      "slope_deg": 1.55,
+      "roughness_m": 29.7,
+      "tmin_c": -25.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.994,
+        "temperature": 0.62,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.2083,
+      "lon": -166.9417,
+      "closeness": 0.8119,
+      "slope_deg": 2.42,
+      "roughness_m": 30.6,
+      "tmin_c": -13.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.498,
+        "roughness": 0.989,
+        "temperature": 0.573,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -75.225,
+      "lon": -110.3583,
+      "closeness": 0.8119,
+      "slope_deg": 6.88,
+      "roughness_m": 60.8,
+      "tmin_c": -25.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.869,
+        "roughness": 0.54,
+        "temperature": 0.65,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.8417,
+      "lon": 114.5917,
+      "closeness": 0.8118,
+      "slope_deg": 1.52,
+      "roughness_m": 29.9,
+      "tmin_c": -25.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.445,
+        "roughness": 0.997,
+        "temperature": 0.617,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.3917,
+      "lon": -31.0917,
+      "closeness": 0.8117,
+      "slope_deg": 4.13,
+      "roughness_m": 37.9,
+      "tmin_c": -26.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.617,
+        "roughness": 0.854,
+        "temperature": 0.588,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.525,
+      "lon": -105.725,
+      "closeness": 0.8111,
+      "slope_deg": 1.7,
+      "roughness_m": 30.1,
+      "tmin_c": -13.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.455,
+        "roughness": 0.998,
+        "temperature": 0.602,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.1083,
+      "lon": 117.3417,
+      "closeness": 0.8109,
+      "slope_deg": 1.35,
+      "roughness_m": 28.9,
+      "tmin_c": -25.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.435,
+        "roughness": 0.977,
+        "temperature": 0.642,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.075,
+      "lon": 167.275,
+      "closeness": 0.8107,
+      "slope_deg": 3.11,
+      "roughness_m": 31.4,
+      "tmin_c": -27.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.543,
+        "roughness": 0.972,
+        "temperature": 0.539,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.2417,
+      "lon": -47.525,
+      "closeness": 0.8105,
+      "slope_deg": 1.28,
+      "roughness_m": 30.0,
+      "tmin_c": -14.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.431,
+        "roughness": 0.999,
+        "temperature": 0.622,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -64.0417,
+      "lon": -62.2083,
+      "closeness": 0.8087,
+      "slope_deg": 1.02,
+      "roughness_m": 30.3,
+      "tmin_c": -14.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.418,
+        "roughness": 0.995,
+        "temperature": 0.631,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.3417,
+      "lon": -77.1583,
+      "closeness": 0.8086,
+      "slope_deg": 2.22,
+      "roughness_m": 29.6,
+      "tmin_c": -26.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.486,
+        "roughness": 0.992,
+        "temperature": 0.565,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.225,
+      "lon": -166.3083,
+      "closeness": 0.8085,
+      "slope_deg": 1.41,
+      "roughness_m": 29.4,
+      "tmin_c": -14.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.439,
+        "roughness": 0.987,
+        "temperature": 0.616,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.2583,
+      "lon": 112.6583,
+      "closeness": 0.8081,
+      "slope_deg": 2.64,
+      "roughness_m": 31.4,
+      "tmin_c": -27.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.512,
+        "roughness": 0.973,
+        "temperature": 0.556,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.975,
+      "lon": -155.4417,
+      "closeness": 0.8075,
+      "slope_deg": 2.87,
+      "roughness_m": 32.9,
+      "tmin_c": -13.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.527,
+        "roughness": 0.943,
+        "temperature": 0.567,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.8417,
+      "lon": 176.225,
+      "closeness": 0.8073,
+      "slope_deg": 3.64,
+      "roughness_m": 31.2,
+      "tmin_c": -28.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.58,
+        "roughness": 0.977,
+        "temperature": 0.48,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -77.5917,
+      "lon": 166.175,
+      "closeness": 0.8072,
+      "slope_deg": 6.52,
+      "roughness_m": 41.1,
+      "tmin_c": -30.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.831,
+        "roughness": 0.8,
+        "temperature": 0.405,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 34.3917,
+      "lon": 75.0917,
+      "closeness": 0.8067,
+      "slope_deg": 8.27,
+      "roughness_m": 145.1,
+      "tmin_c": -19.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.966,
+        "roughness": 0.1,
+        "temperature": 0.967,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 41.0417,
+      "lon": 43.6417,
+      "closeness": 0.8065,
+      "slope_deg": 2.08,
+      "roughness_m": 32.2,
+      "tmin_c": -13.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.957,
+        "temperature": 0.599,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.025,
+      "lon": 97.4583,
+      "closeness": 0.8057,
+      "slope_deg": 2.21,
+      "roughness_m": 29.9,
+      "tmin_c": -27.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.485,
+        "roughness": 0.999,
+        "temperature": 0.545,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.425,
+      "lon": 174.8417,
+      "closeness": 0.8053,
+      "slope_deg": 3.86,
+      "roughness_m": 32.6,
+      "tmin_c": -28.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.596,
+        "roughness": 0.949,
+        "temperature": 0.482,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -64.3917,
+      "lon": -58.325,
+      "closeness": 0.8053,
+      "slope_deg": 2.03,
+      "roughness_m": 40.4,
+      "tmin_c": -16.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.474,
+        "roughness": 0.812,
+        "temperature": 0.74,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.5083,
+      "lon": -81.425,
+      "closeness": 0.8052,
+      "slope_deg": 0.49,
+      "roughness_m": 22.4,
+      "tmin_c": -23.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.391,
+        "roughness": 0.859,
+        "temperature": 0.776,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.1083,
+      "lon": -111.625,
+      "closeness": 0.8047,
+      "slope_deg": 1.5,
+      "roughness_m": 27.6,
+      "tmin_c": -14.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.444,
+        "roughness": 0.953,
+        "temperature": 0.627,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.8583,
+      "lon": -73.425,
+      "closeness": 0.8045,
+      "slope_deg": 2.23,
+      "roughness_m": 29.5,
+      "tmin_c": -27.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.486,
+        "roughness": 0.991,
+        "temperature": 0.546,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.525,
+      "lon": -96.3417,
+      "closeness": 0.8045,
+      "slope_deg": 0.5,
+      "roughness_m": 11.6,
+      "tmin_c": -20.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.392,
+        "roughness": 0.692,
+        "temperature": 0.939,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 66.9917,
+      "lon": -148.7583,
+      "closeness": 0.8044,
+      "slope_deg": 7.69,
+      "roughness_m": 70.3,
+      "tmin_c": -25.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.962,
+        "roughness": 0.446,
+        "temperature": 0.614,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.0583,
+      "lon": 111.4417,
+      "closeness": 0.8037,
+      "slope_deg": 1.68,
+      "roughness_m": 30.1,
+      "tmin_c": -26.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.454,
+        "roughness": 0.997,
+        "temperature": 0.567,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 39.975,
+      "lon": 40.875,
+      "closeness": 0.8033,
+      "slope_deg": 1.72,
+      "roughness_m": 29.5,
+      "tmin_c": -13.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.456,
+        "roughness": 0.989,
+        "temperature": 0.571,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 38.3417,
+      "lon": 127.175,
+      "closeness": 0.8031,
+      "slope_deg": 1.62,
+      "roughness_m": 30.2,
+      "tmin_c": -13.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.995,
+        "temperature": 0.57,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.7083,
+      "lon": 87.6083,
+      "closeness": 0.8027,
+      "slope_deg": 4.77,
+      "roughness_m": 32.6,
+      "tmin_c": -31.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.668,
+        "roughness": 0.95,
+        "temperature": 0.396,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.7583,
+      "lon": 88.5917,
+      "closeness": 0.8027,
+      "slope_deg": 5.67,
+      "roughness_m": 36.4,
+      "tmin_c": -31.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.747,
+        "roughness": 0.88,
+        "temperature": 0.386,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.3917,
+      "lon": 169.9083,
+      "closeness": 0.8025,
+      "slope_deg": 3.88,
+      "roughness_m": 31.2,
+      "tmin_c": -29.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.598,
+        "roughness": 0.976,
+        "temperature": 0.439,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.4417,
+      "lon": 43.3083,
+      "closeness": 0.8024,
+      "slope_deg": 1.07,
+      "roughness_m": 32.4,
+      "tmin_c": -14.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.421,
+        "roughness": 0.953,
+        "temperature": 0.639,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.2417,
+      "lon": -75.575,
+      "closeness": 0.8021,
+      "slope_deg": 1.27,
+      "roughness_m": 31.2,
+      "tmin_c": -26.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.431,
+        "roughness": 0.977,
+        "temperature": 0.602,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.8083,
+      "lon": -104.975,
+      "closeness": 0.8021,
+      "slope_deg": 1.63,
+      "roughness_m": 29.9,
+      "tmin_c": -26.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.451,
+        "roughness": 0.998,
+        "temperature": 0.562,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.8417,
+      "lon": 165.875,
+      "closeness": 0.8019,
+      "slope_deg": 3.1,
+      "roughness_m": 33.5,
+      "tmin_c": -27.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.542,
+        "roughness": 0.932,
+        "temperature": 0.536,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.1083,
+      "lon": 102.8083,
+      "closeness": 0.8014,
+      "slope_deg": 2.09,
+      "roughness_m": 30.5,
+      "tmin_c": -27.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.478,
+        "roughness": 0.989,
+        "temperature": 0.54,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.125,
+      "lon": 88.1583,
+      "closeness": 0.8014,
+      "slope_deg": 4.04,
+      "roughness_m": 30.2,
+      "tmin_c": -31.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.61,
+        "roughness": 0.997,
+        "temperature": 0.401,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.925,
+      "lon": -92.9083,
+      "closeness": 0.801,
+      "slope_deg": 0.28,
+      "roughness_m": 21.9,
+      "tmin_c": -23.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.381,
+        "roughness": 0.85,
+        "temperature": 0.774,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 39.4917,
+      "lon": 98.3583,
+      "closeness": 0.801,
+      "slope_deg": 7.76,
+      "roughness_m": 139.6,
+      "tmin_c": -21.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.971,
+        "roughness": 0.112,
+        "temperature": 0.923,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.1083,
+      "lon": 97.0083,
+      "closeness": 0.8003,
+      "slope_deg": 1.69,
+      "roughness_m": 30.1,
+      "tmin_c": -27.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.454,
+        "roughness": 0.998,
+        "temperature": 0.549,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.475,
+      "lon": -152.075,
+      "closeness": 0.8002,
+      "slope_deg": 0.96,
+      "roughness_m": 39.0,
+      "tmin_c": -16.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.415,
+        "roughness": 0.836,
+        "temperature": 0.75,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 34.6083,
+      "lon": 84.7417,
+      "closeness": 0.7994,
+      "slope_deg": 1.51,
+      "roughness_m": 30.1,
+      "tmin_c": -27.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.444,
+        "roughness": 0.999,
+        "temperature": 0.554,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.875,
+      "lon": 164.1417,
+      "closeness": 0.7991,
+      "slope_deg": 7.49,
+      "roughness_m": 50.6,
+      "tmin_c": -31.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.938,
+        "roughness": 0.663,
+        "temperature": 0.395,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 34.5583,
+      "lon": 84.675,
+      "closeness": 0.799,
+      "slope_deg": 1.64,
+      "roughness_m": 30.5,
+      "tmin_c": -27.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.452,
+        "roughness": 0.989,
+        "temperature": 0.554,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.5417,
+      "lon": 169.725,
+      "closeness": 0.7989,
+      "slope_deg": 6.63,
+      "roughness_m": 37.7,
+      "tmin_c": -34.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.843,
+        "roughness": 0.857,
+        "temperature": 0.295,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 35.725,
+      "lon": 89.4083,
+      "closeness": 0.7987,
+      "slope_deg": 1.13,
+      "roughness_m": 30.5,
+      "tmin_c": -26.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.424,
+        "roughness": 0.99,
+        "temperature": 0.58,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.8083,
+      "lon": 137.625,
+      "closeness": 0.7986,
+      "slope_deg": 1.93,
+      "roughness_m": 30.2,
+      "tmin_c": -27.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.468,
+        "roughness": 0.996,
+        "temperature": 0.529,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 73.725,
+      "lon": 92.9583,
+      "closeness": 0.7975,
+      "slope_deg": 6.5,
+      "roughness_m": 38.5,
+      "tmin_c": -33.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.829,
+        "roughness": 0.843,
+        "temperature": 0.315,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.7417,
+      "lon": -144.8417,
+      "closeness": 0.7968,
+      "slope_deg": 4.15,
+      "roughness_m": 30.0,
+      "tmin_c": -32.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.618,
+        "roughness": 0.999,
+        "temperature": 0.367,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.525,
+      "lon": -72.2917,
+      "closeness": 0.7967,
+      "slope_deg": 1.71,
+      "roughness_m": 30.0,
+      "tmin_c": -27.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.456,
+        "roughness": 1.0,
+        "temperature": 0.528,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.4917,
+      "lon": 156.8083,
+      "closeness": 0.7962,
+      "slope_deg": 0.97,
+      "roughness_m": 29.8,
+      "tmin_c": -13.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.415,
+        "roughness": 0.997,
+        "temperature": 0.569,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.4917,
+      "lon": 100.2417,
+      "closeness": 0.7962,
+      "slope_deg": 1.67,
+      "roughness_m": 27.1,
+      "tmin_c": -26.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.453,
+        "roughness": 0.944,
+        "temperature": 0.584,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.7917,
+      "lon": 136.6583,
+      "closeness": 0.7962,
+      "slope_deg": 1.48,
+      "roughness_m": 31.0,
+      "tmin_c": -27.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.443,
+        "roughness": 0.98,
+        "temperature": 0.559,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.825,
+      "lon": 118.1083,
+      "closeness": 0.796,
+      "slope_deg": 1.75,
+      "roughness_m": 30.9,
+      "tmin_c": -27.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.458,
+        "roughness": 0.983,
+        "temperature": 0.539,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.575,
+      "lon": -145.0917,
+      "closeness": 0.796,
+      "slope_deg": 3.68,
+      "roughness_m": 30.0,
+      "tmin_c": -31.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.583,
+        "roughness": 1.0,
+        "temperature": 0.397,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.9917,
+      "lon": -174.775,
+      "closeness": 0.7957,
+      "slope_deg": 3.35,
+      "roughness_m": 30.2,
+      "tmin_c": -20.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.559,
+        "roughness": 0.995,
+        "temperature": 0.974,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": -71.8417,
+      "lon": 170.8417,
+      "closeness": 0.7954,
+      "slope_deg": 3.32,
+      "roughness_m": 30.4,
+      "tmin_c": -30.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.557,
+        "roughness": 0.993,
+        "temperature": 0.428,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.675,
+      "lon": 140.1917,
+      "closeness": 0.7952,
+      "slope_deg": 2.08,
+      "roughness_m": 31.5,
+      "tmin_c": -27.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.97,
+        "temperature": 0.529,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.3083,
+      "lon": 174.3583,
+      "closeness": 0.795,
+      "slope_deg": 3.05,
+      "roughness_m": 29.1,
+      "tmin_c": -29.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.539,
+        "roughness": 0.983,
+        "temperature": 0.454,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.4083,
+      "lon": 91.3417,
+      "closeness": 0.7948,
+      "slope_deg": 5.14,
+      "roughness_m": 32.5,
+      "tmin_c": -33.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.699,
+        "roughness": 0.951,
+        "temperature": 0.323,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.1917,
+      "lon": -47.5083,
+      "closeness": 0.7946,
+      "slope_deg": 1.27,
+      "roughness_m": 34.2,
+      "tmin_c": -14.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.431,
+        "roughness": 0.92,
+        "temperature": 0.622,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.725,
+      "lon": -174.4417,
+      "closeness": 0.7946,
+      "slope_deg": 3.02,
+      "roughness_m": 30.2,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.537,
+        "roughness": 0.996,
+        "temperature": 0.99,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 63.2583,
+      "lon": 26.1917,
+      "closeness": 0.7941,
+      "slope_deg": 1.68,
+      "roughness_m": 27.0,
+      "tmin_c": -13.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.454,
+        "roughness": 0.941,
+        "temperature": 0.575,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.1083,
+      "lon": -164.125,
+      "closeness": 0.794,
+      "slope_deg": 0.43,
+      "roughness_m": 32.2,
+      "tmin_c": -14.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.388,
+        "roughness": 0.956,
+        "temperature": 0.626,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 74.625,
+      "lon": 98.575,
+      "closeness": 0.794,
+      "slope_deg": 6.16,
+      "roughness_m": 35.6,
+      "tmin_c": -35.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.794,
+        "roughness": 0.894,
+        "temperature": 0.282,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.375,
+      "lon": 93.0083,
+      "closeness": 0.7937,
+      "slope_deg": 4.8,
+      "roughness_m": 30.0,
+      "tmin_c": -34.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.671,
+        "roughness": 0.999,
+        "temperature": 0.298,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 36.2083,
+      "lon": 70.375,
+      "closeness": 0.7937,
+      "slope_deg": 7.46,
+      "roughness_m": 122.1,
+      "tmin_c": -21.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.935,
+        "roughness": 0.159,
+        "temperature": 0.875,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.9917,
+      "lon": -58.4083,
+      "closeness": 0.7935,
+      "slope_deg": 1.78,
+      "roughness_m": 31.4,
+      "tmin_c": -12.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.459,
+        "roughness": 0.972,
+        "temperature": 0.536,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.575,
+      "lon": -75.4583,
+      "closeness": 0.7934,
+      "slope_deg": 0.63,
+      "roughness_m": 26.6,
+      "tmin_c": -25.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.398,
+        "roughness": 0.935,
+        "temperature": 0.635,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.975,
+      "lon": -143.6583,
+      "closeness": 0.7934,
+      "slope_deg": 4.28,
+      "roughness_m": 31.7,
+      "tmin_c": -31.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.628,
+        "roughness": 0.967,
+        "temperature": 0.372,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.9083,
+      "lon": 8.425,
+      "closeness": 0.7932,
+      "slope_deg": 2.5,
+      "roughness_m": 29.6,
+      "tmin_c": -11.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.503,
+        "roughness": 0.992,
+        "temperature": 0.471,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.5417,
+      "lon": -161.4583,
+      "closeness": 0.7929,
+      "slope_deg": 3.06,
+      "roughness_m": 30.6,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.539,
+        "roughness": 0.988,
+        "temperature": 0.987,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 58.3917,
+      "lon": 102.8417,
+      "closeness": 0.7926,
+      "slope_deg": 2.41,
+      "roughness_m": 30.9,
+      "tmin_c": -28.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.497,
+        "roughness": 0.982,
+        "temperature": 0.484,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.4917,
+      "lon": 155.3417,
+      "closeness": 0.7917,
+      "slope_deg": 1.77,
+      "roughness_m": 29.4,
+      "tmin_c": -11.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.459,
+        "roughness": 0.989,
+        "temperature": 0.51,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.925,
+      "lon": 114.7917,
+      "closeness": 0.7917,
+      "slope_deg": 1.82,
+      "roughness_m": 29.4,
+      "tmin_c": -28.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.462,
+        "roughness": 0.989,
+        "temperature": 0.508,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 82.7917,
+      "lon": -24.325,
+      "closeness": 0.7901,
+      "slope_deg": 8.09,
+      "roughness_m": 31.6,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "ig",
+      "scores": {
+        "slope": 0.989,
+        "roughness": 0.969,
+        "temperature": 0.992,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 66.7583,
+      "lon": 172.275,
+      "closeness": 0.79,
+      "slope_deg": 5.16,
+      "roughness_m": 36.0,
+      "tmin_c": -32.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.702,
+        "roughness": 0.886,
+        "temperature": 0.362,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.5583,
+      "lon": -165.3083,
+      "closeness": 0.7895,
+      "slope_deg": 4.22,
+      "roughness_m": 35.4,
+      "tmin_c": -20.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.624,
+        "roughness": 0.897,
+        "temperature": 0.977,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 58.4583,
+      "lon": 97.1083,
+      "closeness": 0.7895,
+      "slope_deg": 2.08,
+      "roughness_m": 31.7,
+      "tmin_c": -28.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.967,
+        "temperature": 0.503,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.325,
+      "lon": 97.4417,
+      "closeness": 0.7894,
+      "slope_deg": 1.09,
+      "roughness_m": 30.4,
+      "tmin_c": -27.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.422,
+        "roughness": 0.993,
+        "temperature": 0.532,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.625,
+      "lon": -17.375,
+      "closeness": 0.7891,
+      "slope_deg": 2.01,
+      "roughness_m": 29.6,
+      "tmin_c": -11.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.473,
+        "roughness": 0.992,
+        "temperature": 0.481,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.7083,
+      "lon": 141.1083,
+      "closeness": 0.789,
+      "slope_deg": 1.54,
+      "roughness_m": 31.0,
+      "tmin_c": -12.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.979,
+        "temperature": 0.52,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 72.875,
+      "lon": 85.3417,
+      "closeness": 0.789,
+      "slope_deg": 4.4,
+      "roughness_m": 32.3,
+      "tmin_c": -32.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.637,
+        "roughness": 0.956,
+        "temperature": 0.352,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.4583,
+      "lon": 109.9583,
+      "closeness": 0.7889,
+      "slope_deg": 2.0,
+      "roughness_m": 30.9,
+      "tmin_c": -28.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.472,
+        "roughness": 0.982,
+        "temperature": 0.49,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.375,
+      "lon": -18.7417,
+      "closeness": 0.7887,
+      "slope_deg": 3.47,
+      "roughness_m": 31.2,
+      "tmin_c": -9.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.568,
+        "roughness": 0.977,
+        "temperature": 0.399,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 80.1083,
+      "lon": -96.5583,
+      "closeness": 0.7885,
+      "slope_deg": 8.0,
+      "roughness_m": 30.1,
+      "tmin_c": -19.3,
+      "ice_thickness_m": 0.0,
+      "rock": "?",
+      "scores": {
+        "slope": 1.0,
+        "roughness": 0.998,
+        "temperature": 0.945,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 72.7917,
+      "lon": -85.125,
+      "closeness": 0.7877,
+      "slope_deg": 4.43,
+      "roughness_m": 31.1,
+      "tmin_c": -33.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.64,
+        "roughness": 0.979,
+        "temperature": 0.32,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.1917,
+      "lon": -114.375,
+      "closeness": 0.7877,
+      "slope_deg": 1.61,
+      "roughness_m": 27.7,
+      "tmin_c": -12.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.955,
+        "temperature": 0.533,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 80.125,
+      "lon": 22.4917,
+      "closeness": 0.7874,
+      "slope_deg": 8.13,
+      "roughness_m": 30.9,
+      "tmin_c": -20.3,
+      "ice_thickness_m": 0.0,
+      "rock": "?",
+      "scores": {
+        "slope": 0.984,
+        "roughness": 0.981,
+        "temperature": 0.971,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 44.7917,
+      "lon": -116.0417,
+      "closeness": 0.7874,
+      "slope_deg": 1.54,
+      "roughness_m": 31.1,
+      "tmin_c": -12.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.979,
+        "temperature": 0.512,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 51.975,
+      "lon": -72.375,
+      "closeness": 0.7873,
+      "slope_deg": 1.24,
+      "roughness_m": 30.1,
+      "tmin_c": -28.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.429,
+        "roughness": 0.999,
+        "temperature": 0.509,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 72.025,
+      "lon": -82.5083,
+      "closeness": 0.7871,
+      "slope_deg": 5.09,
+      "roughness_m": 26.5,
+      "tmin_c": -34.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.695,
+        "roughness": 0.933,
+        "temperature": 0.307,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.9417,
+      "lon": -137.325,
+      "closeness": 0.7871,
+      "slope_deg": 2.93,
+      "roughness_m": 30.0,
+      "tmin_c": -30.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.531,
+        "roughness": 0.999,
+        "temperature": 0.405,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.6583,
+      "lon": -140.8583,
+      "closeness": 0.7869,
+      "slope_deg": 2.23,
+      "roughness_m": 30.6,
+      "tmin_c": -29.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.486,
+        "roughness": 0.989,
+        "temperature": 0.459,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.3417,
+      "lon": -16.5417,
+      "closeness": 0.7868,
+      "slope_deg": 2.84,
+      "roughness_m": 29.4,
+      "tmin_c": -9.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.524,
+        "roughness": 0.988,
+        "temperature": 0.422,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.675,
+      "lon": 129.3583,
+      "closeness": 0.7868,
+      "slope_deg": 2.53,
+      "roughness_m": 29.3,
+      "tmin_c": -29.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.505,
+        "roughness": 0.987,
+        "temperature": 0.443,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.9583,
+      "lon": -120.8083,
+      "closeness": 0.7864,
+      "slope_deg": 1.71,
+      "roughness_m": 28.5,
+      "tmin_c": -11.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.456,
+        "roughness": 0.971,
+        "temperature": 0.506,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 35.7083,
+      "lon": 86.475,
+      "closeness": 0.7864,
+      "slope_deg": 0.84,
+      "roughness_m": 30.5,
+      "tmin_c": -27.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.409,
+        "roughness": 0.991,
+        "temperature": 0.532,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.275,
+      "lon": -20.025,
+      "closeness": 0.786,
+      "slope_deg": 3.88,
+      "roughness_m": 29.4,
+      "tmin_c": -7.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.598,
+        "roughness": 0.987,
+        "temperature": 0.345,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.2583,
+      "lon": -116.3083,
+      "closeness": 0.7858,
+      "slope_deg": 4.34,
+      "roughness_m": 32.4,
+      "tmin_c": -32.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.633,
+        "roughness": 0.954,
+        "temperature": 0.342,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.3583,
+      "lon": 95.1083,
+      "closeness": 0.7854,
+      "slope_deg": 4.93,
+      "roughness_m": 32.0,
+      "tmin_c": -35.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.681,
+        "roughness": 0.96,
+        "temperature": 0.286,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.4083,
+      "lon": -141.025,
+      "closeness": 0.7852,
+      "slope_deg": 5.99,
+      "roughness_m": 41.2,
+      "tmin_c": -32.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.778,
+        "roughness": 0.8,
+        "temperature": 0.348,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 58.1583,
+      "lon": 101.475,
+      "closeness": 0.785,
+      "slope_deg": 2.04,
+      "roughness_m": 30.8,
+      "tmin_c": -29.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.985,
+        "temperature": 0.465,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 79.425,
+      "lon": 11.4917,
+      "closeness": 0.785,
+      "slope_deg": 7.87,
+      "roughness_m": 28.4,
+      "tmin_c": -20.3,
+      "ice_thickness_m": 0.0,
+      "rock": "mt",
+      "scores": {
+        "slope": 0.984,
+        "roughness": 0.969,
+        "temperature": 0.972,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 81.6083,
+      "lon": 58.425,
+      "closeness": 0.7849,
+      "slope_deg": 7.89,
+      "roughness_m": 32.2,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "pb",
+      "scores": {
+        "slope": 0.986,
+        "roughness": 0.957,
+        "temperature": 0.981,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 66.3417,
+      "lon": -22.3417,
+      "closeness": 0.7842,
+      "slope_deg": 4.34,
+      "roughness_m": 31.1,
+      "tmin_c": -5.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.633,
+        "roughness": 0.979,
+        "temperature": 0.309,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.8583,
+      "lon": 100.525,
+      "closeness": 0.7839,
+      "slope_deg": 1.95,
+      "roughness_m": 29.5,
+      "tmin_c": -29.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.989,
+        "temperature": 0.46,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.7083,
+      "lon": 91.0417,
+      "closeness": 0.7837,
+      "slope_deg": 2.52,
+      "roughness_m": 30.7,
+      "tmin_c": -19.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.504,
+        "roughness": 0.985,
+        "temperature": 0.979,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 67.775,
+      "lon": 89.6417,
+      "closeness": 0.7836,
+      "slope_deg": 4.11,
+      "roughness_m": 32.4,
+      "tmin_c": -32.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.615,
+        "roughness": 0.952,
+        "temperature": 0.351,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 53.175,
+      "lon": 87.375,
+      "closeness": 0.7832,
+      "slope_deg": 2.22,
+      "roughness_m": 30.6,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.486,
+        "roughness": 0.989,
+        "temperature": 0.991,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 48.675,
+      "lon": 80.4917,
+      "closeness": 0.783,
+      "slope_deg": 2.14,
+      "roughness_m": 30.7,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "py",
+      "scores": {
+        "slope": 0.481,
+        "roughness": 0.985,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 67.0083,
+      "lon": 18.8083,
+      "closeness": 0.7827,
+      "slope_deg": 4.01,
+      "roughness_m": 34.3,
+      "tmin_c": -19.3,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.607,
+        "roughness": 0.917,
+        "temperature": 0.94,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 55.6083,
+      "lon": -66.6583,
+      "closeness": 0.7827,
+      "slope_deg": 2.65,
+      "roughness_m": 32.0,
+      "tmin_c": -29.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.513,
+        "roughness": 0.961,
+        "temperature": 0.44,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.775,
+      "lon": -66.725,
+      "closeness": 0.7824,
+      "slope_deg": 1.69,
+      "roughness_m": 31.0,
+      "tmin_c": -11.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.454,
+        "roughness": 0.981,
+        "temperature": 0.477,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 56.3083,
+      "lon": -103.5583,
+      "closeness": 0.7821,
+      "slope_deg": 1.94,
+      "roughness_m": 27.5,
+      "tmin_c": -28.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.469,
+        "roughness": 0.952,
+        "temperature": 0.49,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.675,
+      "lon": -19.525,
+      "closeness": 0.7819,
+      "slope_deg": 2.83,
+      "roughness_m": 30.2,
+      "tmin_c": -8.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.524,
+        "roughness": 0.996,
+        "temperature": 0.39,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 50.675,
+      "lon": -80.4417,
+      "closeness": 0.7817,
+      "slope_deg": 1.1,
+      "roughness_m": 23.5,
+      "tmin_c": -26.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.422,
+        "roughness": 0.879,
+        "temperature": 0.608,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 68.075,
+      "lon": 91.4417,
+      "closeness": 0.7815,
+      "slope_deg": 4.36,
+      "roughness_m": 30.4,
+      "tmin_c": -35.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.634,
+        "roughness": 0.993,
+        "temperature": 0.281,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -66.9917,
+      "lon": 163.175,
+      "closeness": 0.7811,
+      "slope_deg": 7.84,
+      "roughness_m": 121.8,
+      "tmin_c": -16.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.98,
+        "roughness": 0.159,
+        "temperature": 0.766,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 54.4417,
+      "lon": 59.175,
+      "closeness": 0.7811,
+      "slope_deg": 2.04,
+      "roughness_m": 30.5,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.475,
+        "roughness": 0.99,
+        "temperature": 0.991,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 48.675,
+      "lon": 70.2083,
+      "closeness": 0.7808,
+      "slope_deg": 1.96,
+      "roughness_m": 29.2,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.984,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 53.0417,
+      "lon": 70.375,
+      "closeness": 0.7805,
+      "slope_deg": 1.68,
+      "roughness_m": 30.0,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.454,
+        "roughness": 0.999,
+        "temperature": 1.0,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 64.8917,
+      "lon": -174.975,
+      "closeness": 0.7805,
+      "slope_deg": 2.09,
+      "roughness_m": 30.4,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.478,
+        "roughness": 0.991,
+        "temperature": 0.983,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 44.2417,
+      "lon": 119.725,
+      "closeness": 0.7804,
+      "slope_deg": 2.17,
+      "roughness_m": 31.4,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.482,
+        "roughness": 0.973,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 66.975,
+      "lon": 179.7417,
+      "closeness": 0.78,
+      "slope_deg": 1.61,
+      "roughness_m": 29.0,
+      "tmin_c": -29.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.98,
+        "temperature": 0.47,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 48.2083,
+      "lon": 78.7083,
+      "closeness": 0.78,
+      "slope_deg": 1.96,
+      "roughness_m": 30.8,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 0.984,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 64.9083,
+      "lon": -17.025,
+      "closeness": 0.78,
+      "slope_deg": 3.41,
+      "roughness_m": 29.8,
+      "tmin_c": -7.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.563,
+        "roughness": 0.995,
+        "temperature": 0.341,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.8583,
+      "lon": 125.075,
+      "closeness": 0.7799,
+      "slope_deg": 1.91,
+      "roughness_m": 30.4,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.467,
+        "roughness": 0.992,
+        "temperature": 0.991,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 63.575,
+      "lon": -140.2917,
+      "closeness": 0.7798,
+      "slope_deg": 3.63,
+      "roughness_m": 35.6,
+      "tmin_c": -30.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.579,
+        "roughness": 0.895,
+        "temperature": 0.425,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.5417,
+      "lon": 144.6417,
+      "closeness": 0.7797,
+      "slope_deg": 1.06,
+      "roughness_m": 29.7,
+      "tmin_c": -11.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.42,
+        "roughness": 0.993,
+        "temperature": 0.485,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 34.7917,
+      "lon": -108.3083,
+      "closeness": 0.7797,
+      "slope_deg": 1.78,
+      "roughness_m": 29.9,
+      "tmin_c": -10.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.459,
+        "roughness": 0.997,
+        "temperature": 0.442,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 73.675,
+      "lon": 92.6417,
+      "closeness": 0.7796,
+      "slope_deg": 4.02,
+      "roughness_m": 31.1,
+      "tmin_c": -34.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.608,
+        "roughness": 0.979,
+        "temperature": 0.311,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.325,
+      "lon": 82.0583,
+      "closeness": 0.7792,
+      "slope_deg": 1.69,
+      "roughness_m": 29.9,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "py",
+      "scores": {
+        "slope": 0.455,
+        "roughness": 0.999,
+        "temperature": 0.993,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 49.8417,
+      "lon": 72.0083,
+      "closeness": 0.7792,
+      "slope_deg": 1.85,
+      "roughness_m": 30.6,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.464,
+        "roughness": 0.987,
+        "temperature": 0.995,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 56.8917,
+      "lon": -126.6917,
+      "closeness": 0.7792,
+      "slope_deg": 1.92,
+      "roughness_m": 31.1,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.468,
+        "roughness": 0.979,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 53.9917,
+      "lon": 59.725,
+      "closeness": 0.779,
+      "slope_deg": 2.1,
+      "roughness_m": 30.9,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.478,
+        "roughness": 0.981,
+        "temperature": 0.985,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 45.4917,
+      "lon": 121.5917,
+      "closeness": 0.7789,
+      "slope_deg": 1.86,
+      "roughness_m": 30.5,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.464,
+        "roughness": 0.989,
+        "temperature": 0.991,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 56.2417,
+      "lon": -103.775,
+      "closeness": 0.7789,
+      "slope_deg": 0.64,
+      "roughness_m": 30.1,
+      "tmin_c": -28.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.399,
+        "roughness": 0.998,
+        "temperature": 0.497,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.975,
+      "lon": 19.2417,
+      "closeness": 0.7787,
+      "slope_deg": 3.32,
+      "roughness_m": 29.7,
+      "tmin_c": -18.6,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.557,
+        "roughness": 0.993,
+        "temperature": 0.893,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 44.125,
+      "lon": -118.8917,
+      "closeness": 0.7787,
+      "slope_deg": 1.62,
+      "roughness_m": 30.5,
+      "tmin_c": -10.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.45,
+        "roughness": 0.99,
+        "temperature": 0.453,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.375,
+      "lon": -55.2417,
+      "closeness": 0.7786,
+      "slope_deg": 2.07,
+      "roughness_m": 30.8,
+      "tmin_c": -10.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.476,
+        "roughness": 0.983,
+        "temperature": 0.433,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 70.5083,
+      "lon": 100.6917,
+      "closeness": 0.7777,
+      "slope_deg": 4.76,
+      "roughness_m": 29.7,
+      "tmin_c": -37.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.667,
+        "roughness": 0.994,
+        "temperature": 0.228,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.4917,
+      "lon": -116.575,
+      "closeness": 0.7774,
+      "slope_deg": 2.08,
+      "roughness_m": 30.2,
+      "tmin_c": -9.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.997,
+        "temperature": 0.413,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.7917,
+      "lon": 124.0083,
+      "closeness": 0.7771,
+      "slope_deg": 1.96,
+      "roughness_m": 30.0,
+      "tmin_c": -30.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.47,
+        "roughness": 1.0,
+        "temperature": 0.416,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 45.125,
+      "lon": 120.9917,
+      "closeness": 0.777,
+      "slope_deg": 1.55,
+      "roughness_m": 30.1,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.447,
+        "roughness": 0.999,
+        "temperature": 0.989,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 34.025,
+      "lon": -109.5917,
+      "closeness": 0.777,
+      "slope_deg": 1.57,
+      "roughness_m": 29.7,
+      "tmin_c": -10.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.447,
+        "roughness": 0.994,
+        "temperature": 0.443,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.9417,
+      "lon": -140.625,
+      "closeness": 0.7769,
+      "slope_deg": 2.06,
+      "roughness_m": 30.8,
+      "tmin_c": -30.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.476,
+        "roughness": 0.985,
+        "temperature": 0.424,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.225,
+      "lon": -118.325,
+      "closeness": 0.7768,
+      "slope_deg": 1.47,
+      "roughness_m": 30.5,
+      "tmin_c": -10.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.442,
+        "roughness": 0.991,
+        "temperature": 0.451,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.325,
+      "lon": 77.6917,
+      "closeness": 0.7764,
+      "slope_deg": 1.54,
+      "roughness_m": 30.3,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.994,
+        "temperature": 0.992,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 69.475,
+      "lon": -141.875,
+      "closeness": 0.7763,
+      "slope_deg": 4.23,
+      "roughness_m": 38.1,
+      "tmin_c": -30.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.624,
+        "roughness": 0.851,
+        "temperature": 0.406,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 79.3083,
+      "lon": 16.025,
+      "closeness": 0.7763,
+      "slope_deg": 7.49,
+      "roughness_m": 30.4,
+      "tmin_c": -20.6,
+      "ice_thickness_m": 0.0,
+      "rock": "mt",
+      "scores": {
+        "slope": 0.938,
+        "roughness": 0.992,
+        "temperature": 0.951,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 49.975,
+      "lon": 74.975,
+      "closeness": 0.776,
+      "slope_deg": 1.45,
+      "roughness_m": 30.2,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.441,
+        "roughness": 0.996,
+        "temperature": 0.993,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 59.525,
+      "lon": 100.0083,
+      "closeness": 0.7759,
+      "slope_deg": 2.77,
+      "roughness_m": 29.8,
+      "tmin_c": -32.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.52,
+        "roughness": 0.995,
+        "temperature": 0.364,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 40.975,
+      "lon": -115.525,
+      "closeness": 0.7759,
+      "slope_deg": 1.32,
+      "roughness_m": 29.9,
+      "tmin_c": -10.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.434,
+        "roughness": 0.998,
+        "temperature": 0.447,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 37.875,
+      "lon": 46.6417,
+      "closeness": 0.7756,
+      "slope_deg": 1.78,
+      "roughness_m": 30.1,
+      "tmin_c": -9.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.459,
+        "roughness": 0.999,
+        "temperature": 0.42,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.525,
+      "lon": 168.3917,
+      "closeness": 0.7751,
+      "slope_deg": 3.61,
+      "roughness_m": 30.4,
+      "tmin_c": -34.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.577,
+        "roughness": 0.992,
+        "temperature": 0.306,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.6083,
+      "lon": -137.3083,
+      "closeness": 0.7749,
+      "slope_deg": 2.73,
+      "roughness_m": 31.4,
+      "tmin_c": -31.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.518,
+        "roughness": 0.972,
+        "temperature": 0.385,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 56.9583,
+      "lon": -131.0917,
+      "closeness": 0.7746,
+      "slope_deg": 3.85,
+      "roughness_m": 47.4,
+      "tmin_c": -13.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.595,
+        "roughness": 0.706,
+        "temperature": 0.572,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.9583,
+      "lon": -113.275,
+      "closeness": 0.7746,
+      "slope_deg": 3.48,
+      "roughness_m": 31.1,
+      "tmin_c": -33.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.568,
+        "roughness": 0.979,
+        "temperature": 0.325,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 42.1917,
+      "lon": 82.4417,
+      "closeness": 0.7746,
+      "slope_deg": 1.4,
+      "roughness_m": 30.5,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "py",
+      "scores": {
+        "slope": 0.438,
+        "roughness": 0.99,
+        "temperature": 0.994,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 68.725,
+      "lon": 95.775,
+      "closeness": 0.7746,
+      "slope_deg": 5.21,
+      "roughness_m": 32.8,
+      "tmin_c": -38.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.705,
+        "roughness": 0.946,
+        "temperature": 0.222,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 56.0917,
+      "lon": -103.6417,
+      "closeness": 0.7744,
+      "slope_deg": 1.86,
+      "roughness_m": 25.2,
+      "tmin_c": -28.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.464,
+        "roughness": 0.909,
+        "temperature": 0.499,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 67.7417,
+      "lon": -118.0583,
+      "closeness": 0.7744,
+      "slope_deg": 2.39,
+      "roughness_m": 29.9,
+      "tmin_c": -31.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.496,
+        "roughness": 0.998,
+        "temperature": 0.378,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.4917,
+      "lon": 151.4083,
+      "closeness": 0.7743,
+      "slope_deg": 6.55,
+      "roughness_m": 72.1,
+      "tmin_c": -26.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.834,
+        "roughness": 0.431,
+        "temperature": 0.606,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 35.4083,
+      "lon": -111.9583,
+      "closeness": 0.7742,
+      "slope_deg": 1.47,
+      "roughness_m": 30.1,
+      "tmin_c": -9.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.442,
+        "roughness": 0.999,
+        "temperature": 0.43,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": -73.3083,
+      "lon": 164.1417,
+      "closeness": 0.774,
+      "slope_deg": 1.69,
+      "roughness_m": 30.2,
+      "tmin_c": -30.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.455,
+        "roughness": 0.995,
+        "temperature": 0.42,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 80.8083,
+      "lon": -86.9417,
+      "closeness": 0.7739,
+      "slope_deg": 8.29,
+      "roughness_m": 34.7,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "?",
+      "scores": {
+        "slope": 0.964,
+        "roughness": 0.91,
+        "temperature": 0.995,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 71.5083,
+      "lon": 103.4417,
+      "closeness": 0.7738,
+      "slope_deg": 4.55,
+      "roughness_m": 29.8,
+      "tmin_c": -38.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.65,
+        "roughness": 0.996,
+        "temperature": 0.223,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 55.5417,
+      "lon": -66.975,
+      "closeness": 0.7738,
+      "slope_deg": 2.16,
+      "roughness_m": 32.8,
+      "tmin_c": -29.8,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.482,
+        "roughness": 0.946,
+        "temperature": 0.441,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 82.1083,
+      "lon": -54.875,
+      "closeness": 0.7737,
+      "slope_deg": 7.55,
+      "roughness_m": 29.3,
+      "tmin_c": -20.8,
+      "ice_thickness_m": 0.0,
+      "rock": "?",
+      "scores": {
+        "slope": 0.946,
+        "roughness": 0.987,
+        "temperature": 0.937,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 50.325,
+      "lon": 84.8083,
+      "closeness": 0.7734,
+      "slope_deg": 1.75,
+      "roughness_m": 29.4,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.458,
+        "roughness": 0.988,
+        "temperature": 0.971,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 67.3417,
+      "lon": -108.575,
+      "closeness": 0.7734,
+      "slope_deg": 3.57,
+      "roughness_m": 30.3,
+      "tmin_c": -34.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.575,
+        "roughness": 0.994,
+        "temperature": 0.298,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.8083,
+      "lon": -144.675,
+      "closeness": 0.7731,
+      "slope_deg": 2.11,
+      "roughness_m": 29.7,
+      "tmin_c": -31.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.479,
+        "roughness": 0.994,
+        "temperature": 0.392,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 64.325,
+      "lon": 174.9917,
+      "closeness": 0.773,
+      "slope_deg": 1.35,
+      "roughness_m": 25.4,
+      "tmin_c": -27.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.436,
+        "roughness": 0.912,
+        "temperature": 0.517,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 65.3083,
+      "lon": -14.475,
+      "closeness": 0.7729,
+      "slope_deg": 3.5,
+      "roughness_m": 30.0,
+      "tmin_c": -5.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.57,
+        "roughness": 0.999,
+        "temperature": 0.296,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 61.1083,
+      "lon": 156.1917,
+      "closeness": 0.7729,
+      "slope_deg": 2.1,
+      "roughness_m": 28.6,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.478,
+        "roughness": 0.972,
+        "temperature": 0.964,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 45.725,
+      "lon": -117.0417,
+      "closeness": 0.7728,
+      "slope_deg": 2.32,
+      "roughness_m": 29.3,
+      "tmin_c": -8.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.492,
+        "roughness": 0.985,
+        "temperature": 0.387,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 44.1583,
+      "lon": 108.0417,
+      "closeness": 0.7727,
+      "slope_deg": 1.16,
+      "roughness_m": 29.4,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.425,
+        "roughness": 0.989,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 50.3083,
+      "lon": 82.8917,
+      "closeness": 0.7725,
+      "slope_deg": 1.59,
+      "roughness_m": 31.7,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.449,
+        "roughness": 0.967,
+        "temperature": 0.997,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 68.9583,
+      "lon": 97.675,
+      "closeness": 0.7724,
+      "slope_deg": 6.0,
+      "roughness_m": 37.0,
+      "tmin_c": -38.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.779,
+        "roughness": 0.87,
+        "temperature": 0.214,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 59.675,
+      "lon": 148.4083,
+      "closeness": 0.7724,
+      "slope_deg": 2.88,
+      "roughness_m": 30.9,
+      "tmin_c": -32.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.527,
+        "roughness": 0.982,
+        "temperature": 0.353,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 62.8083,
+      "lon": 165.6583,
+      "closeness": 0.7723,
+      "slope_deg": 4.71,
+      "roughness_m": 44.3,
+      "tmin_c": -29.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.663,
+        "roughness": 0.751,
+        "temperature": 0.448,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 34.5083,
+      "lon": -107.925,
+      "closeness": 0.7723,
+      "slope_deg": 1.48,
+      "roughness_m": 30.0,
+      "tmin_c": -9.6,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.443,
+        "roughness": 1.0,
+        "temperature": 0.419,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 66.625,
+      "lon": 90.5917,
+      "closeness": 0.7723,
+      "slope_deg": 3.57,
+      "roughness_m": 31.0,
+      "tmin_c": -34.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.575,
+        "roughness": 0.981,
+        "temperature": 0.306,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.9083,
+      "lon": 126.125,
+      "closeness": 0.7722,
+      "slope_deg": 2.32,
+      "roughness_m": 30.9,
+      "tmin_c": -31.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.492,
+        "roughness": 0.982,
+        "temperature": 0.387,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.625,
+      "lon": 126.425,
+      "closeness": 0.7722,
+      "slope_deg": 1.92,
+      "roughness_m": 30.6,
+      "tmin_c": -30.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.468,
+        "roughness": 0.989,
+        "temperature": 0.404,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.375,
+      "lon": 82.175,
+      "closeness": 0.7719,
+      "slope_deg": 2.1,
+      "roughness_m": 32.5,
+      "tmin_c": -19.8,
+      "ice_thickness_m": 0.0,
+      "rock": "py",
+      "scores": {
+        "slope": 0.478,
+        "roughness": 0.951,
+        "temperature": 0.98,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": -73.3083,
+      "lon": 164.1917,
+      "closeness": 0.7719,
+      "slope_deg": 2.07,
+      "roughness_m": 31.1,
+      "tmin_c": -30.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.477,
+        "roughness": 0.978,
+        "temperature": 0.405,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 31.1417,
+      "lon": 84.3417,
+      "closeness": 0.7717,
+      "slope_deg": 1.24,
+      "roughness_m": 30.6,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.429,
+        "roughness": 0.988,
+        "temperature": 0.991,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 71.0917,
+      "lon": 102.9917,
+      "closeness": 0.7717,
+      "slope_deg": 4.55,
+      "roughness_m": 29.0,
+      "tmin_c": -37.7,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.65,
+        "roughness": 0.98,
+        "temperature": 0.229,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 60.4917,
+      "lon": 164.1417,
+      "closeness": 0.7716,
+      "slope_deg": 0.45,
+      "roughness_m": 12.3,
+      "tmin_c": -23.2,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.389,
+        "roughness": 0.702,
+        "temperature": 0.767,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 52.4417,
+      "lon": 99.5083,
+      "closeness": 0.7716,
+      "slope_deg": 1.97,
+      "roughness_m": 30.6,
+      "tmin_c": -31.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.471,
+        "roughness": 0.988,
+        "temperature": 0.399,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 49.1917,
+      "lon": 85.075,
+      "closeness": 0.7716,
+      "slope_deg": 1.13,
+      "roughness_m": 30.6,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.424,
+        "roughness": 0.988,
+        "temperature": 0.996,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 43.175,
+      "lon": -121.4583,
+      "closeness": 0.7714,
+      "slope_deg": 1.74,
+      "roughness_m": 30.7,
+      "tmin_c": -9.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.457,
+        "roughness": 0.986,
+        "temperature": 0.414,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 43.425,
+      "lon": -121.275,
+      "closeness": 0.7714,
+      "slope_deg": 1.56,
+      "roughness_m": 29.8,
+      "tmin_c": -9.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.447,
+        "roughness": 0.996,
+        "temperature": 0.414,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 47.1917,
+      "lon": -53.3583,
+      "closeness": 0.7713,
+      "slope_deg": 2.01,
+      "roughness_m": 31.0,
+      "tmin_c": -9.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.473,
+        "roughness": 0.98,
+        "temperature": 0.403,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 78.875,
+      "lon": 13.2417,
+      "closeness": 0.771,
+      "slope_deg": 8.05,
+      "roughness_m": 31.1,
+      "tmin_c": -21.5,
+      "ice_thickness_m": 0.0,
+      "rock": "sm",
+      "scores": {
+        "slope": 0.994,
+        "roughness": 0.978,
+        "temperature": 0.883,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 65.1083,
+      "lon": -172.7083,
+      "closeness": 0.7709,
+      "slope_deg": 3.26,
+      "roughness_m": 33.3,
+      "tmin_c": -21.1,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.553,
+        "roughness": 0.937,
+        "temperature": 0.915,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 36.6917,
+      "lon": 93.3417,
+      "closeness": 0.7709,
+      "slope_deg": 1.54,
+      "roughness_m": 30.2,
+      "tmin_c": -20.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.446,
+        "roughness": 0.997,
+        "temperature": 0.961,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 36.8417,
+      "lon": 93.025,
+      "closeness": 0.7709,
+      "slope_deg": 1.08,
+      "roughness_m": 30.7,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.421,
+        "roughness": 0.986,
+        "temperature": 0.998,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 29.9917,
+      "lon": 86.8917,
+      "closeness": 0.7708,
+      "slope_deg": 1.08,
+      "roughness_m": 29.5,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.421,
+        "roughness": 0.99,
+        "temperature": 0.993,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 68.925,
+      "lon": 93.3083,
+      "closeness": 0.7705,
+      "slope_deg": 4.62,
+      "roughness_m": 33.1,
+      "tmin_c": -36.3,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.655,
+        "roughness": 0.939,
+        "temperature": 0.258,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 35.8083,
+      "lon": 101.725,
+      "closeness": 0.7702,
+      "slope_deg": 1.09,
+      "roughness_m": 30.0,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.422,
+        "roughness": 1.0,
+        "temperature": 0.98,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 79.9583,
+      "lon": 16.0917,
+      "closeness": 0.77,
+      "slope_deg": 7.95,
+      "roughness_m": 35.9,
+      "tmin_c": -20.4,
+      "ice_thickness_m": 0.0,
+      "rock": "mt",
+      "scores": {
+        "slope": 0.994,
+        "roughness": 0.888,
+        "temperature": 0.968,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 45.675,
+      "lon": 149.7917,
+      "closeness": 0.7697,
+      "slope_deg": 1.92,
+      "roughness_m": 32.6,
+      "tmin_c": -9.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.467,
+        "roughness": 0.95,
+        "temperature": 0.431,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 73.375,
+      "lon": 87.0583,
+      "closeness": 0.7696,
+      "slope_deg": 2.42,
+      "roughness_m": 30.2,
+      "tmin_c": -32.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.498,
+        "roughness": 0.996,
+        "temperature": 0.354,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 72.1083,
+      "lon": 106.4917,
+      "closeness": 0.7694,
+      "slope_deg": 4.5,
+      "roughness_m": 28.5,
+      "tmin_c": -37.5,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.646,
+        "roughness": 0.969,
+        "temperature": 0.232,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 69.275,
+      "lon": 98.225,
+      "closeness": 0.7689,
+      "slope_deg": 4.76,
+      "roughness_m": 32.3,
+      "tmin_c": -38.0,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.667,
+        "roughness": 0.955,
+        "temperature": 0.223,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 80.275,
+      "lon": 24.8583,
+      "closeness": 0.7689,
+      "slope_deg": 8.65,
+      "roughness_m": 33.4,
+      "tmin_c": -20.1,
+      "ice_thickness_m": 0.0,
+      "rock": "mt",
+      "scores": {
+        "slope": 0.922,
+        "roughness": 0.933,
+        "temperature": 0.989,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 81.2583,
+      "lon": 55.7083,
+      "closeness": 0.7684,
+      "slope_deg": 8.53,
+      "roughness_m": 34.9,
+      "tmin_c": -20.0,
+      "ice_thickness_m": 0.0,
+      "rock": "su",
+      "scores": {
+        "slope": 0.936,
+        "roughness": 0.906,
+        "temperature": 0.999,
+        "ice": 1.0,
+        "rock": 0.0
+      }
+    },
+    {
+      "lat": 42.3417,
+      "lon": -116.6417,
+      "closeness": 0.7684,
+      "slope_deg": 1.26,
+      "roughness_m": 29.9,
+      "tmin_c": -9.4,
+      "ice_thickness_m": 0.0,
+      "rock": "vb",
+      "scores": {
+        "slope": 0.431,
+        "roughness": 0.998,
+        "temperature": 0.413,
+        "ice": 1.0,
+        "rock": 1.0
+      }
+    },
+    {
+      "lat": 30.5083,
+      "lon": 87.825,
+      "closeness": 0.7682,
+      "slope_deg": 0.97,
+      "roughness_m": 29.6,
+      "tmin_c": -20.2,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.415,
+        "roughness": 0.991,
+        "temperature": 0.985,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 54.5083,
+      "lon": 88.6083,
+      "closeness": 0.7681,
+      "slope_deg": 0.78,
+      "roughness_m": 30.1,
+      "tmin_c": -19.9,
+      "ice_thickness_m": 0.0,
+      "rock": "vi",
+      "scores": {
+        "slope": 0.405,
+        "roughness": 0.998,
+        "temperature": 0.988,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    },
+    {
+      "lat": 29.525,
+      "lon": 85.6583,
+      "closeness": 0.7673,
+      "slope_deg": 1.42,
+      "roughness_m": 30.1,
+      "tmin_c": -19.4,
+      "ice_thickness_m": 0.0,
+      "rock": "va",
+      "scores": {
+        "slope": 0.44,
+        "roughness": 0.997,
+        "temperature": 0.95,
+        "ice": 1.0,
+        "rock": 0.45
+      }
+    }
+  ]
+}
