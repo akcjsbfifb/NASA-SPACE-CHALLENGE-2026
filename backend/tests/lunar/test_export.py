@@ -21,19 +21,24 @@ def test_extensible_document_deterministic_no_invented_values(metadata_pair, reg
     assert measures["rock_abundance"]["available"] is False  # fuera de ±70°
     assert measures["rock_abundance"]["status"] == "not_implemented"
     assert measures["rock_abundance"]["value"] is None
-    assert measures["slope"]["status"] == "not_implemented"
+    # El fixture original tiene sólo dos filas: falta un vecino latitudinal.
+    assert measures["slope"]["status"] == "not_sampled"
     assert measures["slope"]["selected_for_project"] is True
-    assert measures["slope"]["implemented"] is False
+    assert measures["slope"]["implemented"] is True
     slope_definition = next(item for item in registry["variables"] if item["id"] == "slope")
-    assert slope_definition["implementation_status"] == "in_development_external"
+    assert slope_definition["implementation_status"] == "implemented_derived"
     assert measures["lend_neutron_indicator"]["status"] == "not_implemented"
     assert measures["lend_neutron_indicator"]["value"] is None
     assert measures["lend_neutron_indicator"]["implemented"] is False
-    assert measures["slope"]["available"] is None
+    assert measures["slope"]["available"] is False
     assert measures["earth_visibility"]["status"] == "not_implemented"
     assert all(item["used_in_similarity"] is None for item in measures.values())
     for source in first["sources"].values():
-        assert all(len(item["sha256"]) == 64 for item in source["files"])
+        if source.get("kind") == "derived_measurement":
+            assert source["derived_from"] == ["elevation"]
+            assert source["independent_nasa_product"] is False
+        else:
+            assert all(len(item["sha256"]) == 64 for item in source["files"])
     destination = tmp_path / "result.json"
     write_document(first, destination)
     assert json.loads(destination.read_text(encoding="utf-8")) == first

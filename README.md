@@ -6,7 +6,8 @@ componentes de frontend, backend o procesamiento terrestre.
 
 ## MoonStudies — módulo de datos lunares
 
-Extractor local de **elevación LOLA LDEM 16** y **rugosidad LOLA LDRM 32/50**
+Extractor local de **elevación LOLA LDEM 16**, **rugosidad LOLA LDRM 32/50**
+y **pendiente derivada del LDEM por diferencias centrales**
 para coordenadas lunares. Exporta JSON con unidades, celdas consultadas,
 procedencia, hashes y calidad de procesamiento. No calcula similitud terrestre
 ni evalúa seguridad de aterrizaje.
@@ -36,7 +37,7 @@ Windows con Python 3.12.10. El empaquetador se resuelve mediante `pyproject.toml
 El equipo puede usar directamente
 [`lola_measurements.example.json`](data/moon/lola_measurements.example.json)
 sin descargar los IMG ni instalar Python. Incluye elevación y rugosidad reales
-extraídas de LOLA para los dos puntos de prueba de
+extraídas de LOLA, más pendiente derivada con cinco alturas, para los dos puntos de prueba de
 `backend/tests/lunar/fixtures/sites.example.json`.
 Ambos están marcados `is_example: true`; no son sitios de misión definitivos.
 
@@ -46,7 +47,9 @@ mantienen valores nulos y estados explícitos. El JSON no calcula similitud.
 
 El [JSON histórico publicado](NASA-Lunar-Studies/examples/lola_measurements.example.json)
 se conserva sin modificar. Las mediciones LOLA de ambas versiones son iguales;
-la nueva registra las rutas actuales y prepara los estados pendientes del proyecto.
+la nueva registra las rutas actuales y agrega pendiente derivada sin modificar
+elevación ni rugosidad. El método y sus límites están en la
+[metodología LOLA](docs/moon/lola_methodology.md#pendiente-derivada-de-ldem).
 
 ## Datos requeridos para regenerar las mediciones
 

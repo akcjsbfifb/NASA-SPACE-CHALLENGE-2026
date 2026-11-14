@@ -6,7 +6,8 @@ La herramienta lee exclusivamente LDEM_16_FLOAT y LDRM_32_50_FLOAT locales.
 El único paquete está en `backend/processing/lunar_data/`; registro y mediciones
 compartidas están en `data/moon/`, y las pruebas en `backend/tests/lunar/`.
 Los originales siguen en `NASA-Lunar-Studies/data/raw/`. Esta migración conserva
-el contrato JSON 1.0.0 y los cálculos, sin endpoints ni exportación CSV.
+el contrato JSON 1.0.0. La versión 0.2.0 agrega pendiente derivada, sin alterar
+elevación o rugosidad y sin endpoints ni exportación CSV.
 El flujo es: validación de coordenadas y registro → interpretación PDS4/PDS3 →
 validación estructural del IMG → lectura puntual de celdas nativas → conversión
 física → JSON estricto. No hay descargas, reproyección global ni interpolación
@@ -182,11 +183,13 @@ de toda la georreferenciación. Ningún resultado implica seguridad de aterrizaj
 
 ## Referencia antes y después de la migración
 
-Se preservan los 60 casos originales y los imports públicos `lunar_data`.
-`metadata.py`, `lola.py` y `export.py` no cambian sus algoritmos. El CLI resuelve
+En la primera etapa se preservaron los 60 casos originales y los imports públicos
+`lunar_data`. `metadata.py`, `lola.py` y `export.py` se trasladaron sin alterar
+sus algoritmos. El CLI resuelve
 por defecto las rutas del checkout; los argumentos de rutas explícitas se
-mantienen. El registro 1.1.0 prepara LEND y pendiente externa con valores nulos;
-esas diferencias documentales no alteran los valores LOLA ni sus fuentes.
+mantienen. El registro 1.1.0 preparó LEND y pendiente externa con valores nulos;
+el registro actual 1.2.0 incorpora pendiente derivada. Elevación y rugosidad
+conservan sus valores, fuentes y registros completos de medición.
 
 La comparación registra por separado valores almacenados/convertidos, unidades,
 coordenadas, centros, índices, advertencias y fuentes. Los hashes de código y
@@ -194,3 +197,102 @@ registro pueden cambiar legítimamente. La versión histórica publicada se
 conserva en `NASA-Lunar-Studies/examples/lola_measurements.example.json`.
 La guía y los pasos para el otro desarrollador están en
 [integration.md](integration.md).
+
+## Pendiente derivada de LDEM
+
+Implementada en `lunar_data` 0.2.0, registro 1.2.0. Se adapta el método de
+diferencias centrales de **n.x**, commit
+[`d6daf40f7e12815f3b83418ce4b5bd6928f0acf8`](https://github.com/akcjsbfifb/NASA-SPACE-CHALLENGE-2026/commit/d6daf40f7e12815f3b83418ce4b5bd6928f0acf8)
+de `lola-slope`. La adaptación conserva la fórmula y agrega lectura puntual,
+validación, exportación y pruebas; no integra ni modifica su rama.
+
+`LolaRaster.sample_slope(latitude_deg, longitude_deg)` utiliza el mismo LDEM
+abierto y la misma selección de celda que `sample()`. Lee cinco escalares:
+centro, norte, sur, este y oeste. No calcula pendiente al abrir, no construye
+matrices globales y no agrega otro lector. `slope.py` sólo contiene geometría
+y matemática escalar, sin operaciones de archivos.
+
+Con alturas en metros, radio R = 1737400 m tomado de los metadatos, paso angular
+Δθ y latitud φ del **centro del píxel**, el método 1.0.0 es:
+
+```text
+z_m = raw_km * scaling_factor * 1000       (sin sumar OFFSET)
+dy = R * radians(Δθ)
+dx = dy * cos(radians(φ))
+gx = (z_este - z_oeste) / (2 * dx)
+gy = (z_sur - z_norte) / (2 * dy)
+slope_deg = degrees(atan(hypot(gx, gy)))
+```
+
+La derivada norte-sur se orienta hacia el sur; el signo no altera su magnitud.
+El centro no participa en la resta, pero se exige su validez. No se implementa
+aspecto, Horn, ajuste de plano, suavizado ni derivadas unilaterales.
+
+Las columnas son periódicas: el oeste de la columna 0 es la última columna.
+Polos exactos y primera/última fila producen `not_sampled`, `available: false`
+y valor nulo, con motivo explícito. En filas extremas sólo se lee el centro;
+no se inventa un vecino. Un NaN, infinito o constante especial declarada en
+cualquiera de las cinco entradas produce `missing` y pendiente nula. Cero y
+alturas negativas son válidos. Valores fuera de estadísticas publicadas generan
+advertencia, no una sustitución o descarte automático.
+
+La salida preserva las coordenadas solicitadas y normalizadas, fila/columna,
+centros, `dx_m`, `dy_m`, separación entre vecinos opuestos y relación de pasos.
+`input_samples` contiene alturas originales, convertidas, unidades, estados y
+advertencias de cada entrada. `raw_value` y `raw_unit` de la pendiente son nulos:
+no existe una banda NASA original de pendiente en este cálculo. `value` conserva
+el ángulo calculado, sin normalizar ni redondear para presentación.
+`sources.slope` es una derivación de `sources.elevation`, donde permanecen el
+producto, etiquetas, período, URL y hashes originales. El método y su atribución
+se registran tanto en fuente como en medición. No se calculan pesos ni similitud.
+
+### Escala y limitaciones
+
+El paso angular es 0,0625°. El paso norte-sur es ≈1895,2094 m y la separación
+entre vecinos opuestos ≈3790,4188 m. Estas distancias no son incertidumbre ni
+resolución efectiva. En el ejemplo austral, φ = −85,03125°, el paso este-oeste
+es ≈164,1486 m y la separación opuesta ≈328,2972 m. El cálculo tiene soporte
+anisotrópico: no representa pendiente a una escala física uniforme.
+
+Se advierte en todas las mediciones que el paso longitudinal disminuye hacia
+los polos. No se introduce un límite artificial de dx ni un umbral arbitrario
+de exclusión por latitud. La disponibilidad numérica no acredita precisión
+polar: la división por pasos pequeños amplifica diferencias y errores del DEM.
+La esfera de radio constante es una aproximación; no se modelan topografía
+subpíxel, obstáculos, incertidumbre del gradiente ni seguridad de aterrizaje.
+
+La pendiente terrestre de ETOPO usa una definición angular semejante, pero
+distancias aproximadas, un mínimo dx de 200 m, sustitución de vecinos ausentes
+y bordes replicados. Por ello no se habilita automáticamente su comparación.
+
+### Contraste local reproducible
+
+`test_real_slope_independent_five_binary_reads` abre el IMG mediante
+`seek` + `struct.unpack`, calcula índices y distancias independientemente y
+evalúa `atan(sqrt(gx*gx + gy*gy))*180/pi`, sin llamar a las funciones de
+`slope.py`. Tolerancia numérica: 1e-12 grados, no incertidumbre científica.
+
+| Coordenada solicitada | Fila, columna | Pendiente (°) | Independiente (°) | Diferencia absoluta (°) |
+|---|---|---|---|---|
+| 0°, 0° E | 1440, 0 | 0.1900942345716397 | 0.1900942345716397 | 0 |
+| −85°, −10° E | 2800, 5600 | 9.61866522327338 | 9.618665223273384 | 3.55e-15 |
+
+| Altura convertida (m) | Ecuatorial | Austral |
+|---|---:|---:|
+| Centro | −718.6850309371948 | −351.0236144065857 |
+| Norte | −728.7025451660156 | −603.2520532608032 |
+| Sur | −718.8617587089539 | −17.284920439124107 |
+| Este | −717.0171141624451 | −353.1443178653717 |
+| Oeste | −724.847137928009 | −330.34637570381165 |
+
+La suite conserva los 60 casos anteriores con expectativas de pendiente
+actualizadas y agrega 60 casos: 120 aprobados con los IMG locales presentes.
+Incluye gradientes analíticos, faltantes en cada posición, periodicidad,
+geometría, recursos, acceso restringido a cinco escalares y JSON idéntico entre
+ejecuciones. Los registros completos previos de elevación y rugosidad, sus
+fuentes, coordenadas y los hashes de 17 archivos protegidos coinciden antes y
+después. El manifiesto y el contraste detallado quedan localmente en
+`NASA-Lunar-Studies/output/slope_integration.*.json`, excluidos de Git.
+
+La concordancia valida esta implementación numérica, no una comprobación
+externa del DEM, de la georreferenciación o de la precisión física.

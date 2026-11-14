@@ -77,15 +77,18 @@ es la publicación mantenida. El
 [JSON histórico](../../NASA-Lunar-Studies/examples/lola_measurements.example.json)
 permanece byte a byte como referencia de la versión anterior.
 
-Consultar `sites[].measurements.elevation` y `roughness`, verificando `available`,
+Consultar `sites[].measurements.elevation`, `roughness` y `slope`, verificando `available`,
 `status`, `unit` y advertencias. Seguir `source_ref` a las fuentes y hashes.
 `used_in_similarity: null` indica que el procesador no conoce la decisión del
 comparador. Un dato faltante o un procesador pendiente no equivale a cero ni a
 condiciones favorables.
 
-El registro 1.1.0 prepara LEND pendiente y pendiente lunar en desarrollo externo.
-No agrega valores ni procesadores; la salida conserva la versión de contrato
-1.0.0. CSV, Diviner, iluminación, LEND y normalización quedan para otras etapas.
+El registro 1.2.0 incorpora pendiente derivada del LDEM; el paquete es 0.2.0.
+La salida conserva el contrato 1.0.0 con campos aditivos de método, entradas y
+distancias. `sources.slope` referencia `elevation`: no es otro producto NASA.
+`input_samples` conserva las cinco alturas originales y convertidas, índices,
+centros, unidades y estados. Una altura ausente invalida la pendiente completa.
+CSV, Diviner, iluminación, LEND y normalización quedan para otras etapas.
 
 ## Pruebas y documentación
 
@@ -93,7 +96,8 @@ No agrega valores ni procesadores; la salida conserva la versión de contrato
 .\.venv\Scripts\python.exe -m pytest .\backend\tests\lunar
 ```
 
-Se conservan los 60 casos, con pruebas sintéticas y comprobaciones opcionales
+Se conservan los 60 casos originales (adaptando las expectativas del estado de
+pendiente) y se agregan 60 casos, con pruebas sintéticas y comprobaciones opcionales
 contra los IMG locales. Las pruebas locales se omiten si faltan esas entradas;
 no requieren descargarlas. pvl 1.3.2 emite una advertencia de deprecación interna
 conocida; no se oculta. Las comprobaciones externas QGIS/GDAL siguen pendientes.

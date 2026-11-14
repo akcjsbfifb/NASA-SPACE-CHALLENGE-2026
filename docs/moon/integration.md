@@ -6,7 +6,9 @@ Trabajo aislado en `feature/lunar-backend-integration`, creada desde `main`
 `ff2baf39cbaa964ec1ea6657acae4dfc13eccb64`. No se integra ni modifica
 `review/lunar-roughness-comparison`. Su referencia remota observada durante la
 migración fue `c27b21f37f9de5a763a28b5ba93656e33c48edc9`; puede avanzar en paralelo.
-No hay commit ni push de esta entrega mientras está en revisión.
+La migración se publicó en `f79904a286946f226bf273a33fe9f5f6d78857cb`.
+La adaptación posterior de pendiente se entrega en un commit independiente
+de la migración; se describe en este documento.
 
 La migración sólo traslada el paquete, las pruebas, configuración y documentos,
 agrega un script que delega en el CLI y publica un JSON regenerado. No implementa
@@ -84,9 +86,52 @@ En main el backend y el servidor terrestre pueden intentar usar el mismo puerto
 de ese servicio y los parámetros del comparador pertenece a sus responsables;
 no se modifica aquí.
 
-## Registro y preparación futura
+## Adaptación posterior: pendiente puntual en el backend
 
-La única configuración mantenida es `data/moon/variables.json`, registro 1.1.0.
+La versión 0.2.0 agrega `LolaRaster.sample_slope(lat, lon)` y pendiente al JSON
+científico (registro 1.2.0). Conserva `sample()` y los imports públicos. El método
+de diferencias centrales de n.x se adapta desde el commit
+`d6daf40f7e12815f3b83418ce4b5bd6928f0acf8`, sin fusionar ni modificar
+`lola-slope`. No hay un segundo lector ni catálogo. La fórmula y el contraste
+independiente están en [lola_methodology.md](lola_methodology.md#pendiente-derivada-de-ldem).
+
+Para quien mantiene `review/lunar-roughness-comparison`, después de coordinar
+la integración y reinstalar el paquete editable desde `backend`:
+
+```python
+from lunar_data.lola import LolaRaster
+from lunar_data.metadata import load_metadata
+
+with LolaRaster(load_metadata(ldem_xml_path)) as elevation:
+    height = elevation.sample(latitude, longitude)  # API anterior intacta
+    slope = elevation.sample_slope(latitude, longitude)
+    if slope["available"]:
+        slope_deg = slope["value"]
+```
+
+En un servicio que ya conserva el LDEM abierto, se llama al mismo objeto:
+no se abre otro lector para pendiente. Debe seguir retirándose el `sys.path`
+de la antigua ruta `NASA-Lunar-Studies/src`; los datos crudos no cambiaron de
+ubicación. El ejemplo anterior no crea endpoints ni modifica el servicio.
+
+Su respuesta actual declara pendiente no disponible de forma fija; deberá
+adaptarla para distinguir `valid`, `missing` y `not_sampled`, sin sustituir
+nulos por cero. Exponer el dato no significa agregarlo a `compared` ni activar
+un peso en similitud: las políticas terrestres de bordes, faltantes, distancias
+y escala todavía requieren revisión conjunta. No se altera el comparador aquí.
+
+El JSON histórico queda intacto. El ejemplo canónico de `data/moon` sí incorpora
+pendiente y los nuevos hashes del código. La versión de contrato sigue en
+1.0.0 con campos aditivos; consumidores deben seguir ignorando campos nuevos
+que no utilizan y comprobar disponibilidad antes de leer valores.
+
+La futura exportación CSV deberá derivarse de este JSON, conservando valor,
+unidad, estado, método y versión, referencia a elevación, distancias y claves
+de procedencia. No se implementa CSV en esta entrega.
+
+## Registro durante la migración 0.1.0 (referencia histórica)
+
+Durante la primera etapa, `data/moon/variables.json` pasó al registro 1.1.0.
 Los valores LOLA, las unidades y las fuentes no cambian. Las diferencias de
 metadatos intencionales respecto del registro histórico 1.0.0 son:
 
@@ -97,7 +142,7 @@ metadatos intencionales respecto del registro histórico 1.0.0 son:
 
 El contrato de salida sigue siendo 1.0.0. Los consumidores deben admitir claves
 de variables adicionales. La condición externa de desarrollo se consulta en
-el registro; el procesador sigue informando `not_implemented` para la pendiente.
+el registro; esa versión informaba `not_implemented` para la pendiente.
 Diviner e iluminación permanecen pendientes. Mineralogía, disponibilidad de
 agua/hielo y seguridad integral permanecen excluidas. La falta de datos nunca
 significa condiciones favorables.

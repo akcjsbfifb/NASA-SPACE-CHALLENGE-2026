@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "registry_version": "1.1.0",
+  "registry_version": "1.2.0",
   "documentation": "docs/moon/variables.md",
   "similarity_responsibility": "external_comparator",
   "variables": [
@@ -128,15 +128,18 @@
       "definition": "Inclinación local de la superficie respecto de la horizontal, a una escala definida.",
       "scope": "selected",
       "selected_for_project": true,
-      "implemented": false,
-      "implementation_status": "in_development_external",
+      "implemented": true,
+      "implementation_status": "implemented_derived",
       "used_in_similarity": null,
-      "similarity_eligibility": "requires_external_methodology_review",
+      "similarity_eligibility": "requires_cross_body_scale_and_policy_review",
       "unit": "deg",
-      "coverage": "No evaluada.",
-      "resolution": "Dependería del DEM y del procedimiento.",
+      "coverage": "LDEM global; sin resultado en polos exactos, primera/última fila o con alguna de las cinco alturas no válida.",
+      "resolution": "LDEM 16 px/deg (0.0625 deg); paso norte-sur 1895.2094 m, este-oeste multiplicado por cos(latitud central). Diferencias entre vecinos separados por dos pasos; resolución efectiva no determinada.",
       "source": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/document/rdrsis.htm",
-      "intended_use": "En desarrollo por otro integrante. Incorporación pendiente de revisar metodología, unidades, resolución y procedencia; este paquete no calcula pendiente."
+      "method": "central_difference_spherical",
+      "method_version": "1.0.0",
+      "derived_from": "elevation",
+      "intended_use": "Pendiente derivada del LDEM mediante cinco alturas, en grados sin normalización. No es un producto NASA independiente ni una evaluación de seguridad. Comparabilidad terrestre pendiente; no habilita similitud automáticamente."
     },
     {
       "id": "lend_neutron_indicator",

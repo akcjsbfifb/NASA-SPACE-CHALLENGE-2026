@@ -1,4 +1,4 @@
-# Registro científico de variables — versión 1.1.0
+# Registro científico de variables — versión 1.2.0
 
 Este documento explica las decisiones científicas. `data/moon/variables.json`
 mantiene identificadores, unidades previstas, fuentes y estados que el extractor
@@ -35,7 +35,7 @@ la clave exista en JSON. No corresponde asignar cero a variables pendientes.
 | `bolometric_temperature` / pendiente | Temperatura efectiva derivada de observaciones radiométricas, a medianoche ajustada por pendiente; K previstos | Diviner GHRM TBOL SAM seleccionado; 70° S–70° N, 128 px/°, ≈236,90 m en el ecuador | Caracterizar condiciones térmicas nocturnas de referencia | No mide el ciclo completo, amplitud día-noche ni mínimo nocturno absoluto. No es directamente intercambiable con temperatura del aire terrestre. |
 | `regolith_temperature` / pendiente | Temperatura del componente regolito inferida mediante separación térmica de rocas y regolito, a medianoche ajustada por pendiente; K previstos | Diviner GHRM TREG SAM seleccionado; 70° S–70° N, 128 px/°, ≈236,90 m en el ecuador | Caracterizar térmicamente el componente regolito | Es una inferencia dependiente del modelo; no representa por defecto una profundidad específica ni propiedades térmicas completas. Comparar con TBOL no reconstruye un ciclo térmico. |
 | `polar_solar_illumination` / pendiente, complementaria | Estadística de iluminación modelada sobre relieve polar, dependiente del período y producto; fracción normalizada prevista | NASA LOLA/Mazarico, PGDA 69; productos polares con coberturas distintas, incluidas resoluciones de 240, 120 y 60 m/px; producto aún no elegido | Contexto de iluminación y operaciones energéticas | No equivale a irradiancia, potencia eléctrica ni suministro continuo. Deben registrarse período, altura de evaluación, escala y proyección. No se extrapola a zonas sin cobertura. |
-| `slope` / en desarrollo por otro integrante | Inclinación local a una escala definida; grados previstos | Implementación externa todavía no revisada; cobertura y resolución no confirmadas | Movilidad y contexto operativo; se evita un cálculo paralelo | No se incorporan valores hasta verificar método, unidades y procedencia. Este procesador sigue sin calcular pendiente. |
+| `slope` / implementada, derivada | Inclinación del gradiente del DEM; grados sin normalización | LDEM_16_FLOAT; centro y cuatro vecinos, diferencias centrales; 0,0625°; pasos RΔθ y RΔθ cos(latitud central) | Contexto topográfico a escala de grilla; método adaptado del aporte de n.x | Sin resultado en polos exactos, filas extremas o faltantes. Distancias anisotrópicas, incertidumbre no determinada; no es producto NASA independiente ni garantía de transitabilidad. Comparabilidad terrestre pendiente. |
 | `lend_neutron_indicator` / seleccionada, pendiente | Familia de tasas relativas normalizadas, errores y exposiciones ALDE; unidad de RATE pendiente de validar | LEND ALDE, grilla de 1° entre 80° S y 80° N; períodos 2009-09-15–2011-12-11 y 2011-12-11–2016-09-14 separados | Preparar indicadores neutrónicos relacionados con hidrógeno, sin estimar recursos | No hay lector LEND implementado. Mantener canales y períodos separados; no inferir porcentaje de hidrógeno, agua o hielo. |
 
 Las resoluciones métricas cilíndricas citadas son nominales ecuatoriales: el
@@ -47,7 +47,7 @@ Los XML Diviner locales describen NaN como faltante y no incluyen una unidad en
 `Element_Array`. Las unidades previstas de la tabla son definiciones físicas,
 no una certificación de la codificación de los TIFF todavía no procesados.
 Los nombres SAM identifican medianoche ajustada por pendiente: usar el producto
-no significa que este módulo calcule pendiente.
+no es la fuente de nuestra pendiente: ésta se deriva exclusivamente del LDEM.
 
 ## Variables excluidas y contexto operativo opcional
 
@@ -92,7 +92,7 @@ confundirse con la resolución de la grilla.
 - [Derivación radiométrica de temperatura del regolito y abundancia de rocas](https://doi.org/10.1002/2017JE005387), como contexto del modelo; verificar además la documentación específica de GHRM antes de implementar.
 
 El PDF de la hackatón propone una arquitectura más amplia. En esta entrega no
-implementamos Marte, pendiente, recursos, extracción regional, un modelo ML ni
+implementamos Marte, recursos, extracción regional, un modelo ML ni
 el comparador. Las métricas terrestres necesitan armonización física y de
 escala: la presencia de dos números con la misma unidad no demuestra que sean
 comparables. Cualquier porcentaje futuro debe indicar variables efectivamente

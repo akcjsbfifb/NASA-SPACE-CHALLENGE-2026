@@ -10,34 +10,42 @@
     "not_a_landing_safety_assessment",
     "native_pixel_not_local_point_measurement",
     "numeric_validity_does_not_establish_scientific_uncertainty",
-    "lunar_elevation_and_roughness_not_automatically_equivalent_to_terrestrial_metrics"
+    "lunar_elevation_and_roughness_not_automatically_equivalent_to_terrestrial_metrics",
+    "slope_is_derived_at_ldem_grid_scale_not_a_point_or_landing_safety_measurement",
+    "slope_east_west_spacing_shrinks_toward_poles_no_polar_accuracy_claim",
+    "lunar_and_terrestrial_slope_boundary_missing_data_and_metric_policies_differ"
   ],
   "reproducibility": {
     "code": [
       {
         "bytes": 103,
         "file_name": "__init__.py",
-        "sha256": "ec0094ad5cee9e58cb2f3a1b7bda6a3ff4fb8b710dfb47dcabb9ec43b90c339d"
+        "sha256": "df1617e2a730b9d9874658ba31e7c3d1cd2bd65a0211dd246ea0d6c511b38a2b"
       },
       {
-        "bytes": 3119,
+        "bytes": 3160,
         "file_name": "__main__.py",
-        "sha256": "f3452add279a2ae6ad631c2cce6679935dcd22c1940f75a5dd442f16236a4f0a"
+        "sha256": "735268c1cebdd65a1586979833040c39badbc2e5e251b1d16d652706816fd346"
       },
       {
-        "bytes": 9319,
+        "bytes": 10233,
         "file_name": "export.py",
-        "sha256": "28452848b3dc5b9adb3e94cfb853b8ea8cb69387079d554c6e48fb0b150ef1a5"
+        "sha256": "aca722c035da77fa132aacdfa57c947961153de63b18bf7e3e3daa2bf8661793"
       },
       {
-        "bytes": 5046,
+        "bytes": 9291,
         "file_name": "lola.py",
-        "sha256": "1005aa1e0d42c2cc492405cdf73233bb794ba32ed40c81d7cc945b30d6f6a329"
+        "sha256": "0fb7209aefc8b8f8492bfdd165e33c067b008e91d88fd892ef5e9a8d9158fc2e"
       },
       {
         "bytes": 12417,
         "file_name": "metadata.py",
         "sha256": "a3f133df1e666f79d1b0038a1ce3c13d99a34a4e7dde99331a8581f36e4e8a03"
+      },
+      {
+        "bytes": 2918,
+        "file_name": "slope.py",
+        "sha256": "7a297d0eb6786c5b61733fa558056b5176ef36c7e8e8135a052a5d2ed02d71a8"
       }
     ],
     "configuration": {
@@ -47,14 +55,14 @@
         "sha256": "73a9d0ee2d6ee8798b733726c9052669baed090cf40d70e3a6203ecb8f9eceaa"
       },
       "variable_registry": {
-        "bytes": 11165,
+        "bytes": 11607,
         "file_name": "variables.json",
-        "sha256": "0df2238d9fdfe1d71ae14f2acd5a1f11798d9ab3a19ac7ff3f4af92d32f6bdc5"
+        "sha256": "68e9a70cbdd6e3d8a54a41eb365f47f0cad640c16371c93b016de684e950a89e"
       }
     },
     "policy": "deterministic_output_no_execution_timestamp",
     "software": {
-      "lunar_data": "0.1.0",
+      "lunar_data": "0.2.0",
       "numpy": "2.5.4",
       "pvl": "1.3.2",
       "python": "3.12.10"
@@ -245,15 +253,242 @@
           "value": null
         },
         "slope": {
-          "available": null,
-          "implemented": false,
-          "reason": "processor_not_implemented",
+          "available": true,
+          "derived_from": "elevation",
+          "implemented": true,
+          "input_samples": {
+            "center": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.7186850309371948,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 1895.2091196178467,
+                "center_latitude_deg": -0.03125,
+                "center_longitude_deg_east": 0.03125,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 1440
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -718.6850309371948
+            },
+            "east": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.7170171141624451,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 1895.2091196178467,
+                "center_latitude_deg": -0.03125,
+                "center_longitude_deg_east": 0.09375,
+                "column": 1,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 1440
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -717.0171141624451
+            },
+            "north": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.7287025451660156,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 1895.2091196178467,
+                "center_latitude_deg": 0.03125,
+                "center_longitude_deg_east": 0.03125,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 1439
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -728.7025451660156
+            },
+            "south": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.7188617587089539,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 1895.2068644863828,
+                "center_latitude_deg": -0.09375,
+                "center_longitude_deg_east": 0.03125,
+                "column": 0,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 1441
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -718.8617587089539
+            },
+            "west": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.724847137928009,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 1895.2091196178467,
+                "center_latitude_deg": -0.03125,
+                "center_longitude_deg_east": 359.96875,
+                "column": 5759,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 1440
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -724.847137928009
+            }
+          },
+          "method": {
+            "attribution": {
+              "adaptation": "point_sampling_and_validation_in_migrated_lunar_data",
+              "original_author": "n.x",
+              "original_commit": "d6daf40f7e12815f3b83418ce4b5bd6928f0acf8",
+              "original_url": "https://github.com/akcjsbfifb/NASA-SPACE-CHALLENGE-2026/commit/d6daf40f7e12815f3b83418ce4b5bd6928f0acf8"
+            },
+            "distance_formula": "dy_m=R_m*radians(step_deg); dx_m=dy_m*cos(radians(center_latitude_deg))",
+            "formula": "degrees(atan(hypot((east_m-west_m)/(2*dx_m), (south_m-north_m)/(2*dy_m))))",
+            "height_formula": "raw * scaling_factor * 1000; label radius offset is not added",
+            "id": "central_difference_spherical",
+            "latitude_boundary": "no_result_without_both_latitude_neighbors",
+            "longitude_boundary": "periodic",
+            "missing_policy": "require_all_five_samples_valid_no_substitution",
+            "required_samples": [
+              "center",
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "version": "1.0.0"
+          },
+          "normalized_coordinates": {
+            "latitude_deg": 0.0,
+            "longitude_deg_east": 0.0
+          },
+          "quality": {
+            "uncertainty_deg": null,
+            "valid_sample_count": 5,
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
+              "no_declared_special_constants",
+              "ldem_reference_sphere_offset_not_added_to_height",
+              "derived_from_gridded_ldem_not_independent_nasa_slope_product",
+              "spherical_metric_approximation",
+              "longitude_spacing_shrinks_toward_poles",
+              "pixel_spacing_does_not_establish_effective_resolution_or_uncertainty"
+            ]
+          },
+          "raw_unit": null,
+          "raw_value": null,
+          "reason": null,
+          "requested_coordinates": {
+            "latitude_deg": 0.0,
+            "longitude_deg": 0.0
+          },
+          "sampling": {
+            "angular_resolution_deg": 0.0625,
+            "approx_surface_width_at_center_m": 1895.2091196178467,
+            "center_latitude_deg": -0.03125,
+            "center_longitude_deg_east": 0.03125,
+            "column": 0,
+            "dx_m": 1895.2091196178467,
+            "dy_m": 1895.2094015093426,
+            "east_west_baseline_m": 3790.4182392356934,
+            "index_base": 0,
+            "method": "central_difference_at_containing_native_pixel",
+            "nominal_equatorial_pixel_size_m": 1895.21,
+            "north_south_baseline_m": 3790.418803018685,
+            "reference_radius_m": 1737400.0,
+            "row": 1440,
+            "spacing_ratio_north_south_to_east_west": 1.000000148738993
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_implemented",
+          "source_ref": "slope",
+          "status": "valid",
           "unit": "deg",
           "used_in_similarity": null,
-          "value": null
+          "value": 0.1900942345716397
         },
         "water_ice": {
           "available": null,
@@ -457,15 +692,242 @@
           "value": null
         },
         "slope": {
-          "available": null,
-          "implemented": false,
-          "reason": "processor_not_implemented",
+          "available": true,
+          "derived_from": "elevation",
+          "implemented": true,
+          "input_samples": {
+            "center": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.3510236144065857,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 164.14861560695252,
+                "center_latitude_deg": -85.03125,
+                "center_longitude_deg_east": 350.03125,
+                "column": 5600,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 2800
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -351.0236144065857
+            },
+            "east": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.3531443178653717,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 164.14861560695252,
+                "center_latitude_deg": -85.03125,
+                "center_longitude_deg_east": 350.09375,
+                "column": 5601,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 2800
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -353.1443178653717
+            },
+            "north": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.6032520532608032,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 166.20810135790532,
+                "center_latitude_deg": -84.96875,
+                "center_longitude_deg_east": 350.03125,
+                "column": 5600,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 2799
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -603.2520532608032
+            },
+            "south": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.017284920439124107,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 162.0889345336446,
+                "center_latitude_deg": -85.09375,
+                "center_longitude_deg_east": 350.03125,
+                "column": 5600,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 2801
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -17.284920439124107
+            },
+            "west": {
+              "available": true,
+              "quality": {
+                "direct_observation_or_interpolation": "unknown",
+                "observation_count": null,
+                "uncertainty_m": null,
+                "validation": "structural_and_numeric_checks_only",
+                "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
+                  "no_declared_special_constants",
+                  "ldem_reference_sphere_offset_not_added_to_height"
+                ]
+              },
+              "raw_unit": "KILOMETER",
+              "raw_value": -0.33034637570381165,
+              "reason": null,
+              "sampling": {
+                "angular_resolution_deg": 0.0625,
+                "approx_surface_width_at_center_m": 164.14861560695252,
+                "center_latitude_deg": -85.03125,
+                "center_longitude_deg_east": 349.96875,
+                "column": 5599,
+                "index_base": 0,
+                "method": "containing_native_pixel",
+                "nominal_equatorial_pixel_size_m": 1895.21,
+                "row": 2800
+              },
+              "source_ref": "elevation",
+              "status": "valid",
+              "unit": "m",
+              "value": -330.34637570381165
+            }
+          },
+          "method": {
+            "attribution": {
+              "adaptation": "point_sampling_and_validation_in_migrated_lunar_data",
+              "original_author": "n.x",
+              "original_commit": "d6daf40f7e12815f3b83418ce4b5bd6928f0acf8",
+              "original_url": "https://github.com/akcjsbfifb/NASA-SPACE-CHALLENGE-2026/commit/d6daf40f7e12815f3b83418ce4b5bd6928f0acf8"
+            },
+            "distance_formula": "dy_m=R_m*radians(step_deg); dx_m=dy_m*cos(radians(center_latitude_deg))",
+            "formula": "degrees(atan(hypot((east_m-west_m)/(2*dx_m), (south_m-north_m)/(2*dy_m))))",
+            "height_formula": "raw * scaling_factor * 1000; label radius offset is not added",
+            "id": "central_difference_spherical",
+            "latitude_boundary": "no_result_without_both_latitude_neighbors",
+            "longitude_boundary": "periodic",
+            "missing_policy": "require_all_five_samples_valid_no_substitution",
+            "required_samples": [
+              "center",
+              "north",
+              "south",
+              "east",
+              "west"
+            ],
+            "version": "1.0.0"
+          },
+          "normalized_coordinates": {
+            "latitude_deg": -85.0,
+            "longitude_deg_east": 350.0
+          },
+          "quality": {
+            "uncertainty_deg": null,
+            "valid_sample_count": 5,
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
+              "no_declared_special_constants",
+              "ldem_reference_sphere_offset_not_added_to_height",
+              "derived_from_gridded_ldem_not_independent_nasa_slope_product",
+              "spherical_metric_approximation",
+              "longitude_spacing_shrinks_toward_poles",
+              "pixel_spacing_does_not_establish_effective_resolution_or_uncertainty"
+            ]
+          },
+          "raw_unit": null,
+          "raw_value": null,
+          "reason": null,
+          "requested_coordinates": {
+            "latitude_deg": -85.0,
+            "longitude_deg": -10.0
+          },
+          "sampling": {
+            "angular_resolution_deg": 0.0625,
+            "approx_surface_width_at_center_m": 164.14861560695252,
+            "center_latitude_deg": -85.03125,
+            "center_longitude_deg_east": 350.03125,
+            "column": 5600,
+            "dx_m": 164.14861560695252,
+            "dy_m": 1895.2094015093426,
+            "east_west_baseline_m": 328.29723121390504,
+            "index_base": 0,
+            "method": "central_difference_at_containing_native_pixel",
+            "nominal_equatorial_pixel_size_m": 1895.21,
+            "north_south_baseline_m": 3790.418803018685,
+            "reference_radius_m": 1737400.0,
+            "row": 2800,
+            "spacing_ratio_north_south_to_east_west": 11.545692264912839
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_implemented",
+          "source_ref": "slope",
+          "status": "valid",
           "unit": "deg",
           "used_in_similarity": null,
-          "value": null
+          "value": 9.61866522327338
         },
         "water_ice": {
           "available": null,
@@ -591,7 +1053,38 @@
         "ldrm_unit_text_conflict_resolved_as_meters",
         "ldrc_observation_count_unavailable"
       ]
+    },
+    "slope": {
+      "derived_from": [
+        "elevation"
+      ],
+      "independent_nasa_product": false,
+      "kind": "derived_measurement",
+      "method": {
+        "attribution": {
+          "adaptation": "point_sampling_and_validation_in_migrated_lunar_data",
+          "original_author": "n.x",
+          "original_commit": "d6daf40f7e12815f3b83418ce4b5bd6928f0acf8",
+          "original_url": "https://github.com/akcjsbfifb/NASA-SPACE-CHALLENGE-2026/commit/d6daf40f7e12815f3b83418ce4b5bd6928f0acf8"
+        },
+        "distance_formula": "dy_m=R_m*radians(step_deg); dx_m=dy_m*cos(radians(center_latitude_deg))",
+        "formula": "degrees(atan(hypot((east_m-west_m)/(2*dx_m), (south_m-north_m)/(2*dy_m))))",
+        "height_formula": "raw * scaling_factor * 1000; label radius offset is not added",
+        "id": "central_difference_spherical",
+        "latitude_boundary": "no_result_without_both_latitude_neighbors",
+        "longitude_boundary": "periodic",
+        "missing_policy": "require_all_five_samples_valid_no_substitution",
+        "required_samples": [
+          "center",
+          "north",
+          "south",
+          "east",
+          "west"
+        ],
+        "version": "1.0.0"
+      },
+      "output_unit": "deg"
     }
   },
-  "variable_registry_version": "1.1.0"
+  "variable_registry_version": "1.2.0"
 }

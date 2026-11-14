@@ -5,6 +5,7 @@ import math
 import numpy as np
 
 from .metadata import LolaMetadata, MetadataError
+from .slope import central_difference_slope, horizontal_distances, method_description
 
 
 def normalize_coordinates(latitude_deg, longitude_deg):
@@ -31,6 +32,8 @@ class LolaRaster:
         self._data = None
 
     def __enter__(self):
+        if self._data is not None:
+            raise RuntimeError("El raster ya está abierto")
         meta = self.metadata
         if meta.image_path.stat().st_size != meta.rows * meta.columns * 4:
             raise MetadataError(f"Cambió el tamaño del raster: {meta.image_path}")
@@ -47,10 +50,7 @@ class LolaRaster:
             self._data._mmap.close()
             self._data = None
 
-    def sample(self, latitude_deg, longitude_deg):
-        if self._data is None:
-            raise RuntimeError("El raster debe abrirse con 'with LolaRaster(...)'")
-        lat, lon = normalize_coordinates(latitude_deg, longitude_deg)
+    def _empty_sample(self):
         meta = self.metadata
         warnings = list(meta.warnings)
         result = {
@@ -71,13 +71,27 @@ class LolaRaster:
                 "validation": "structural_and_numeric_checks_only",
             },
         }
+        return result
+
+    def sample(self, latitude_deg, longitude_deg):
+        if self._data is None:
+            raise RuntimeError("El raster debe abrirse con 'with LolaRaster(...)'")
+        lat, lon = normalize_coordinates(latitude_deg, longitude_deg)
         if abs(lat) == 90:
+            result = self._empty_sample()
             result["reason"] = "exact_pole_not_sampled_longitude_is_degenerate"
             return result
-        # En un borde se elige la celda hacia el este/sur. El min sólo protege
-        # del redondeo flotante próximo al último borde, nunca de latitudes inválidas.
+        meta = self.metadata
+        # En un borde se elige la celda hacia el este/sur; min protege redondeo.
         row = min(math.floor((90.0 - lat) * meta.pixels_per_degree), meta.rows - 1)
         col = min(math.floor(lon * meta.pixels_per_degree), meta.columns - 1)
+        return self._sample_cell(row, col)
+
+    def _sample_cell(self, row, col):
+        """Una lectura escalar; validación y conversión compartidas con pendiente."""
+        meta = self.metadata
+        result = self._empty_sample()
+        warnings = result["quality"]["warnings"]
         center_lat = 90.0 - (row + 0.5) / meta.pixels_per_degree
         center_lon = (col + 0.5) / meta.pixels_per_degree
         result["sampling"] = {
@@ -111,4 +125,69 @@ class LolaRaster:
         # Producto LDEM: HEIGHT = DN * SCALE. OFFSET sólo define radio planetario.
         value = raw * meta.scale * (1000.0 if meta.variable == "elevation" else 1.0)
         result.update(status="valid", available=True, value=value)
+        return result
+
+    def sample_slope(self, latitude_deg, longitude_deg):
+        """Deriva pendiente del LDEM abierto con sólo cinco lecturas escalares.
+
+        Conserva índices, alturas originales y convertidas, y estados de cada
+        entrada. No sustituye faltantes ni estima derivadas unilaterales.
+        """
+        if self.metadata.variable != "elevation":
+            raise ValueError("La pendiente requiere el raster LDEM de elevación")
+        center = self.sample(latitude_deg, longitude_deg)
+        lat, lon = normalize_coordinates(latitude_deg, longitude_deg)
+        result = {
+            "value": None, "unit": "deg", "raw_value": None, "raw_unit": None,
+            "status": "not_sampled", "available": False, "reason": center["reason"],
+            "source_ref": "slope", "derived_from": "elevation",
+            "requested_coordinates": {"latitude_deg": latitude_deg, "longitude_deg": longitude_deg},
+            "normalized_coordinates": {"latitude_deg": lat, "longitude_deg_east": lon},
+            "method": method_description(),
+            "sampling": None if center["sampling"] is None else dict(center["sampling"]),
+            "input_samples": {},
+            "quality": {
+                "warnings": list(self.metadata.warnings) + [
+                    "derived_from_gridded_ldem_not_independent_nasa_slope_product",
+                    "spherical_metric_approximation",
+                    "longitude_spacing_shrinks_toward_poles",
+                    "pixel_spacing_does_not_establish_effective_resolution_or_uncertainty",
+                ],
+                "uncertainty_deg": None,
+                "valid_sample_count": 0,
+                "validation": "structural_and_numeric_checks_only",
+            },
+        }
+        if result["sampling"] is None:
+            return result
+        meta = self.metadata
+        sampling = result["sampling"]
+        row, col = sampling["row"], sampling["column"]
+        dx, dy = horizontal_distances(meta.reference_radius_m, 1 / meta.pixels_per_degree,
+                                      sampling["center_latitude_deg"])
+        sampling.update(method="central_difference_at_containing_native_pixel",
+                        reference_radius_m=meta.reference_radius_m, dx_m=dx, dy_m=dy,
+                        east_west_baseline_m=2 * dx, north_south_baseline_m=2 * dy,
+                        spacing_ratio_north_south_to_east_west=dy / dx)
+        inputs = result["input_samples"]
+        inputs["center"] = center
+        if row == 0 or row == meta.rows - 1:
+            result["reason"] = "latitude_boundary_requires_north_and_south_neighbors"
+            result["quality"]["valid_sample_count"] = int(center["available"])
+            return result
+        for role, r, c in (("north", row - 1, col), ("south", row + 1, col),
+                           ("east", row, (col + 1) % meta.columns),
+                           ("west", row, (col - 1) % meta.columns)):
+            inputs[role] = self._sample_cell(r, c)
+        result["quality"]["valid_sample_count"] = sum(item["available"] for item in inputs.values())
+        for item in inputs.values():
+            for warning in item["quality"]["warnings"]:
+                if warning not in result["quality"]["warnings"]:
+                    result["quality"]["warnings"].append(warning)
+        if not all(item["available"] for item in inputs.values()):
+            result.update(status="missing", reason="one_or_more_required_elevations_unavailable")
+            return result
+        value = central_difference_slope(
+            **{role + "_m": item["value"] for role, item in inputs.items()}, dx_m=dx, dy_m=dy)
+        result.update(status="valid", available=True, reason=None, value=value)
         return result

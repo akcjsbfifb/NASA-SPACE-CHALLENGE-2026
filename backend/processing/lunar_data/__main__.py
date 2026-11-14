@@ -18,7 +18,7 @@ def _repository_root():
 
 def main(argv=None):
     root = _repository_root()
-    parser = argparse.ArgumentParser(description="Extraer elevación y rugosidad LOLA; no calcula similitud.")
+    parser = argparse.ArgumentParser(description="Extraer elevación, rugosidad LOLA y pendiente derivada; no calcula similitud.")
     parser.add_argument("--data-root", type=Path, default=root / "NASA-Lunar-Studies/data/raw/lola")
     parser.add_argument("--registry", type=Path, default=root / "data/moon/variables.json")
     parser.add_argument("--output", required=True, type=Path)
@@ -56,7 +56,7 @@ def main(argv=None):
         write_document(document, args.output, protected)
     except (OSError, ValueError, KeyError, MetadataError) as exc:
         parser.exit(2, f"Error: {exc}\n")
-    print(f"JSON generado: {args.output.resolve()} ({len(sites)} sitio(s), LDEM + LDRM)")
+    print(f"JSON generado: {args.output.resolve()} ({len(sites)} sitio(s), LDEM + LDRM + pendiente derivada)")
     return 0
 
 
