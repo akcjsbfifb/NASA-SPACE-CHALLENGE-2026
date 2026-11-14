@@ -29,6 +29,7 @@ class LolaRaster:
     def __init__(self, metadata: LolaMetadata):
         self.metadata = metadata
         self._data = None
+        self._slope = None
 
     def __enter__(self):
         meta = self.metadata
@@ -38,6 +39,10 @@ class LolaRaster:
             meta.image_path, dtype="<f4", mode="r", offset=0,
             shape=(meta.rows, meta.columns), order="C",
         )
+        
+        if meta.variable == "elevation":
+            self._slope = self._build_slope()
+
         return self
 
     def __exit__(self, *exc):
@@ -46,6 +51,70 @@ class LolaRaster:
         if self._data is not None:
             self._data._mmap.close()
             self._data = None
+            self._slope = None
+
+    def _valid_raw_value(self, raw):
+        meta = self.metadata
+
+        if not math.isfinite(raw):
+            return False
+
+        if any(raw == float(np.float32(value))
+                for value in meta.special_constants
+                if math.isfinite(value)):
+            return False
+
+        return True
+
+    def _elevation_at(self, row, col):
+        raw = float(self._data[row, col])
+
+        if not self._valid_raw_value(raw):
+            return None
+
+        return raw * self.metadata.scale * 1000.0
+
+    def _build_slope(self, sd=1):
+        if sd <= 1:
+            raise ValueError("GRRR")
+
+        meta = self.metadata
+        raw = self._data
+        valid = self._valid_raw_mask(raw)
+        z = raw * (meta.scale * 1000.0)
+
+        rows = meta.rows
+        cols = meta.columns
+
+        slope = np.full((rows, cols), np.nan, dtype=np.float32)
+        lat = np.radians(90.0 - (np.arange(rows) + 0.5) / meta.pixels_per_degree)
+        angular_step = math.radians(1.0 / meta.pixels_per_degree)
+        dy = meta.reference_radius_m * angular_step
+
+        dx = (meta.reference_radius_m * angular_step * np.cos(lat))
+
+        east_z = np.roll(z, -1, axis=1)
+        west_z = np.roll(z, 1, axis=1)
+
+        east_valid = np.roll(valid, -1, axis=1)
+        west_valid = np.roll(valid, 1, axis=1)
+
+        valid_x = valid & east_valid & west_valid
+
+        dz_dx = np.full((rows, cols), np.nan, dtype=np.float32)
+
+        dz_dx[valid_x] = ((east_z[valid_x] - west_z[valid_x]) / (2.0 * np.broadcast_to(dx[:, None], z.shape)[valid_x]))
+
+        dz_dy = np.full((rows, cols), np.nan, dtype=np.float32)
+
+        valid_y = (valid[1:-1, :] & valid[:-2, :] & valid[2:, :])
+        dz_dy[1:-1, :][valid_y] = (z[2:, :][valid_y] - z[:-2, :][valid_y]) / (2.0 * dy)
+
+        usable = (valid_x[1:-1, :] & valid_y)
+        gradient = np.sqrt(dz_dx[1:-1, :] ** 2 + dz_dy[1:-1, :] ** 2)
+        slope[1:-1, :][usable] = np.degrees(np.arctan(gradient[usable]))
+
+        return slope
 
     def sample(self, latitude_deg, longitude_deg):
         if self._data is None:
