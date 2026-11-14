@@ -1,73 +1,107 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+
 import InteractiveGlobe from './components/Globe/InteractiveGlobe';
-import { mockPoints } from './data/mockData';
+
+import type {
+	GlobeController,
+} from './components/Globe/globe.controller';
+
+import type {
+	GlobeClickEvent,
+} from './components/Globe/globe.types';
+
 import './App.css';
 
-type Coordinates = {
-	lat: number;
-	lng: number;
-};
-
 function App() {
-	const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+	const globe = useRef<GlobeController>(null);
+
+	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
+
+	const [visibleLayers, setVisibleLayers] = useState({
+		points: true,
+		heatmaps: false,
+		polygons: false,
+		labels: true,
+	});
+
+	function toggleLayer(layer: keyof typeof visibleLayers) {
+		setVisibleLayers(previous => ({
+			...previous,
+			[layer]: !previous[layer],
+		}));
+	}
 
 	return (
 		<main className="app">
 		<header className="topbar">
-		<div className="brand">ORBITAL</div>
-		<div className="topbar-status">EARTH OBSERVATION SYSTEM</div>
+		<strong>ORBITAL</strong>
+		<span>EARTH OBSERVATION SYSTEM</span>
 		</header>
 
 		<div className="workspace">
-		<aside className="sidebar">
-		<h3>EXPLORER</h3>
 
+		<aside className="sidebar">
 		<section className="sidebar-section">
 		<h4>Visualization layers</h4>
 
 		<label>
-		<input type="checkbox" defaultChecked />
-		Globe
-		</label>
-
-		<label>
-		<input type="checkbox" />
-		Heatmap
-		</label>
-
-		<label>
-		<input type="checkbox" defaultChecked />
+		<input
+		type="checkbox"
+		checked={visibleLayers.points}
+		onChange={() => toggleLayer('points')}
+		/>
 		Locations
 		</label>
 
 		<label>
-		<input type="checkbox" />
+		<input
+		type="checkbox"
+		checked={visibleLayers.heatmaps}
+		onChange={() => toggleLayer('heatmaps')}
+		/>
+		Heatmap
+		</label>
+
+		<label>
+		<input
+		type="checkbox"
+		checked={visibleLayers.polygons}
+		onChange={() => toggleLayer('polygons')}
+		/>
 		Areas
+		</label>
+
+		<label>
+		<input
+		type="checkbox"
+		checked={visibleLayers.labels}
+		onChange={() => toggleLayer('labels')}
+		/>
+		Labels
 		</label>
 		</section>
 
-		<section className="sidebar-section">
-		<h4>Selected location</h4>
+		<hr />
 
-		{coordinates ? (
+		<h3>SELECTED LOCATION</h3>
+
+		{location ? (
 			<>
-			<p>Latitude: {coordinates.lat.toFixed(5)}</p>
-			<p>Longitude: {coordinates.lng.toFixed(5)}</p>
+			<p>Latitude: {location.lat.toFixed(5)}</p>
+			<p>Longitude: {location.lng.toFixed(5)}</p>
 			</>
 		) : (
-		<p className="muted">Click anywhere on the globe.</p>
+		<p>Click the globe to select a location.</p>
 		)}
-		</section>
 		</aside>
 
 		<section className="globe-container">
-		<InteractiveGlobe points={mockPoints} onLocationSelect={setCoordinates} />
-
-		<div className="globe-overlay">
-		<span>EARTH / 3D VIEW</span>
-		<span>INTERACTIVE MODE</span>
-		</div>
+		<InteractiveGlobe
+		ref={globe}
+		onLocationSelect={setLocation}
+		/>
 		</section>
+
 		</div>
 		</main>
 	);
