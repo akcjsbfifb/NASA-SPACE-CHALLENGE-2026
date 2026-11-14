@@ -59,8 +59,10 @@ def validate_registry(registry):
     if len(set(ids)) != len(ids):
         raise ValueError("Identificadores de variable duplicados")
     implemented = {item["id"] for item in variables if item.get("implemented") is True}
-    if implemented != {"elevation", "roughness", "slope"}:
-        raise ValueError("Esta versión implementa solamente elevation, roughness y slope")
+    required = {"elevation", "roughness", "slope"}
+    supported = required | {"rock_abundance", "bolometric_temperature", "regolith_temperature"}
+    if not required <= implemented <= supported:
+        raise ValueError("Registro reclama procesadores no implementados")
     for item in variables:
         if not isinstance(item.get("selected_for_project"), bool) or not isinstance(item.get("implemented"), bool):
             raise ValueError("Los estados de selección e implementación deben ser booleanos")
@@ -74,9 +76,10 @@ def validate_registry(registry):
             raise ValueError("El uso en similitud lo determina el comparador externo")
 
 
-def build_document(metadata, sites, registry, registry_path=None, sites_path=None):
+def build_document(metadata, sites, registry, registry_path=None, sites_path=None, processors=None):
     validate_sites(sites)
     validate_registry(registry)
+    processors = processors or {}
     if {meta.variable for meta in metadata} != {"elevation", "roughness"} or len(metadata) != 2:
         raise ValueError("Se requiere un producto de elevación y uno de rugosidad")
     sources = {}
@@ -119,20 +122,23 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             measurements = {}
             for variable in registry["variables"]:
                 key = variable["id"]
-                if key == "slope":
+                if key in processors:
+                    measurement = processors[key].sample(lat, lon)
+                elif key == "slope":
                     measurement = readers["elevation"].sample_slope(lat, lon)
                     # Preservar exactamente la coordenada solicitada, antes de normalizar.
                     measurement["requested_coordinates"] = {
                         "latitude_deg": site["latitude_deg"], "longitude_deg": site["longitude_deg"]}
-                elif variable["implemented"]:
+                elif key in readers:
                     measurement = readers[key].sample(lat, lon)
                 else:
                     measurement = {
-                        "value": None, "unit": variable["unit"], "available": None,
-                        "status": "excluded" if variable["scope"] == "excluded" else "not_implemented",
+                        "value": None, "unit": variable["unit"], "available": False if variable["implemented"] else None,
+                        "status": ("excluded" if variable["scope"] == "excluded" else
+                                   "not_sampled" if variable["implemented"] else "not_implemented"),
                         "reason": (
                             "outside_current_analysis" if variable["scope"] == "excluded"
-                            else "processor_not_implemented"
+                            else "processor_not_configured" if variable["implemented"] else "processor_not_implemented"
                         ),
                         "source_ref": None,
                     }
@@ -159,6 +165,8 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
                 "normalized_coordinates": {"latitude_deg": lat, "longitude_deg_east": lon},
                 "measurements": measurements,
             })
+    for key, processor in processors.items():
+        sources[key] = processor.manifest()
     configuration = {}
     if registry_path is not None:
         configuration["variable_registry"] = _file_manifest(Path(registry_path))

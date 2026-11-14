@@ -16,10 +16,10 @@ def test_extensible_document_deterministic_no_invented_values(metadata_pair, reg
     measures = first["sites"][0]["measurements"]
     assert measures["elevation"]["available"] is True
     assert measures["elevation"]["quality"]["uncertainty_m"] is None
-    assert measures["rock_abundance"]["implemented"] is False
+    assert measures["rock_abundance"]["implemented"] is True
     assert measures["rock_abundance"]["selected_for_project"] is True
     assert measures["rock_abundance"]["available"] is False  # fuera de ±70°
-    assert measures["rock_abundance"]["status"] == "not_implemented"
+    assert measures["rock_abundance"]["status"] == "not_sampled"
     assert measures["rock_abundance"]["value"] is None
     # El fixture original tiene sólo dos filas: falta un vecino latitudinal.
     assert measures["slope"]["status"] == "not_sampled"
@@ -50,7 +50,8 @@ def test_pending_inside_coverage_has_unknown_availability(metadata_pair, registr
     sites = [{"id": "test", "is_example": True, "latitude_deg": 0, "longitude_deg": 0}]
     result = build_document(metadata_pair, sites, read_json(registry_path))
     measurement = result["sites"][0]["measurements"]["rock_abundance"]
-    assert measurement["available"] is None
+    assert measurement["available"] is False
+    assert measurement["reason"] == "processor_not_configured"
     assert measurement["within_declared_latitude_bounds"] is True
 
 
@@ -85,6 +86,6 @@ def test_registry_cannot_claim_new_processors_or_similarity(registry_path):
     original = read_json(registry_path)
     for field, value in [("implemented", True), ("used_in_similarity", True)]:
         registry = deepcopy(original)
-        registry["variables"][2][field] = value
+        next(item for item in registry["variables"] if item["id"] == "polar_solar_illumination")[field] = value
         with pytest.raises(ValueError):
             validate_registry(registry)

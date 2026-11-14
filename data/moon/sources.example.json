@@ -1,0 +1,8 @@
+{
+  "http_budget_bytes": 16777216,
+  "diviner": {
+    "rock_abundance": {"xml": "NASA-Lunar-Studies/data/raw/lola/diviner/rock_abundance/dghrm_ra_sam_70s70n_tif.xml"},
+    "bolometric_temperature": {"xml": "NASA-Lunar-Studies/data/raw/lola/diviner/bolometric_temperature/dghrm_tbol_sam_70s70n_tif.xml"},
+    "regolith_temperature": {"xml": "NASA-Lunar-Studies/data/raw/lola/diviner/regolith_temperature/dghrm_treg_sam_70s70n_tif.xml"}
+  }
+}

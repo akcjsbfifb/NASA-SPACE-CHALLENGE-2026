@@ -9,6 +9,8 @@ Los originales siguen en `NASA-Lunar-Studies/data/raw/`. Esta migración conserv
 el contrato JSON 1.0.0. La versión 0.2.0 agrega pendiente derivada, sin alterar
 elevación o rugosidad y sin endpoints. La vista CSV posterior sólo transforma
 el JSON ya generado; no interviene en estos cálculos ni modifica el original.
+Las fuentes adicionales Diviner se habilitan mediante `--sources`; los lectores
+LOLA y sus resultados no cambian. Véase la guía de fuentes adicionales.
 El flujo es: validación de coordenadas y registro → interpretación PDS4/PDS3 →
 validación estructural del IMG → lectura puntual de celdas nativas → conversión
 física → JSON estricto. No hay descargas, reproyección global ni interpolación

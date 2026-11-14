@@ -1,0 +1,478 @@
+{
+  "external_validation": "PENDING; independent byte decoder is not external geodetic validation",
+  "http_body_bytes_received": 1376256,
+  "http_body_limit_bytes": 16777216,
+  "products": [
+    {
+      "samples": [
+        {
+          "independent_method": "tifffile strip offset + seek/struct float32; separate coordinate calculation",
+          "independent_raw_value": 0.0033496543765068054,
+          "independent_status": "PASS",
+          "measurement": {
+            "available": true,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "1",
+            "raw_value": 0.0033496543765068054,
+            "reason": null,
+            "sampling": {
+              "angular_resolution_deg": 0.0078125,
+              "center_latitude_deg": -0.00390625,
+              "center_longitude_deg_east": 0.00390625,
+              "column": 23040,
+              "index_base": 0,
+              "method": "containing_native_pixel_no_interpolation",
+              "nominal_equatorial_pixel_size_m": 236.90117518866782,
+              "row": 8960,
+              "scaling_factor": 1.0,
+              "value_offset": 0.0
+            },
+            "source_ref": "rock_abundance",
+            "status": "valid",
+            "unit": "1",
+            "value": 0.0033496543765068054,
+            "within_declared_latitude_bounds": true
+          },
+          "site_id": "equatorial_test_only"
+        },
+        {
+          "independent_status": "OUTSIDE_COVERAGE",
+          "measurement": {
+            "available": false,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "1",
+            "raw_value": null,
+            "reason": "outside_declared_latitude_coverage",
+            "sampling": null,
+            "source_ref": "rock_abundance",
+            "status": "not_sampled",
+            "unit": "1",
+            "value": null,
+            "within_declared_latitude_bounds": false
+          },
+          "site_id": "southern_high_latitude_test_only"
+        }
+      ],
+      "source": {
+        "angular_resolution_deg": 0.0078125,
+        "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+        "coverage_latitude_deg": [
+          -70,
+          70
+        ],
+        "element_array_declares_unit": false,
+        "files": [
+          {
+            "bytes": 8345,
+            "file_name": "dghrm_ra_sam_70s70n_tif.xml",
+            "sha256": "2ac9cedf3c9db29f32a909e76fbd7c95359cd04eaf11c442ec10c0c439fdc6f6"
+          }
+        ],
+        "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+        "missing_value": "NaN",
+        "offset": 0.0,
+        "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_ra_sam_70s70n_tif",
+        "product_id": "dghrm_ra_sam_70s70n_tif",
+        "remote_file": {
+          "checksum_scope": "retrieved_ranges_only",
+          "etag": "\"ec8737e270f8d91:0\"",
+          "last_modified": "Fri, 06 Oct 2023 16:19:29 GMT",
+          "ranges": [
+            {
+              "bytes": 65536,
+              "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+              "start": 0,
+              "stop": 65535,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "5ee7cb0d24f0c9b777244e94370670756ece953d317c3a849973c1d10fab7f83",
+              "start": 131072,
+              "stop": 196607,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+              "start": 65536,
+              "stop": 131071,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "13aeb3ebf47d7a91ef7ff580f795cfc71526a54b027385b810fff71723fc9496",
+              "start": 1651638272,
+              "stop": 1651703807,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "6a648253d7a574850e24806c2b6622c1de930e6ac8b6b06e76a0c5833e7ed421",
+              "start": 1651703808,
+              "stop": 1651769343,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "de2530b238a4460e1af9a8f953a6c8955edb952f8309427eb0e9b50e09d7d26b",
+              "start": 1651769344,
+              "stop": 1651834879,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "0c7d51ef29080fd800bc3abb80653c109203f5064287310e1cc2e09be2cbdb53",
+              "start": 1651834880,
+              "stop": 1651900415,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+            }
+          ],
+          "size_bytes": 3303158255,
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+        },
+        "scale": 1.0,
+        "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+        "unit": "1",
+        "unit_authority": {
+          "section": "11.1, page 69; GHRM",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+        },
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+      },
+      "variable": "rock_abundance"
+    },
+    {
+      "samples": [
+        {
+          "independent_method": "tifffile strip offset + seek/struct float32; separate coordinate calculation",
+          "independent_raw_value": 101.29203796386719,
+          "independent_status": "PASS",
+          "measurement": {
+            "available": true,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "K",
+            "raw_value": 101.29203796386719,
+            "reason": null,
+            "sampling": {
+              "angular_resolution_deg": 0.0078125,
+              "center_latitude_deg": -0.00390625,
+              "center_longitude_deg_east": 0.00390625,
+              "column": 23040,
+              "index_base": 0,
+              "method": "containing_native_pixel_no_interpolation",
+              "nominal_equatorial_pixel_size_m": 236.90117518866782,
+              "row": 8960,
+              "scaling_factor": 1.0,
+              "value_offset": 0.0
+            },
+            "source_ref": "bolometric_temperature",
+            "status": "valid",
+            "unit": "K",
+            "value": 101.29203796386719,
+            "within_declared_latitude_bounds": true
+          },
+          "site_id": "equatorial_test_only"
+        },
+        {
+          "independent_status": "OUTSIDE_COVERAGE",
+          "measurement": {
+            "available": false,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "K",
+            "raw_value": null,
+            "reason": "outside_declared_latitude_coverage",
+            "sampling": null,
+            "source_ref": "bolometric_temperature",
+            "status": "not_sampled",
+            "unit": "K",
+            "value": null,
+            "within_declared_latitude_bounds": false
+          },
+          "site_id": "southern_high_latitude_test_only"
+        }
+      ],
+      "source": {
+        "angular_resolution_deg": 0.0078125,
+        "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+        "coverage_latitude_deg": [
+          -70,
+          70
+        ],
+        "element_array_declares_unit": false,
+        "files": [
+          {
+            "bytes": 8357,
+            "file_name": "dghrm_tbol_sam_70s70n_tif.xml",
+            "sha256": "37bdc7faa9d45d941e622c89541985d0c277ea2f5e1f437ce09a29c8026ebe31"
+          }
+        ],
+        "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+        "missing_value": "NaN",
+        "offset": 0.0,
+        "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_tbol_sam_70s70n_tif",
+        "product_id": "dghrm_tbol_sam_70s70n_tif",
+        "remote_file": {
+          "checksum_scope": "retrieved_ranges_only",
+          "etag": "\"1a52d6b74f8d91:0\"",
+          "last_modified": "Fri, 06 Oct 2023 16:44:48 GMT",
+          "ranges": [
+            {
+              "bytes": 65536,
+              "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+              "start": 0,
+              "stop": 65535,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "23bfb180a84406feb5c077ae52319710f52a053d0a49e440c5b1184b8c2f34c8",
+              "start": 131072,
+              "stop": 196607,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+              "start": 65536,
+              "stop": 131071,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "8e71b1047e3de2a7e2b8fcbd10154b534ab7a7dabb76497f720330d0e8ebc0ed",
+              "start": 1651638272,
+              "stop": 1651703807,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "01ede1f98f33c9ccd1a41ee22a4d0926225d823f59c248c42c9ac77816eb2988",
+              "start": 1651703808,
+              "stop": 1651769343,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "0f473a53024e92453c5626fce0a8920d2119554db0319e7a26b690ea5da8de74",
+              "start": 1651769344,
+              "stop": 1651834879,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "82c1037232358643d0ce2048faea624ba685dc21652b0c2cd030dc2aea351401",
+              "start": 1651834880,
+              "stop": 1651900415,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+            }
+          ],
+          "size_bytes": 3303158255,
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+        },
+        "scale": 1.0,
+        "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+        "unit": "K",
+        "unit_authority": {
+          "section": "11.1, page 69; GHRM",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+        },
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+      },
+      "variable": "bolometric_temperature"
+    },
+    {
+      "samples": [
+        {
+          "independent_method": "tifffile strip offset + seek/struct float32; separate coordinate calculation",
+          "independent_raw_value": 99.86900329589844,
+          "independent_status": "PASS",
+          "measurement": {
+            "available": true,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "K",
+            "raw_value": 99.86900329589844,
+            "reason": null,
+            "sampling": {
+              "angular_resolution_deg": 0.0078125,
+              "center_latitude_deg": -0.00390625,
+              "center_longitude_deg_east": 0.00390625,
+              "column": 23040,
+              "index_base": 0,
+              "method": "containing_native_pixel_no_interpolation",
+              "nominal_equatorial_pixel_size_m": 236.90117518866782,
+              "row": 8960,
+              "scaling_factor": 1.0,
+              "value_offset": 0.0
+            },
+            "source_ref": "regolith_temperature",
+            "status": "valid",
+            "unit": "K",
+            "value": 99.86900329589844,
+            "within_declared_latitude_bounds": true
+          },
+          "site_id": "equatorial_test_only"
+        },
+        {
+          "independent_status": "OUTSIDE_COVERAGE",
+          "measurement": {
+            "available": false,
+            "quality": {
+              "validation": "structural_and_numeric_checks_only",
+              "warnings": [
+                "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+                "units_from_official_sis_not_element_array",
+                "body_fixed_frame_realization_not_declared_in_label",
+                "uncertainty_not_supplied_per_pixel"
+              ]
+            },
+            "raw_unit": "K",
+            "raw_value": null,
+            "reason": "outside_declared_latitude_coverage",
+            "sampling": null,
+            "source_ref": "regolith_temperature",
+            "status": "not_sampled",
+            "unit": "K",
+            "value": null,
+            "within_declared_latitude_bounds": false
+          },
+          "site_id": "southern_high_latitude_test_only"
+        }
+      ],
+      "source": {
+        "angular_resolution_deg": 0.0078125,
+        "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+        "coverage_latitude_deg": [
+          -70,
+          70
+        ],
+        "element_array_declares_unit": false,
+        "files": [
+          {
+            "bytes": 8355,
+            "file_name": "dghrm_treg_sam_70s70n_tif.xml",
+            "sha256": "889e751059730c07f14874ee5ffe4594c83f24259b141abe79cc9884ed9f1d02"
+          }
+        ],
+        "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+        "missing_value": "NaN",
+        "offset": 0.0,
+        "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_treg_sam_70s70n_tif",
+        "product_id": "dghrm_treg_sam_70s70n_tif",
+        "remote_file": {
+          "checksum_scope": "retrieved_ranges_only",
+          "etag": "\"98acb46c75f8d91:0\"",
+          "last_modified": "Fri, 06 Oct 2023 16:52:00 GMT",
+          "ranges": [
+            {
+              "bytes": 65536,
+              "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+              "start": 0,
+              "stop": 65535,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "4dda9233b138e4c3026c524b3a76f50528079a64b76518e7eb78bade7c593d7b",
+              "start": 131072,
+              "stop": 196607,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+              "start": 65536,
+              "stop": 131071,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "5e04d215ff1988afa2f6c73af20645ecb4154e9df44157b3ba48870cd41b39e8",
+              "start": 1651638272,
+              "stop": 1651703807,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "22e585cc45d9f04d831791ec9f51c4958ec821954aa0ffa5b9033e3c5c4043bb",
+              "start": 1651703808,
+              "stop": 1651769343,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "ba6e93e0ba11ceb1dad2c10703a6195dfc0075a80df2071f68f59064662837a0",
+              "start": 1651769344,
+              "stop": 1651834879,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            },
+            {
+              "bytes": 65536,
+              "sha256": "4519b4a574eacdeab80a5746c48ae3e6301ff3109ba599ff98919116d40acb39",
+              "start": 1651834880,
+              "stop": 1651900415,
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+            }
+          ],
+          "size_bytes": 3303158255,
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+        },
+        "scale": 1.0,
+        "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+        "unit": "K",
+        "unit_authority": {
+          "section": "11.1, page 69; GHRM",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+        },
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+      },
+      "variable": "regolith_temperature"
+    }
+  ],
+  "software": {
+    "gdal": "3.12.2",
+    "rasterio": "1.5.2",
+    "tifffile": "2026.11.12"
+  },
+  "transfer_scope": "consumed response bodies, excluding HTTP headers and TLS"
+}

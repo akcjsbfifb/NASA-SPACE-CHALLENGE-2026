@@ -20,6 +20,11 @@ VARIABLE_COLUMNS = (
     ("roughness", "roughness_m", "m"),
     ("slope", "slope_deg", "deg"),
 )
+FULL_VARIABLE_COLUMNS = VARIABLE_COLUMNS + (
+    ("rock_abundance", "rock_abundance_fraction", "1"),
+    ("bolometric_temperature", "bolometric_temperature_K", "K"),
+    ("regolith_temperature", "regolith_temperature_K", "K"),
+)
 
 
 def _number(value, label):
@@ -32,7 +37,7 @@ def _boolean_cell(value):
     return "" if value is None else "true" if value else "false"
 
 
-def render_csv(document, *, source_json_file, source_json_sha256):
+def render_csv(document, *, source_json_file, source_json_sha256, profile="core"):
     """Serializa sin redondear, normalizar coordenadas ni recalcular mediciones."""
     if not isinstance(document, dict) or document.get("schema_version") != "1.0.0":
         raise ValueError("Contrato JSON científico incompatible")
@@ -44,9 +49,12 @@ def render_csv(document, *, source_json_file, source_json_sha256):
     sites = document.get("sites")
     if not isinstance(sites, list) or not sites:
         raise ValueError("Se requiere una lista no vacía de sitios")
+    if profile not in ("core", "full"):
+        raise ValueError("Perfil CSV desconocido")
+    columns = VARIABLE_COLUMNS if profile == "core" else FULL_VARIABLE_COLUMNS
     fields = ["site_id", "latitude_deg", "longitude_deg"]
-    fields += [column for _, column, _ in VARIABLE_COLUMNS]
-    for variable, _, _ in VARIABLE_COLUMNS:
+    fields += [column for _, column, _ in columns]
+    for variable, _, _ in columns:
         fields += [f"{variable}_status", f"{variable}_available", f"{variable}_reason"]
     fields += ["source_json_file", "source_json_sha256"]
     buffer = io.StringIO(newline="")
@@ -72,7 +80,7 @@ def render_csv(document, *, source_json_file, source_json_sha256):
         measurements = site.get("measurements", {})
         if not isinstance(measurements, dict):
             raise ValueError("Faltan mediciones científicas")
-        for variable, column, unit in VARIABLE_COLUMNS:
+        for variable, column, unit in columns:
             measurement = measurements.get(variable)
             if not isinstance(measurement, dict):
                 raise ValueError(f"Falta el registro científico de {variable} en {site_id}")
@@ -105,7 +113,7 @@ def render_csv(document, *, source_json_file, source_json_sha256):
     return buffer.getvalue()
 
 
-def export_csv(source, destination):
+def export_csv(source, destination, profile="core"):
     """Lee exclusivamente el JSON, valida todo y crea una salida nueva UTF-8/LF."""
     source, destination = Path(source), Path(destination)
     if source.resolve() == destination.resolve():
@@ -119,7 +127,7 @@ def export_csv(source, destination):
         raise ValueError(f"Constante JSON no permitida: {value}")
     document = json.loads(raw.decode("utf-8-sig"), parse_constant=invalid_constant)
     payload = render_csv(document, source_json_file=source.name,
-                         source_json_sha256=hashlib.sha256(raw).hexdigest())
+                         source_json_sha256=hashlib.sha256(raw).hexdigest(), profile=profile)
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("x", encoding="utf-8", newline="") as stream:
         stream.write(payload)
@@ -129,9 +137,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Convertir JSON científico lunar a CSV ancho, sin abrir datos NASA.")
     parser.add_argument("--input", required=True, type=Path, help="JSON científico completo, que se conserva")
     parser.add_argument("--output", required=True, type=Path, help="CSV nuevo; nunca se sobrescribe")
+    parser.add_argument("--profile", choices=("core", "full"), default="core", help="core conserva 17 columnas; full agrega fuentes validadas")
     args = parser.parse_args(argv)
     try:
-        export_csv(args.input, args.output)
+        export_csv(args.input, args.output, args.profile)
     except (OSError, ValueError) as exc:
         parser.exit(2, f"Error: {exc}\n")
     print(f"CSV generado: {args.output.resolve()}")

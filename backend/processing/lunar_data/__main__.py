@@ -1,6 +1,7 @@
 """CLI offline. Valores por defecto anclados al checkout, sin imports de FastAPI."""
 
 import argparse
+from contextlib import ExitStack
 from pathlib import Path
 import sys
 
@@ -21,6 +22,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Extraer elevación, rugosidad LOLA y pendiente derivada; no calcula similitud.")
     parser.add_argument("--data-root", type=Path, default=root / "NASA-Lunar-Studies/data/raw/lola")
     parser.add_argument("--registry", type=Path, default=root / "data/moon/variables.json")
+    parser.add_argument("--sources", type=Path, help="Configuración opt-in de fuentes adicionales; no hay red por defecto")
     parser.add_argument("--output", required=True, type=Path)
     selection = parser.add_mutually_exclusive_group(required=True)
     selection.add_argument("--sites", type=Path, help="JSON con una lista de sitios")
@@ -52,7 +54,24 @@ def main(argv=None):
             protected.append(args.sites)
         for meta in metadata:
             protected.extend((meta.image_path, meta.xml_path, meta.label_path))
-        document = build_document(metadata, sites, registry, args.registry, args.sites)
+        with ExitStack() as stack:
+            processors = {}
+            if args.sources:
+                from .diviner import DivinerRaster
+                from .http_range import TransferBudget
+                config = read_json(args.sources)
+                budget = TransferBudget(config.get("http_budget_bytes", 16 * 1024 * 1024))
+                for variable, source in config.get("diviner", {}).items():
+                    location = source.get("raster")
+                    if location and not location.startswith("https://"):
+                        location = str(root / location)
+                    processors[variable] = stack.enter_context(DivinerRaster(
+                        variable, root / source["xml"], location, budget))
+                protected.append(args.sources)
+            document = build_document(metadata, sites, registry, args.registry, args.sites, processors)
+            if args.sources:
+                from .export import _file_manifest
+                document["reproducibility"]["configuration"]["additional_sources"] = _file_manifest(args.sources)
         write_document(document, args.output, protected)
     except (OSError, ValueError, KeyError, MetadataError) as exc:
         parser.exit(2, f"Error: {exc}\n")

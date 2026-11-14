@@ -88,7 +88,67 @@ La salida conserva el contrato 1.0.0 con campos aditivos de método, entradas y
 distancias. `sources.slope` referencia `elevation`: no es otro producto NASA.
 `input_samples` conserva las cinco alturas originales y convertidas, índices,
 centros, unidades y estados. Una altura ausente invalida la pendiente completa.
-Diviner, iluminación, LEND y normalización quedan para otras etapas.
+Diviner GHRM SAM está implementado con ventanas locales/remotas; iluminación,
+LEND y normalización siguen en etapas independientes.
+
+## Fuentes adicionales: Diviner
+
+Instalar las dependencias opcionales, sin modificar el entorno terrestre:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r .\backend\requirements-lunar-geospatial.lock.txt
+.\.venv\Scripts\python.exe -m lunar_data --sources .\data\moon\sources.example.json --sites .\backend\tests\lunar\fixtures\sites.example.json --output .\output\moon_full.json
+.\.venv\Scripts\python.exe -m lunar_data.csv_export --input .\output\moon_full.json --profile full --output .\output\moon_full.csv
+```
+
+No hay red por defecto: `--sources` habilita explícitamente las fuentes de esa
+configuración. Las rutas XML son relativas a la raíz; cada fuente permite
+`"raster": "ruta/local.tif"` o una URL HTTPS. Se reutiliza una sola lógica
+científica. Un procesador implementado pero sin configuración informa
+`not_sampled`, `processor_not_configured`, sin simular disponibilidad.
+
+Los tres TIFF oficiales tienen 46080×17920 celdas float32, 128 px/°, filas al
+sur y longitudes −180° a 180°. La declaración PDS proyectada en metros y el
+TIFF geográfico lunar describen la misma grilla equirectangular. Se contrastan
+dimensiones, radio 1737400 m, transformación, escala 1 y offset 0. El TIFF no
+declara NoData GDAL: se respeta el NaN del XML. La unidad ausente en
+`Element_Array` se obtiene del SIS oficial v1.21 §11.1, página 69: RA es fracción
+0–1; TBOL y TREG son K y observables distintos. SAM es medianoche ajustada por
+pendiente, no mínimo nocturno absoluto, ciclo térmico ni temperatura del aire.
+
+`RangeSource` exige HTTP 206 y rangos/longitudes exactos, compara ETag,
+Last-Modified y tamaño, y aborta si el servidor devuelve el archivo completo.
+El presupuesto de cada ejecución es 16 MiB compartido; no se descargan mapas
+completos. Cada respuesta consumida y su SHA quedan registrados; los hashes
+son **de rangos recibidos**, nunca se presentan como checksum del TIFF completo.
+El presupuesto mide cuerpos HTTP consumidos, excluye cabeceras y TLS.
+
+La prueba inicial y su repetición independiente consumieron cada una 1376256
+bytes para los tres productos. La grilla está organizada en strips de una fila
+sin compresión: una ventana de un píxel lee una fila, no el mapa completo.
+En (0°,0°): RA 0.0033496543765068054, TBOL 101.29203796386719 K y TREG
+99.86900329589844 K. En (−85°,−10°) las tres variables quedan nulas con
+`outside_declared_latitude_coverage`: no hay extrapolación polar. Los límites
+exactos ±70° se asignan al píxel interior, y el antimeridiano es periódico.
+
+La evidencia ejecutada está en `data/moon/validation.diviner.json`. Rasterio
+se contrasta con `tifffile` para localizar strips y `seek`+`struct.unpack` para
+leer float32, con coordenadas calculadas por separado. No es validación externa
+de georreferenciación ni incertidumbre física. Repetir con salida nueva:
+
+```powershell
+.\.venv\Scripts\python.exe -m lunar_data.validation --remote-diviner --sources .\data\moon\sources.example.json --sites .\backend\tests\lunar\fixtures\sites.example.json --output .\output\diviner_validation.json
+```
+
+El JSON mantiene un documento canónico con todas las variables. El CSV original
+conserva **17 columnas por defecto**; `--profile full` produce el archivo optativo
+`data/moon/lunar_measurements.example.csv` de 29 columnas incluyendo las tres
+variables Diviner y sus estados. No se obliga a consumidores anteriores a cambiar
+de contrato. Ambos CSV se generan exclusivamente desde el mismo JSON.
+La suite completa de esta etapa tiene 179 casos aprobados (154 anteriores y
+25 nuevos de Diviner y transporte HTTP), sin omisiones con el entorno opcional
+instalado. Las pruebas de ventanas usan etiquetas y datasets sintéticos; la
+lectura real independiente se registra por separado en el informe ejecutado.
 
 ## CSV ancho desde el JSON
 
