@@ -60,6 +60,8 @@ def main(argv=None):
                 from .diviner import DivinerRaster
                 from .http_range import TransferBudget
                 config = read_json(args.sources)
+                if set(config) - {"http_budget_bytes", "diviner", "lunar_prospector"}:
+                    raise ValueError("La configuración contiene fuentes no soportadas")
                 budget = TransferBudget(config.get("http_budget_bytes", 16 * 1024 * 1024))
                 for variable, source in config.get("diviner", {}).items():
                     location = source.get("raster")
@@ -67,18 +69,11 @@ def main(argv=None):
                         location = str(root / location)
                     processors[variable] = stack.enter_context(DivinerRaster(
                         variable, root / source["xml"], location, budget))
-                if config.get("lend"):
-                    from .lend import LendProduct, LendCollection
-                    selections = []
-                    for source in config["lend"]:
-                        product = stack.enter_context(LendProduct(root / source["xml"]))
-                        channels = source["channels"]
-                        if not channels or len(channels) != len(set(channels)):
-                            raise ValueError("Seleccionar canales LEND explícitos y no duplicados")
-                        selections.append((product, channels))
-                    if len({p.product for p, _ in selections}) != len(selections):
-                        raise ValueError("Producto LEND duplicado")
-                    processors["lend_neutron_indicator"] = LendCollection(selections)
+                if config.get("lunar_prospector"):
+                    from .lunar_prospector import LunarProspectorHydrogen
+                    source = config["lunar_prospector"]
+                    processors["hydrogen_abundance_ppm"] = stack.enter_context(LunarProspectorHydrogen(
+                        root / source["binary"], root / source["ascii"]))
                 protected.append(args.sources)
             document = build_document(metadata, sites, registry, args.registry, args.sites, processors)
             if args.sources:

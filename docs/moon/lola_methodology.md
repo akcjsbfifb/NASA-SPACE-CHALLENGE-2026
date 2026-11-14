@@ -190,8 +190,8 @@ En la primera etapa se preservaron los 60 casos originales y los imports públic
 `lunar_data`. `metadata.py`, `lola.py` y `export.py` se trasladaron sin alterar
 sus algoritmos. El CLI resuelve
 por defecto las rutas del checkout; los argumentos de rutas explícitas se
-mantienen. El registro 1.1.0 preparó LEND y pendiente externa con valores nulos;
-el registro actual 1.2.0 incorpora pendiente derivada. Elevación y rugosidad
+mantienen. Los primeros registros prepararon fuentes adicionales con valores nulos;
+el registro actual 2.0.0 incorpora pendiente y las siete variables seleccionadas. Elevación y rugosidad
 conservan sus valores, fuentes y registros completos de medición.
 
 La comparación registra por separado valores almacenados/convertidos, unidades,

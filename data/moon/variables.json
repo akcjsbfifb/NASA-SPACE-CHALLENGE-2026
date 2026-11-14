@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "registry_version": "1.4.1",
+  "registry_version": "2.0.0",
   "documentation": "docs/moon/variables.md",
   "similarity_responsibility": "external_comparator",
   "variables": [
@@ -166,37 +166,21 @@
       "intended_use": "Pendiente derivada del LDEM mediante cinco alturas, en grados sin normalización. No es un producto NASA independiente ni una evaluación de seguridad. Comparabilidad terrestre pendiente; no habilita similitud automáticamente."
     },
     {
-      "id": "lend_neutron_indicator",
-      "name": "Observables neutrónicos relativos LEND (no abundancia de hidrógeno)",
-      "definition": "Tasas relativas, errores estadísticos y exposiciones ALDE; períodos y canales separados, sin estimar hidrógeno, agua o hielo.",
+      "id": "hydrogen_abundance_ppm",
+      "name": "Estimated hydrogen abundance (Lunar Prospector)",
+      "definition": "Model-derived H ppm by weight from corrected epithermal neutron measurements; not confirmed water or ice.",
       "scope": "selected",
       "selected_for_project": true,
       "implemented": true,
-      "implementation_status": "implemented_collection",
+      "implementation_status": "implemented_binary_ascii_sampling",
       "used_in_similarity": null,
-      "similarity_eligibility": "requires_channel_unit_and_methodology_validation",
-      "unit": null,
-      "unit_validation": "rate_error_units_not_declared_retained_unknown_exposure_seconds",
-      "latitude_bounds_deg": [
-        -80,
-        80
-      ],
-      "native_pixels_per_degree": 1,
-      "coverage": "Grilla ALDE de 1 grado, estrictamente entre -80 y 80 grados. Disponibilidad evaluada por exposición, error y finitud para cada período y canal solicitado.",
-      "source": "https://pds-geosciences.wustl.edu/missions/lro/lend.htm",
-      "products": [
-        {
-          "id": "lend_rdr_alde_20090915",
-          "start": "2009-09-15T00:00:00Z",
-          "stop": "2011-12-11T00:00:00Z"
-        },
-        {
-          "id": "lend_rdr_alde_20111211",
-          "start": "2011-12-11T00:00:00Z",
-          "stop": "2016-09-14T00:00:00Z"
-        }
-      ],
-      "intended_use": "Observables neutrónicos indirectos; RATE/ERR sin unidad declarada en PDS4, exposición en segundos. No se combinan períodos ni sensores."
+      "similarity_eligibility": "context_only_no_validated_terrestrial_equivalent",
+      "unit": "ppm",
+      "unit_validation": "official_ASCII_header_H_ppm_by_weight_and_binary_ASCII_full_comparison",
+      "coverage": "Global raster, exact poles not sampled; ASCII missing or negative estimates are not valid concentrations.",
+      "resolution": "720 x 360 cells, 0.5 degrees; effective spatial resolution not established by grid spacing.",
+      "source": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced_special.html",
+      "intended_use": "Contextual estimated hydrogen abundance only; no automatic similarity weight or water/ice conversion."
     },
     {
       "id": "mineralogy",

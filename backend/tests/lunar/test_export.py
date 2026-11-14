@@ -27,9 +27,10 @@ def test_extensible_document_deterministic_no_invented_values(metadata_pair, reg
     assert measures["slope"]["implemented"] is True
     slope_definition = next(item for item in registry["variables"] if item["id"] == "slope")
     assert slope_definition["implementation_status"] == "implemented_derived"
-    assert measures["lend_neutron_indicator"]["status"] == "not_sampled"
-    assert measures["lend_neutron_indicator"]["value"] is None
-    assert measures["lend_neutron_indicator"]["implemented"] is True
+    assert measures["hydrogen_abundance_ppm"]["status"] == "not_sampled"
+    assert measures["hydrogen_abundance_ppm"]["value"] is None
+    assert measures["hydrogen_abundance_ppm"]["unit"] == "ppm"
+    assert measures["hydrogen_abundance_ppm"]["implemented"] is True
     assert measures["slope"]["available"] is False
     assert measures["earth_visibility"]["status"] == "not_implemented"
     assert all(item["used_in_similarity"] is None for item in measures.values())

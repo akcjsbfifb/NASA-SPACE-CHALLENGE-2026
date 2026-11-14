@@ -60,7 +60,7 @@ def validate_registry(registry):
         raise ValueError("Identificadores de variable duplicados")
     implemented = {item["id"] for item in variables if item.get("implemented") is True}
     required = {"elevation", "roughness", "slope"}
-    supported = required | {"rock_abundance", "bolometric_temperature", "regolith_temperature", "lend_neutron_indicator"}
+    supported = required | {"rock_abundance", "bolometric_temperature", "regolith_temperature", "hydrogen_abundance_ppm"}
     if not required <= implemented <= supported:
         raise ValueError("Registro reclama procesadores no implementados")
     for item in variables:
@@ -167,8 +167,6 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             })
     for key, processor in processors.items():
         sources[key] = processor.manifest()
-        if hasattr(processor, "additional_sources"):
-            sources.update(processor.additional_sources())
     configuration = {}
     if registry_path is not None:
         configuration["variable_registry"] = _file_manifest(Path(registry_path))

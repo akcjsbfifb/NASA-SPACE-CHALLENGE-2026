@@ -100,7 +100,7 @@ def test_full_csv_is_opt_in_and_matches_all_values(repo_root):
     doc=json.loads(path.read_bytes())
     text=render_csv(doc,source_json_file=path.name,source_json_sha256="source",profile="full")
     rows=list(csv.DictReader(io.StringIO(text)))
-    assert len(rows[0])==29
+    assert len(rows[0])==33
     for row,site in zip(rows,doc["sites"]):
         for variable,column in [("rock_abundance","rock_abundance_fraction"),
             ("bolometric_temperature","bolometric_temperature_K"),("regolith_temperature","regolith_temperature_K")]:

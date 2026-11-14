@@ -11,20 +11,8 @@
       "xml": "NASA-Lunar-Studies/data/raw/lola/diviner/regolith_temperature/dghrm_treg_sam_70s70n_tif.xml"
     }
   },
-  "lend": [
-    {
-      "xml": "NASA-Lunar-Studies/data/raw/lola/lend/lend_rdr_alde_20090915.xml",
-      "channels": [
-        "SETN",
-        "CSETN"
-      ]
-    },
-    {
-      "xml": "NASA-Lunar-Studies/data/raw/lola/lend/lend_rdr_alde_20111211.xml",
-      "channels": [
-        "SETN",
-        "CSETN"
-      ]
-    }
-  ]
+  "lunar_prospector": {
+    "binary": "NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.dat",
+    "ascii": "NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.txt"
+  }
 }

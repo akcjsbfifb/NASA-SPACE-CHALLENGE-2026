@@ -62,6 +62,12 @@ Se genera desde el JSON completo, sin abrir datos NASA ni recalcular valores:
 Elegir una salida nueva. El [formato CSV](docs/moon/README.md#csv-ancho-desde-el-json)
 conserva estados, coordenadas originales y SHA-256 del JSON fuente.
 
+El [CSV consolidado de siete variables](data/moon/lunar_measurements.example.csv)
+agrega RA, TBOL, TREG y `hydrogen_abundance_ppm` (Lunar Prospector, ppm por peso).
+Para generarlo usar `--profile full` (33 columnas). El hidrógeno es una
+estimación contextual, no agua/hielo confirmado ni una entrada automática al
+puntaje terrestre. Los formatos `core` y `full` se obtienen del mismo JSON.
+
 ## Datos requeridos para regenerar las mediciones
 
 ```text

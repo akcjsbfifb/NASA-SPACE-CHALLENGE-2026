@@ -24,6 +24,7 @@ FULL_VARIABLE_COLUMNS = VARIABLE_COLUMNS + (
     ("rock_abundance", "rock_abundance_fraction", "1"),
     ("bolometric_temperature", "bolometric_temperature_K", "K"),
     ("regolith_temperature", "regolith_temperature_K", "K"),
+    ("hydrogen_abundance_ppm", "hydrogen_abundance_ppm", "ppm"),
 )
 
 
@@ -39,8 +40,6 @@ def _boolean_cell(value):
 
 def render_csv(document, *, source_json_file, source_json_sha256, profile="core"):
     """Serializa sin redondear, normalizar coordenadas ni recalcular mediciones."""
-    if profile == "lend":
-        return render_lend_csv(document, source_json_file=source_json_file, source_json_sha256=source_json_sha256)
     if not isinstance(document, dict) or document.get("schema_version") != "1.0.0":
         raise ValueError("Contrato JSON científico incompatible")
     reference = document.get("coordinate_reference", {})
@@ -115,42 +114,6 @@ def render_csv(document, *, source_json_file, source_json_sha256, profile="core"
     return buffer.getvalue()
 
 
-def render_lend_csv(document, *, source_json_file, source_json_sha256):
-    """Tabla auxiliar: fila por sitio/producto/canal; jamás mezcla períodos."""
-    fields = ["site_id", "latitude_deg", "longitude_deg", "product_id", "period_start", "period_stop",
-              "channel", "quantity", "value", "unit", "unit_status", "statistical_error", "exposure_s",
-              "raw_value", "raw_statistical_error", "raw_exposure_s", "status", "available", "reason",
-              "source_ref", "record_index", "source_json_file", "source_json_sha256"]
-    if not isinstance(document, dict) or document.get("schema_version") != "1.0.0":
-        raise ValueError("Contrato JSON incompatible")
-    buffer = io.StringIO(newline="")
-    writer = csv.DictWriter(buffer, fieldnames=fields, lineterminator="\n")
-    writer.writeheader()
-    seen = set()
-    for site in document["sites"]:
-        for item in site["measurements"].get("lend_neutron_indicator", {}).get("observations", []):
-            identity = (site["id"], item["product_id"], item["channel"])
-            if identity in seen:
-                raise ValueError("Observación LEND duplicada")
-            seen.add(identity)
-            row = {key: item.get(key) for key in fields if key in item}
-            row.update(site_id=site["id"], **{k: site["requested_coordinates"][k] for k in ["latitude_deg", "longitude_deg"]},
-                       period_start=item["period"]["start"], period_stop=item["period"]["stop"],
-                       available=_boolean_cell(item["available"]),
-                       record_index=(item.get("sampling") or {}).get("record_index"),
-                       source_json_file=source_json_file, source_json_sha256=source_json_sha256)
-            for key in ["value", "statistical_error", "exposure_s", "raw_value", "raw_statistical_error", "raw_exposure_s"]:
-                if row.get(key) is not None:
-                    _number(row[key], key)
-            if not isinstance(item["available"], bool):
-                raise ValueError("Disponibilidad LEND debe ser booleana")
-            if item["available"]:
-                if item["value"] is None or item["status"] != "valid":
-                    raise ValueError("Observable LEND disponible sin valor o estado válido")
-            elif item["value"] is not None:
-                raise ValueError("Observable LEND no disponible con valor contradictorio")
-            writer.writerow(row)
-    return buffer.getvalue()
 
 
 def export_csv(source, destination, profile="core"):
@@ -177,7 +140,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Convertir JSON científico lunar a CSV ancho, sin abrir datos NASA.")
     parser.add_argument("--input", required=True, type=Path, help="JSON científico completo, que se conserva")
     parser.add_argument("--output", required=True, type=Path, help="CSV nuevo; nunca se sobrescribe")
-    parser.add_argument("--profile", choices=("core", "full", "lend"), default="core", help="core: 17 columnas; full: fuentes raster; lend: tabla auxiliar por producto/canal")
+    parser.add_argument("--profile", choices=("core", "full"), default="core", help="core: 17 columnas; full: siete variables y estados, 33 columnas")
     args = parser.parse_args(argv)
     try:
         export_csv(args.input, args.output, args.profile)
