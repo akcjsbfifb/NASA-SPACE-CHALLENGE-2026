@@ -5,7 +5,6 @@ import type { GlobeController } from './Globe/globe.controller';
 import type { GlobeClickEvent, GlobeMarker, GlobePoint } from './Globe/globe.types';
 import {
 	LUNAR_LANDINGS,
-	landingNear,
 	lookupLunarSample,
 	type LunarLanding,
 	type LunarSample,
@@ -40,6 +39,11 @@ export type EarthAnalog = {
 	closeness: number;
 	roughness_m: number;
 	rock: string;
+	slope_deg: number;
+	scores?: Record<string, number>;
+	coverage?: number;
+	tmin_c?: number | null;
+	ice_thickness_m?: number | null;
 };
 
 export type EarthAnalogSet = {
@@ -48,6 +52,7 @@ export type EarthAnalogSet = {
 	closest: number | null;
 	loosest: number | null;
 	points: EarthAnalog[];
+	variables_used?: { id: string; weight: number }[];
 };
 
 type MoonPageProps = {
@@ -156,6 +161,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 			roughness: String(sample.roughness),
 			precision: String(precision),
 		});
+		if (sample.slope !== null) params.set('slope', String(sample.slope));
 		fetch(`http://127.0.0.1:8787/search?${params}`, { signal: controller.signal })
 			.then(async (response) => {
 				const body = (await response.json()) as EarthAnalogSet & { error?: string };
@@ -217,11 +223,6 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 	}
 
 	function chooseCoordinates(lat: number, lng: number) {
-		const site = landingNear(lat, lng);
-		if (site) {
-			chooseLanding(site);
-			return;
-		}
 		choose({
 			lat,
 			lng,
@@ -284,9 +285,19 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 										<dd>{sample.slope === null ? 'sin dato' : `${sample.slope.toFixed(2)}°`}</dd>
 									</div>
 								</dl>
+								<dl className="cell-facts">
+									{([
+										['rock_abundance', 'Abundancia de rocas · Diviner RA'],
+										['bolometric_temperature', 'Temperatura bolométrica nocturna · Diviner TBOL'],
+										['regolith_temperature', 'Temperatura del regolito · Diviner TREG'],
+										['hydrogen_abundance_ppm', 'Hidrógeno estimado · Lunar Prospector'],
+									] as const).map(([key, label]) => {
+										const item = sample.measurements[key];
+										return <div key={key}><dt>{label}</dt><dd>{item?.available && item.value !== null ? `${item.value} ${item.unit ?? ''}` : `sin dato (${item?.reason ?? 'no disponible'})`}</dd></div>;
+									})}
+								</dl>
 								<p className="muted">
-									La comparación usa la rugosidad LDRM. Elevación y pendiente se muestran como contexto:
-									temperatura, roca e hidrógeno no tienen todavía equivalente terrestre validado.
+									El puntaje es relativo; pendiente y rugosidad son aproximaciones con diferencias de escala y método. Las demás mediciones son contexto.
 								</p>
 								{sample.roughness !== null && (
 									<>
@@ -316,7 +327,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 													</div>
 												</dl>
 												<div className="result-list">
-													{listPreview(analogs.points).map((point) => (
+														{analogs.points.map((point) => (
 														<button
 															key={`${point.lat},${point.lon}`}
 															type="button"
@@ -326,6 +337,15 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 															}}
 														>
 															{percentText(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
+																	<br />Pendiente: Luna {sample.slope ?? 'sin dato'}° · Tierra {point.slope_deg}° · {point.scores?.slope === undefined ? 'sin puntaje' : percentText(point.scores.slope)} · peso {analogs.variables_used?.find(v => v.id === 'slope')?.weight ?? 'no utilizado'}
+																	<br />Rugosidad: Luna {sample.roughness} m · Tierra {point.roughness_m} m · {point.scores?.roughness === undefined ? 'sin puntaje' : percentText(point.scores.roughness)} · peso {analogs.variables_used?.find(v => v.id === 'roughness')?.weight ?? 'no utilizado'}
+																	<br />Tierra: ETOPO; Luna: LOLA. Valores terrestres redondeados por el servicio.
+																	<br />Elevación LOLA: Luna {sample.elevation ?? 'sin dato'} m · Tierra ETOPO: no incluida en esta respuesta · contextual.
+																	<br />Rocas Diviner RA: Luna {sample.measurements.rock_abundance?.value ?? 'sin dato'} fracción · Tierra: sin equivalente medido · contextual.
+																	<br />TBOL Diviner: Luna {sample.measurements.bolometric_temperature?.value ?? 'sin dato'} K · MODIS terrestre: no disponible · aproximada.
+																	<br />TREG Diviner: Luna {sample.measurements.regolith_temperature?.value ?? 'sin dato'} K · suelo ERA5 terrestre: no disponible · contextual.
+																	<br />Hidrógeno Lunar Prospector: Luna {sample.measurements.hydrogen_abundance_ppm?.value ?? 'sin dato'} ppm · Tierra: sin equivalente · contextual.
+																	<br />Contexto terrestre: mínima del aire del mes más frío WorldClim {point.tmin_c ?? 'sin dato'} °C · hielo ETOPO {point.ice_thickness_m ?? 'sin dato'} m · litología GLiM {point.rock}.
 														</button>
 													))}
 												</div>

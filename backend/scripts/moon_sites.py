@@ -36,11 +36,13 @@ class MoonSites:
         self.path = SITES_PATH if path is None else Path(path)
         self.error = ""
         self.sites: dict[str, dict] = {}
+        self.sources: dict = {}
         try:
-            document = json.loads(self.path.read_text())
+            document = json.loads(self.path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as error:
             self.error = str(error)
             return
+        self.sources = document.get("sources", {})
         for site in document.get("sites", []):
             site_id = site.get("id")
             if not isinstance(site_id, str):
@@ -53,13 +55,7 @@ class MoonSites:
             return None
         measurements = site.get("measurements", {})
         selected = {
-            key: {
-                "available": item.get("available"),
-                "value": item.get("value"),
-                "unit": item.get("unit"),
-                "status": item.get("status"),
-                "reason": item.get("reason"),
-            }
+            key: dict(item)
             for key, item in measurements.items()
             if key in MEASURED
         }
@@ -71,9 +67,9 @@ class MoonSites:
             "lat": site.get("requested_coordinates", {}).get("latitude_deg"),
             "lon": site.get("requested_coordinates", {}).get("longitude_deg"),
             "measurements": selected,
-            "compared": [
-                key for key in MEASURED if selected.get(key, {}).get("available") is True
-            ],
+            "sources": self.sources,
+            # Availability is not evidence that a search has used a variable.
+            "compared": [],
             "unavailable": [
                 key for key in MEASURED if selected.get(key, {}).get("available") is not True
             ],

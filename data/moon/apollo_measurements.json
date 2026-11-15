@@ -18,66 +18,71 @@
   "reproducibility": {
     "code": [
       {
-        "bytes": 103,
+        "bytes": 106,
         "file_name": "__init__.py",
-        "sha256": "eab63aca042aa11b92f2803a2fd300cacdf75dfe45621afbc0ab7e84e8a8eaaf"
+        "sha256": "cf457176e35f815650e4ee444876e463d147826d155993df2162612917d058c8"
       },
       {
-        "bytes": 4838,
+        "bytes": 4928,
         "file_name": "__main__.py",
-        "sha256": "ece52dba8fac4d199d73d96b60e0afbad236356fcf1800fd095631fd1d54fae0"
+        "sha256": "411f1dc96eb81bfcc8b2b113578125718be44f856cece56fd824b109a8ee34d2"
       },
       {
-        "bytes": 7517,
+        "bytes": 7671,
         "file_name": "csv_export.py",
-        "sha256": "2e957840d04ff6d9ca7c296c6020ca488858127a3eac55d5c19a22417fa7eba8"
+        "sha256": "473d02960ff95cc3fade90e2865247033420681c6efa9d8a574739eeeacec336"
       },
       {
-        "bytes": 8784,
+        "bytes": 8940,
         "file_name": "diviner.py",
-        "sha256": "e09b736437b6124744324aaaa0af4d1772c996acb8c3881f2ced4c709d39adcf"
+        "sha256": "e66115fa0fc7452263e96bfa36256f118f7363236e4149735fea284d5fe4c290"
       },
       {
-        "bytes": 10844,
+        "bytes": 11058,
         "file_name": "export.py",
-        "sha256": "7a89137687cec5f4f6551d229b9ace0d3a660758e2b352184819e7b69277e55b"
+        "sha256": "b1c4832de13e2a5268fa7b7756b8f5f654c290620e56279dec10ae588d6248e0"
       },
       {
-        "bytes": 4663,
+        "bytes": 4780,
         "file_name": "http_range.py",
-        "sha256": "b2455b1e57b0edf46bb108eec462425881a16ce91024e89c5165e08f8c934d0e"
+        "sha256": "5029beee5450aca9f6c4dc789f1c9d3f392c349d7047b2b45f45467eefce1219"
       },
       {
-        "bytes": 9291,
+        "bytes": 9484,
         "file_name": "lola.py",
-        "sha256": "0fb7209aefc8b8f8492bfdd165e33c067b008e91d88fd892ef5e9a8d9158fc2e"
+        "sha256": "491d2c7162af8a90d4ef3ebd8d1eda088b3b85a14367a6c76354a11201d337c0"
       },
       {
-        "bytes": 12149,
+        "bytes": 12373,
         "file_name": "lunar_prospector.py",
-        "sha256": "58392e88da58dfbaed8c417a6859d678fde44bbfe290120e2069b67c43d3fe5b"
+        "sha256": "f67ab87abbf8e627633782dd0a603ff9e032f039fb7f67c8591b8610310bfed6"
       },
       {
-        "bytes": 12417,
+        "bytes": 12685,
         "file_name": "metadata.py",
-        "sha256": "a3f133df1e666f79d1b0038a1ce3c13d99a34a4e7dde99331a8581f36e4e8a03"
+        "sha256": "6a92a517b902d731e5d47797b7901fded883e5593a7e37d94060db89a1221348"
       },
       {
-        "bytes": 2918,
+        "bytes": 2973,
         "file_name": "slope.py",
-        "sha256": "7a297d0eb6786c5b61733fa558056b5176ef36c7e8e8135a052a5d2ed02d71a8"
+        "sha256": "d34d36ee388208291e0c48bbc6c1d4d432ed2e3de1d29f396d18a261e94b179c"
       },
       {
-        "bytes": 5077,
+        "bytes": 5175,
         "file_name": "validation.py",
-        "sha256": "52c48151688e1d07229b8f936b02aa9f8e386e663ea974bf9b911486b2139b96"
+        "sha256": "5c1af985f1d1fc3520db75bd4a35c7e01544d2a9617c73decdbabe43f5c82ab1"
       }
     ],
     "configuration": {
+      "additional_sources": {
+        "bytes": 676,
+        "file_name": "sources.apollo.json",
+        "sha256": "93b738a6847c3de46df2b80b96e9485a7350ffb6dca76854eafc3efb89b3283d"
+      },
       "sites_input": {
-        "bytes": 2022,
+        "bytes": 1969,
         "file_name": "apollo_sites.json",
-        "sha256": "79949f2d4a77b96db3e908c518ac07551868747a5c11cc6b1ed9d1916330e6d5"
+        "sha256": "eb0ec1f1b289b6cd3fb40f39bb08957ec2a5b0f7308089577c8d5ef9acd5917c"
       },
       "variable_registry": {
         "bytes": 12506,
@@ -90,7 +95,7 @@
       "lunar_data": "0.3.0",
       "numpy": "2.5.4",
       "pvl": "1.3.2",
-      "python": "3.14.8"
+      "python": "3.12.10"
     }
   },
   "schema_version": "1.0.0",
@@ -104,15 +109,38 @@
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 101.79780578613281,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 0.67578125,
+            "center_longitude_deg_east": 23.47265625,
+            "column": 26044,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 8873,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 101.79780578613281,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -135,6 +163,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -161,15 +190,53 @@
           "value": -1915.0362014770508
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "28.424",
+          "ascii_reference_value_ppm": 28.424,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.02400000000000091,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 284,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 7190331,
+            "binary_byte_offset": 261452,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": 0.75,
+            "center_longitude_deg_east": 23.25,
+            "column": 406,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              0.5,
+              1.0
+            ],
+            "longitude_bounds_deg_east_signed": [
+              23.0,
+              23.5
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 181
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 28.4
         },
         "landing_safety": {
           "available": null,
@@ -205,27 +272,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 100.10199737548828,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 0.67578125,
+            "center_longitude_deg_east": 23.47265625,
+            "column": 26044,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 8873,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 100.10199737548828,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.004207266494631767,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 0.67578125,
+            "center_longitude_deg_east": 23.47265625,
+            "column": 26044,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 8873,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.004207266494631767,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -237,6 +350,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -287,6 +401,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -318,6 +433,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -349,6 +465,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -380,6 +497,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -411,6 +529,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -459,14 +578,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": 0.67408,
-            "longitude_deg_east": 23.47297
+            "latitude_deg": 0.6742,
+            "longitude_deg_east": 23.4731
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -479,8 +599,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": 0.67408,
-            "longitude_deg": 23.47297
+            "latitude_deg": 0.6742,
+            "longitude_deg": 23.4731
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -520,30 +640,53 @@
       },
       "name": "Apolo 11 · Base de la Tranquilidad",
       "normalized_coordinates": {
-        "latitude_deg": 0.67408,
-        "longitude_deg_east": 23.47297
+        "latitude_deg": 0.6742,
+        "longitude_deg_east": 23.4731
       },
       "requested_coordinates": {
-        "latitude_deg": 0.67408,
-        "longitude_deg": 23.47297,
+        "latitude_deg": 0.6742,
+        "longitude_deg": 23.4731,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     },
     {
       "id": "apollo-12",
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 101.31527709960938,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.01171875,
+            "center_longitude_deg_east": 336.57421875,
+            "column": 20041,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9345,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 101.31527709960938,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -566,6 +709,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -592,15 +736,53 @@
           "value": -1429.8723936080933
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "89.516",
+          "ascii_reference_value_ppm": 89.516,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.016000000000005343,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 895,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 6868416,
+            "binary_byte_offset": 249746,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": -3.25,
+            "center_longitude_deg_east": 336.75,
+            "column": 313,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              -3.5,
+              -3.0
+            ],
+            "longitude_bounds_deg_east_signed": [
+              -23.5,
+              -23.0
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 173
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 89.5
         },
         "landing_safety": {
           "available": null,
@@ -636,27 +818,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 98.9280014038086,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.01171875,
+            "center_longitude_deg_east": 336.57421875,
+            "column": 20041,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9345,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 98.9280014038086,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.005395106505602598,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.01171875,
+            "center_longitude_deg_east": 336.57421875,
+            "column": 20041,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9345,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.005395106505602598,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -668,6 +896,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -718,6 +947,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -749,6 +979,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -780,6 +1011,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -811,6 +1043,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -842,6 +1075,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -890,14 +1124,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": -3.01239,
-            "longitude_deg_east": 336.57843
+            "latitude_deg": -3.0128,
+            "longitude_deg_east": 336.5781
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -910,8 +1145,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": -3.01239,
-            "longitude_deg": -23.42157
+            "latitude_deg": -3.0128,
+            "longitude_deg": 336.5781
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -951,30 +1186,53 @@
       },
       "name": "Apolo 12 · Océano de las Tormentas",
       "normalized_coordinates": {
-        "latitude_deg": -3.01239,
-        "longitude_deg_east": 336.57843
+        "latitude_deg": -3.0128,
+        "longitude_deg_east": 336.5781
       },
       "requested_coordinates": {
-        "latitude_deg": -3.01239,
-        "longitude_deg": -23.42157,
+        "latitude_deg": -3.0128,
+        "longitude_deg": 336.5781,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     },
     {
       "id": "apollo-14",
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 100.47330474853516,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.64453125,
+            "center_longitude_deg_east": 342.52734375,
+            "column": 20803,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9426,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 100.47330474853516,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -997,6 +1255,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -1023,15 +1282,53 @@
           "value": -1043.2358980178833
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "127.25",
+          "ascii_reference_value_ppm": 127.25,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.04999999999999716,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 1272,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 6829476,
+            "binary_byte_offset": 248330,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": -3.75,
+            "center_longitude_deg_east": 342.75,
+            "column": 325,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              -4.0,
+              -3.5
+            ],
+            "longitude_bounds_deg_east_signed": [
+              -17.5,
+              -17.0
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 172
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 127.2
         },
         "landing_safety": {
           "available": null,
@@ -1067,27 +1364,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 99.53199768066406,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.64453125,
+            "center_longitude_deg_east": 342.52734375,
+            "column": 20803,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9426,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 99.53199768066406,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.001999862026423216,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -3.64453125,
+            "center_longitude_deg_east": 342.52734375,
+            "column": 20803,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 9426,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.001999862026423216,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -1099,6 +1442,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -1149,6 +1493,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1180,6 +1525,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1211,6 +1557,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1242,6 +1589,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1273,6 +1621,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1321,14 +1670,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": -3.64544,
-            "longitude_deg_east": 342.52864
+            "latitude_deg": -3.6459,
+            "longitude_deg_east": 342.5281
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -1341,8 +1691,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": -3.64544,
-            "longitude_deg": -17.47136
+            "latitude_deg": -3.6459,
+            "longitude_deg": 342.5281
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -1382,30 +1732,53 @@
       },
       "name": "Apolo 14 · Fra Mauro",
       "normalized_coordinates": {
-        "latitude_deg": -3.64544,
-        "longitude_deg_east": 342.52864
+        "latitude_deg": -3.6459,
+        "longitude_deg_east": 342.5281
       },
       "requested_coordinates": {
-        "latitude_deg": -3.64544,
-        "longitude_deg": -17.47136,
+        "latitude_deg": -3.6459,
+        "longitude_deg": 342.5281,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     },
     {
       "id": "apollo-15",
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 98.0687484741211,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 26.12890625,
+            "center_longitude_deg_east": 3.63671875,
+            "column": 23505,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 5615,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 98.0687484741211,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -1428,6 +1801,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -1454,15 +1828,53 @@
           "value": -1930.5574893951416
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "102.89",
+          "ascii_reference_value_ppm": 102.89,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.09000000000000341,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 1028,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 9207786,
+            "binary_byte_offset": 334814,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": 26.25,
+            "center_longitude_deg_east": 3.75,
+            "column": 367,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              26.0,
+              26.5
+            ],
+            "longitude_bounds_deg_east_signed": [
+              3.5,
+              4.0
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 232
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 102.8
         },
         "landing_safety": {
           "available": null,
@@ -1498,27 +1910,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 97.24699401855469,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 26.12890625,
+            "center_longitude_deg_east": 3.63671875,
+            "column": 23505,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 5615,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 97.24699401855469,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.002322736894711852,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 26.12890625,
+            "center_longitude_deg_east": 3.63671875,
+            "column": 23505,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 5615,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.002322736894711852,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -1530,6 +1988,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -1580,6 +2039,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1611,6 +2071,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1642,6 +2103,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1673,6 +2135,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1704,6 +2167,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -1752,14 +2216,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": 26.13222,
-            "longitude_deg_east": 3.63386
+            "latitude_deg": 26.1324,
+            "longitude_deg_east": 3.6333
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -1772,8 +2237,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": 26.13222,
-            "longitude_deg": 3.63386
+            "latitude_deg": 26.1324,
+            "longitude_deg": 3.6333
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -1813,30 +2278,53 @@
       },
       "name": "Apolo 15 · Hadley-Apeninos",
       "normalized_coordinates": {
-        "latitude_deg": 26.13222,
-        "longitude_deg_east": 3.63386
+        "latitude_deg": 26.1324,
+        "longitude_deg_east": 3.6333
       },
       "requested_coordinates": {
-        "latitude_deg": 26.13222,
-        "longitude_deg": 3.63386,
+        "latitude_deg": 26.1324,
+        "longitude_deg": 3.6333,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     },
     {
       "id": "apollo-16",
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 99.11227416992188,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -8.97265625,
+            "center_longitude_deg_east": 15.50390625,
+            "column": 25024,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 10108,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 99.11227416992188,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -1859,6 +2347,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -1885,15 +2374,53 @@
           "value": 10.541961528360844
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "53.252",
+          "ascii_reference_value_ppm": 53.252,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.0519999999999996,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 532,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 6437106,
+            "binary_byte_offset": 234062,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": -8.75,
+            "center_longitude_deg_east": 15.75,
+            "column": 391,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              -9.0,
+              -8.5
+            ],
+            "longitude_bounds_deg_east_signed": [
+              15.5,
+              16.0
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 162
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 53.2
         },
         "landing_safety": {
           "available": null,
@@ -1929,27 +2456,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 98.88099670410156,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -8.97265625,
+            "center_longitude_deg_east": 15.50390625,
+            "column": 25024,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 10108,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 98.88099670410156,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.0007798300939612091,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": -8.97265625,
+            "center_longitude_deg_east": 15.50390625,
+            "column": 25024,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 10108,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.0007798300939612091,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -1961,6 +2534,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -2011,6 +2585,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2042,6 +2617,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2073,6 +2649,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2104,6 +2681,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2135,6 +2713,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2183,14 +2762,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": -8.97301,
-            "longitude_deg_east": 15.50019
+            "latitude_deg": -8.9734,
+            "longitude_deg_east": 15.5011
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -2203,8 +2783,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": -8.97301,
-            "longitude_deg": 15.50019
+            "latitude_deg": -8.9734,
+            "longitude_deg": 15.5011
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -2244,30 +2824,53 @@
       },
       "name": "Apolo 16 · Descartes",
       "normalized_coordinates": {
-        "latitude_deg": -8.97301,
-        "longitude_deg_east": 15.50019
+        "latitude_deg": -8.9734,
+        "longitude_deg_east": 15.5011
       },
       "requested_coordinates": {
-        "latitude_deg": -8.97301,
-        "longitude_deg": 15.50019,
+        "latitude_deg": -8.9734,
+        "longitude_deg": 15.5011,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     },
     {
       "id": "apollo-17",
       "is_example": false,
       "measurements": {
         "bolometric_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 102.8709945678711,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 20.19140625,
+            "center_longitude_deg_east": 30.76953125,
+            "column": 26978,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 6375,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "bolometric_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 102.8709945678711,
           "within_declared_latitude_bounds": true
         },
         "earth_visibility": {
@@ -2290,6 +2893,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height"
             ]
@@ -2316,15 +2920,53 @@
           "value": -2607.980966567993
         },
         "hydrogen_abundance_ppm": {
-          "available": false,
+          "ascii_raw_token": "67.996",
+          "ascii_reference_value_ppm": 67.996,
+          "available": true,
+          "binary_ascii_difference_ppm": -0.09599999999998943,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "uncertainty_ppm": null,
+            "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+            "warnings": [
+              "model_derived_hydrogen_not_confirmed_water_or_ice",
+              "reliability_limited_in_high_thorium_and_rare_earth_regions",
+              "half_degree_grid_does_not_establish_effective_resolution",
+              "special_product_not_pds_peer_reviewed_archive",
+              "body_fixed_frame_realization_not_declared",
+              "binary_quantized_ascii_has_more_precision"
+            ]
+          },
+          "quantity": "estimated_hydrogen_mass_abundance",
+          "raw_unit": "integer_tenths_ppm",
+          "raw_value": 679,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.5,
+            "ascii_byte_offset": 8735556,
+            "binary_byte_offset": 317642,
+            "binary_scaling_factor": 0.1,
+            "center_latitude_deg": 20.25,
+            "center_longitude_deg_east": 30.75,
+            "column": 421,
+            "index_base": 0,
+            "latitude_bounds_deg": [
+              20.0,
+              20.5
+            ],
+            "longitude_bounds_deg_east_signed": [
+              30.5,
+              31.0
+            ],
+            "method": "containing_native_pixel_north_east_on_boundary",
+            "row": 220
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "hydrogen_abundance_ppm",
+          "status": "valid",
           "unit": "ppm",
           "used_in_similarity": null,
-          "value": null
+          "value": 67.9
         },
         "landing_safety": {
           "available": null,
@@ -2360,27 +3002,73 @@
           "value": null
         },
         "regolith_temperature": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "K",
+          "raw_value": 100.40599822998047,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 20.19140625,
+            "center_longitude_deg_east": 30.76953125,
+            "column": 26978,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 6375,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "regolith_temperature",
+          "status": "valid",
           "unit": "K",
           "used_in_similarity": null,
-          "value": null,
+          "value": 100.40599822998047,
           "within_declared_latitude_bounds": true
         },
         "rock_abundance": {
-          "available": false,
+          "available": true,
           "implemented": true,
-          "reason": "processor_not_configured",
+          "quality": {
+            "validation": "structural_and_numeric_checks_only",
+            "warnings": [
+              "sam_slope_adjusted_midnight_not_full_thermal_cycle",
+              "units_from_official_sis_not_element_array",
+              "body_fixed_frame_realization_not_declared_in_label",
+              "uncertainty_not_supplied_per_pixel"
+            ]
+          },
+          "raw_unit": "1",
+          "raw_value": 0.006397348362952471,
+          "reason": null,
+          "sampling": {
+            "angular_resolution_deg": 0.0078125,
+            "center_latitude_deg": 20.19140625,
+            "center_longitude_deg_east": 30.76953125,
+            "column": 26978,
+            "index_base": 0,
+            "method": "containing_native_pixel_no_interpolation",
+            "nominal_equatorial_pixel_size_m": 236.90117518866782,
+            "row": 6375,
+            "scaling_factor": 1.0,
+            "value_offset": 0.0
+          },
           "selected_for_project": true,
-          "source_ref": null,
-          "status": "not_sampled",
+          "source_ref": "rock_abundance",
+          "status": "valid",
           "unit": "1",
           "used_in_similarity": null,
-          "value": null,
+          "value": 0.006397348362952471,
           "within_declared_latitude_bounds": true
         },
         "roughness": {
@@ -2392,6 +3080,7 @@
             "uncertainty_m": null,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldrm_unit_text_conflict_resolved_as_meters",
               "ldrc_observation_count_unavailable"
@@ -2442,6 +3131,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2473,6 +3163,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2504,6 +3195,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2535,6 +3227,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2566,6 +3259,7 @@
                 "uncertainty_m": null,
                 "validation": "structural_and_numeric_checks_only",
                 "warnings": [
+                  "pds3_label_resolved_as_lbl_txt",
                   "no_declared_special_constants",
                   "ldem_reference_sphere_offset_not_added_to_height"
                 ]
@@ -2614,14 +3308,15 @@
             "version": "1.0.0"
           },
           "normalized_coordinates": {
-            "latitude_deg": 20.1908,
-            "longitude_deg_east": 30.77168
+            "latitude_deg": 20.1911,
+            "longitude_deg_east": 30.7723
           },
           "quality": {
             "uncertainty_deg": null,
             "valid_sample_count": 5,
             "validation": "structural_and_numeric_checks_only",
             "warnings": [
+              "pds3_label_resolved_as_lbl_txt",
               "no_declared_special_constants",
               "ldem_reference_sphere_offset_not_added_to_height",
               "derived_from_gridded_ldem_not_independent_nasa_slope_product",
@@ -2634,8 +3329,8 @@
           "raw_value": null,
           "reason": null,
           "requested_coordinates": {
-            "latitude_deg": 20.1908,
-            "longitude_deg": 30.77168
+            "latitude_deg": 20.1911,
+            "longitude_deg": 30.7723
           },
           "sampling": {
             "angular_resolution_deg": 0.0625,
@@ -2675,18 +3370,238 @@
       },
       "name": "Apolo 17 · Taurus-Littrow",
       "normalized_coordinates": {
-        "latitude_deg": 20.1908,
-        "longitude_deg_east": 30.77168
+        "latitude_deg": 20.1911,
+        "longitude_deg_east": 30.7723
       },
       "requested_coordinates": {
-        "latitude_deg": 20.1908,
-        "longitude_deg": 30.77168,
+        "latitude_deg": 20.1911,
+        "longitude_deg": 30.7723,
         "longitude_direction": "positive_east"
       },
-      "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario."
+      "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html"
     }
   ],
   "sources": {
+    "bolometric_temperature": {
+      "angular_resolution_deg": 0.0078125,
+      "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+      "coverage_latitude_deg": [
+        -70,
+        70
+      ],
+      "element_array_declares_unit": false,
+      "files": [
+        {
+          "bytes": 8357,
+          "file_name": "dghrm_tbol_sam_70s70n_tif.xml",
+          "sha256": "37bdc7faa9d45d941e622c89541985d0c277ea2f5e1f437ce09a29c8026ebe31"
+        }
+      ],
+      "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+      "missing_value": "NaN",
+      "offset": 0.0,
+      "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_tbol_sam_70s70n_tif",
+      "product_id": "dghrm_tbol_sam_70s70n_tif",
+      "remote_file": {
+        "checksum_scope": "retrieved_ranges_only",
+        "etag": "\"1a52d6b74f8d91:0\"",
+        "last_modified": "Fri, 06 Oct 2023 16:44:48 GMT",
+        "ranges": [
+          {
+            "bytes": 65536,
+            "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+            "start": 0,
+            "stop": 65535,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "23bfb180a84406feb5c077ae52319710f52a053d0a49e440c5b1184b8c2f34c8",
+            "start": 131072,
+            "stop": 196607,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+            "start": 65536,
+            "stop": 131071,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "03038c5549411b8159cee25f586d9ed179a9a5273cc084b0f2a4c8ef2211add4",
+            "start": 1635581952,
+            "stop": 1635647487,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "eda8e123b8c18e2a7a78035d5e29d745c568ea8e8a416e0ffe2c5ad9eae68ab9",
+            "start": 1635647488,
+            "stop": 1635713023,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "d6aa7eb953f01db0b3d801a8b8a2d2c33b6e5c6f18093a1e73266cb75b16daec",
+            "start": 1635713024,
+            "stop": 1635778559,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "8886d1f8519c75b6308e6b2a8b47a91e36cc0e9b6c7021cb4567776f8b3dbc38",
+            "start": 1635778560,
+            "stop": 1635844095,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "120a6979f014f905402c8661445d00c6d94de2c18cb68cf4cb8929e6f0e920de",
+            "start": 1722613760,
+            "stop": 1722679295,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "6834cf5b76b190447a3af18a86a3992c18d79d03eb0356ebfe3250ffcb1e56f5",
+            "start": 1722679296,
+            "stop": 1722744831,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "ea0d8eb9c2f52a5a6ece9846e4c68a35911baf4998733d835b2032e05deeaf01",
+            "start": 1722744832,
+            "stop": 1722810367,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3ce249170e99a2a687b6563183e45407ca7c99d686ba0dd8b97df45c75b8b53c",
+            "start": 1737490432,
+            "stop": 1737555967,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "55462100e2acda1b713567ee14e074fff50789e203ab95bdf02605f6fc2e4a06",
+            "start": 1737555968,
+            "stop": 1737621503,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "cb18acdfb1d12ba0ede66c1555993fed7e4512d14d265644b17801e4721552ad",
+            "start": 1737621504,
+            "stop": 1737687039,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "337bb35738f9ccf49f6cbaed79495ad0f1a0e9105d4fe464713076bfae6871f9",
+            "start": 1737687040,
+            "stop": 1737752575,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3fa48cb82b0a193d3d964346a84e1127ee84f99a5448ee1b24a1de14e2212ef7",
+            "start": 1035075584,
+            "stop": 1035141119,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "2b75e8a525916be5cd56f57b46e64490c678eb294e5c526573d51dd8579bf100",
+            "start": 1035141120,
+            "stop": 1035206655,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "754c67b27e60216f5162a0e909295722df7ab1de31bfc213adb229614a95a9b9",
+            "start": 1035206656,
+            "stop": 1035272191,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "9e7a7cf9d0d7ced9f8410c5c32c8a9342499121b818b442b9f7ddab23cf34abf",
+            "start": 1035272192,
+            "stop": 1035337727,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "0e67b9d7a6e1c0aa123115ceaa317db04d14697532e3a6cbb478a24d88ece0ad",
+            "start": 1863188480,
+            "stop": 1863254015,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "2d96c1688cdf5674ec546f363f5b4acd82e78030f32fae23d1323b586c984b85",
+            "start": 1863254016,
+            "stop": 1863319551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "7c9b2bf9a52c2f2f180985a232de546a44f80b74b8c76ac0cdd5a6b4c750f1b1",
+            "start": 1863319552,
+            "stop": 1863385087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3a6404b8e76340c39480f1130582f6712636e7170571377a4fa4f5d77afa3c91",
+            "start": 1863385088,
+            "stop": 1863450623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "f438ea10b03e83252053fa0435ab243250299add3497b2d865ce12876dbd544d",
+            "start": 1175126016,
+            "stop": 1175191551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "c817395c7f0e11bcec212da065c6c0624fa6047bcb41ec5971a28074848aa925",
+            "start": 1175191552,
+            "stop": 1175257087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "79f34240f148a6d5508f48f9a13ec957cc489ada949020107ce643bc4b48b3f5",
+            "start": 1175257088,
+            "stop": 1175322623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "a925b32e959a57e17aac4b383fa1a7a1673add91bb02dcae5cef89c9a7b3ae7f",
+            "start": 1175322624,
+            "stop": 1175388159,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+          }
+        ],
+        "size_bytes": 3303158255,
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+      },
+      "scale": 1.0,
+      "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+      "unit": "K",
+      "unit_authority": {
+        "section": "11.1, page 69; GHRM",
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+      },
+      "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.tif"
+    },
     "elevation": {
       "files": [
         {
@@ -2696,7 +3611,7 @@
         },
         {
           "bytes": 5139,
-          "file_name": "ldem_16_float.lbl",
+          "file_name": "ldem_16_float.lbl.txt",
           "sha256": "b39b1e1ec3d7dbd0ec451f1d4df0304ab383f6ebbc52601b8bf819e0a8d5111a"
         },
         {
@@ -2733,9 +3648,501 @@
       },
       "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/float_img/ldem_16_float.img",
       "warnings": [
+        "pds3_label_resolved_as_lbl_txt",
         "no_declared_special_constants",
         "ldem_reference_sphere_offset_not_added_to_height"
       ]
+    },
+    "hydrogen_abundance_ppm": {
+      "abundance_basis": "H ppm by weight, model-derived estimate",
+      "ascii_layout": {
+        "header_bytes": 401,
+        "record_bytes": 55
+      },
+      "ascii_url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced/hydrogenhd.txt",
+      "binary_ascii_tolerance_ppm": 0.100001,
+      "documentation_url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced_special.html",
+      "files": [
+        {
+          "bytes": 518400,
+          "file_name": "hydrogenhd.dat",
+          "sha256": "7b9708c95cf3648a6ca6df754648fa18dbcdd2ebd4ae6e8b12dbc18d1e3ad6d4"
+        },
+        {
+          "bytes": 14256401,
+          "file_name": "hydrogenhd.txt",
+          "sha256": "10b218a29a8998070863a7da91e173c91aea5fdd1fe3d61dd9063af90c1b8083"
+        }
+      ],
+      "limitations": [
+        "not_a_pds_peer_reviewed_archive",
+        "model_dependent_not_water_or_ice",
+        "less_reliable_in_high_thorium_and_rare_earth_regions",
+        "grid_spacing_not_effective_spatial_resolution",
+        "no_per_pixel_uncertainty"
+      ],
+      "missing_policy": "ASCII **********; no universal binary NoData: zero also encodes valid data",
+      "negative_policy": "retain raw and ASCII estimates, no physical concentration exported",
+      "product_id": "Lunar_Prospector_Hydrogen_halfdeg_December_2001",
+      "raster": {
+        "angular_resolution_deg": 0.5,
+        "byte_offset": 0,
+        "columns": 720,
+        "dtype": ">i2",
+        "longitude_interval_deg": [
+          -180,
+          180
+        ],
+        "row_order": "south_to_north",
+        "rows": 360
+      },
+      "release": "2002-01-03",
+      "transformation": {
+        "formula": "signed_int16_raw / 10",
+        "scaling_factor": 0.1
+      },
+      "unit": "ppm",
+      "url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced/hydrogenhd.dat"
+    },
+    "regolith_temperature": {
+      "angular_resolution_deg": 0.0078125,
+      "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+      "coverage_latitude_deg": [
+        -70,
+        70
+      ],
+      "element_array_declares_unit": false,
+      "files": [
+        {
+          "bytes": 8355,
+          "file_name": "dghrm_treg_sam_70s70n_tif.xml",
+          "sha256": "889e751059730c07f14874ee5ffe4594c83f24259b141abe79cc9884ed9f1d02"
+        }
+      ],
+      "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+      "missing_value": "NaN",
+      "offset": 0.0,
+      "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_treg_sam_70s70n_tif",
+      "product_id": "dghrm_treg_sam_70s70n_tif",
+      "remote_file": {
+        "checksum_scope": "retrieved_ranges_only",
+        "etag": "\"98acb46c75f8d91:0\"",
+        "last_modified": "Fri, 06 Oct 2023 16:52:00 GMT",
+        "ranges": [
+          {
+            "bytes": 65536,
+            "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+            "start": 0,
+            "stop": 65535,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "4dda9233b138e4c3026c524b3a76f50528079a64b76518e7eb78bade7c593d7b",
+            "start": 131072,
+            "stop": 196607,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+            "start": 65536,
+            "stop": 131071,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "f22f44ab783a60fe3401f797a4ea9944f0e89f7e9951cb09a137f297c1c756ef",
+            "start": 1635581952,
+            "stop": 1635647487,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "7312a975eeb6b5e76c693575012b98775574eb9da5a592e6aa7ca93bcce69d07",
+            "start": 1635647488,
+            "stop": 1635713023,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "6dffd490a6f5a2da8c22da8f6b6af85121a2d18154b241b2ee8170305e0b8be1",
+            "start": 1635713024,
+            "stop": 1635778559,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "768d7af849e662201177cc2c5ec869fc5696c824ec5efd133a05cce8d775ad79",
+            "start": 1635778560,
+            "stop": 1635844095,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "1d7fc2ccdc17a4e8f64f83ba77156f70c3f4c46a3824ed989b98d5abc7b9c140",
+            "start": 1722613760,
+            "stop": 1722679295,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "e769524d82d3c00123dfc4df7a0fb691cf8ab89f2ff5b6008c75c6ad72f4dfb2",
+            "start": 1722679296,
+            "stop": 1722744831,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "08c526e376fa1e50f74e0938cf8680dd9f71055184e3cfd54b15356bd4b437ba",
+            "start": 1722744832,
+            "stop": 1722810367,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "1d5fc9621e2fbcde821468872a6f3cd1904fb9b2b52744bd3981610cc02f2216",
+            "start": 1737490432,
+            "stop": 1737555967,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "7e833018b5ed63639c0df55518efe1475d85f6d2b59ea8d9965f1a2e508da19e",
+            "start": 1737555968,
+            "stop": 1737621503,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "4fee9cfb94a7589813115168b4af8e5ae8c5a5a6e554c305d4e6b1186f90d641",
+            "start": 1737621504,
+            "stop": 1737687039,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "1cd0fd23e1d94bde68d3452fb1b9559e39a3b7c191cb3591752061c46d825d37",
+            "start": 1737687040,
+            "stop": 1737752575,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "a26efb7199c82d626adc550a5d45992c2ed49459e6a7895ef22886fa612bec29",
+            "start": 1035075584,
+            "stop": 1035141119,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "487a6517cf56a10313ff7c8187c4b017c3e032375acf9914b32dd72b0a3e4eed",
+            "start": 1035141120,
+            "stop": 1035206655,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "ebac42b7981df53b512f88aff94a23892ee62cca810e48b40afe831aab02a727",
+            "start": 1035206656,
+            "stop": 1035272191,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "a05ef3c27f33f825b64e44457968f2028fb4f33537eac177b264731fd720f012",
+            "start": 1035272192,
+            "stop": 1035337727,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "210c00b105e2dcb25d126d527e3f5d08fb81d1f8192da7594299b7b81721f737",
+            "start": 1863188480,
+            "stop": 1863254015,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "99502d5b13f4fa3f3aa9114a26a6e99e77b15af8160c16f0954968abdf6b18a0",
+            "start": 1863254016,
+            "stop": 1863319551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "ceb89f4d9a71e8cf0da4e57d092bd76277a5864931b38f98546783ed59259d8b",
+            "start": 1863319552,
+            "stop": 1863385087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "70bfa619671b1d2651af6dce8c8ab9cd67732250052cdafb3848f3e084a95a06",
+            "start": 1863385088,
+            "stop": 1863450623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "10edc463b34f341527e4e682398f963b67d8a5ca44abd2a0ae2cf2210c7bb4d2",
+            "start": 1175126016,
+            "stop": 1175191551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "51adbe8143f57a92e688b3dffc05d0fe06cde6dcb881ca65f97e2ef2b4905d88",
+            "start": 1175191552,
+            "stop": 1175257087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "06fe3acbdda0cea5e90e0a6ae0f562ae2697a348689f32da9299844997c23a2e",
+            "start": 1175257088,
+            "stop": 1175322623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "a42e99b0e6d0dd02d08aba712da17261f952d3d2137caccf31baae1e84b30194",
+            "start": 1175322624,
+            "stop": 1175388159,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+          }
+        ],
+        "size_bytes": 3303158255,
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+      },
+      "scale": 1.0,
+      "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+      "unit": "K",
+      "unit_authority": {
+        "section": "11.1, page 69; GHRM",
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+      },
+      "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.tif"
+    },
+    "rock_abundance": {
+      "angular_resolution_deg": 0.0078125,
+      "body_fixed_frame_realization": "not_declared_in_product_label; no frame conversion applied",
+      "coverage_latitude_deg": [
+        -70,
+        70
+      ],
+      "element_array_declares_unit": false,
+      "files": [
+        {
+          "bytes": 8345,
+          "file_name": "dghrm_ra_sam_70s70n_tif.xml",
+          "sha256": "2ac9cedf3c9db29f32a909e76fbd7c95359cd04eaf11c442ec10c0c439fdc6f6"
+        }
+      ],
+      "georeferencing_note": "PDS projected meters and TIFF geographic degrees describe same equirectangular grid",
+      "missing_value": "NaN",
+      "offset": 0.0,
+      "pds_logical_identifier": "urn:nasa:pds:lro_diviner_derived1:data_derived_ghrm:dghrm_ra_sam_70s70n_tif",
+      "product_id": "dghrm_ra_sam_70s70n_tif",
+      "remote_file": {
+        "checksum_scope": "retrieved_ranges_only",
+        "etag": "\"ec8737e270f8d91:0\"",
+        "last_modified": "Fri, 06 Oct 2023 16:19:29 GMT",
+        "ranges": [
+          {
+            "bytes": 65536,
+            "sha256": "19a233367d3c03cbacc542ff628685d61e61bb0def406f9d7e9f153e8164c0b2",
+            "start": 0,
+            "stop": 65535,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "5ee7cb0d24f0c9b777244e94370670756ece953d317c3a849973c1d10fab7f83",
+            "start": 131072,
+            "stop": 196607,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "fa29939067265d3172d1f031f6a407b6e53f620a6f5866b854b688a31bc8964a",
+            "start": 65536,
+            "stop": 131071,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "dcc177cdd259a4f413ce980f260284fa4f5a43bae216be871cd494e216c79f49",
+            "start": 1635581952,
+            "stop": 1635647487,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "65b673eab981ed02f5a8b1f36e3f5cd90c0c50617fda038c6dba337bc432f2a9",
+            "start": 1635647488,
+            "stop": 1635713023,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "d82039b714373ff94b9b10b0b18de7f805aeaccb4f3f7506400820723fddb648",
+            "start": 1635713024,
+            "stop": 1635778559,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3032e9bd5ed74888f93ae2114c521002e488855d9b70355211e8204042fbb4b3",
+            "start": 1635778560,
+            "stop": 1635844095,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "01d996f632bd4e300f565367a5638d7ca5e0ec1f7a5d22db84ecc303fa6e6474",
+            "start": 1722613760,
+            "stop": 1722679295,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "27876ca153585561382bb2bf053a47cb58233ef11b7d131d8d51171437c28350",
+            "start": 1722679296,
+            "stop": 1722744831,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "09703170e28469da81659fab6470ffef229fc2bc9986ac73970a290c3426536f",
+            "start": 1722744832,
+            "stop": 1722810367,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "4b5546b032cb57583f52aa309dd301126ab855a12b5c7a8327fc9bc90d8cfde3",
+            "start": 1737490432,
+            "stop": 1737555967,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "9f7cad5a096b24300f5b5cfe362fbe09299c0a7c1bb89601bea9a01890ccfb47",
+            "start": 1737555968,
+            "stop": 1737621503,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "4f7127ea1b851e3f8f8a2be53be96ad8af231859606a33b1288b925df1a54741",
+            "start": 1737621504,
+            "stop": 1737687039,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "da80f21b6e610e318eaae168d1ccb8af1d7bc2e3ec5247f7913e20ba26c01112",
+            "start": 1737687040,
+            "stop": 1737752575,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3eb2a1c6210725e6570ffc152fa43d9f79a8ec806892f22d50986ac1202820dc",
+            "start": 1035075584,
+            "stop": 1035141119,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "cb2482cdbfda6bc571c1c1d90a9257a50a63f78dce7664f5ed9c2962d312413f",
+            "start": 1035141120,
+            "stop": 1035206655,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "509fc63e331a8b0886f98cf4fff815acdb9cc537b68b0289d2d5f6e4db476afc",
+            "start": 1035206656,
+            "stop": 1035272191,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "26e9c1811ebf2f3c466200c902f0f47263f6e515cbe963b127a6a1b6a2de48bf",
+            "start": 1035272192,
+            "stop": 1035337727,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "3d91e164eb13dd5941e0cdde1ac2067fbdc67355d99e1d39d92893f6a80ed9dd",
+            "start": 1863188480,
+            "stop": 1863254015,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "a48c777d2e59c574749752aafd2ed9b9f6cbc2a803b9c3c98c01128b557693af",
+            "start": 1863254016,
+            "stop": 1863319551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "583838560778db1c2f5b04f17e79fb30846febaf1c68c7a4a1cf9f8fe07dded7",
+            "start": 1863319552,
+            "stop": 1863385087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "baf60b4505461b9b15c1023a2e8f4d5699a2ff37a990fc298117fdcd20aac9be",
+            "start": 1863385088,
+            "stop": 1863450623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "811f6a78bae70cd9c47a73c6aa913bea430b21724e10578756a0961101dbf278",
+            "start": 1175126016,
+            "stop": 1175191551,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "da703f62fcb9cac423cd5b5556f9c116d9a452b25a186f5bdbda81fab75ecee5",
+            "start": 1175191552,
+            "stop": 1175257087,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "33e56cc6c7c6b06fc1142e057c520dd6907b00ebd89c2a34542d57f7a765d071",
+            "start": 1175257088,
+            "stop": 1175322623,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          },
+          {
+            "bytes": 65536,
+            "sha256": "04d829e31753128e2e4edff887dbedef34f74892f6b8ccddc9695dcb1732f5a1",
+            "start": 1175322624,
+            "stop": 1175388159,
+            "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+          }
+        ],
+        "size_bytes": 3303158255,
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
+      },
+      "scale": 1.0,
+      "temporal_definition": "slope_adjusted_midnight_not_complete_thermal_cycle",
+      "unit": "1",
+      "unit_authority": {
+        "section": "11.1, page 69; GHRM",
+        "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
+      },
+      "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.tif"
     },
     "roughness": {
       "files": [
@@ -2746,7 +4153,7 @@
         },
         {
           "bytes": 6642,
-          "file_name": "ldrm_32_50_float.lbl",
+          "file_name": "ldrm_32_50_float.lbl.txt",
           "sha256": "e48e1f713e90ed48196c427d4a12b998c874e4cfc3d0cdf1aeb054e9c54c08a9"
         },
         {
@@ -2780,6 +4187,7 @@
       },
       "url": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/float_img/ldrm_32_50_float.img",
       "warnings": [
+        "pds3_label_resolved_as_lbl_txt",
         "no_declared_special_constants",
         "ldrm_unit_text_conflict_resolved_as_meters",
         "ldrc_observation_count_unavailable"

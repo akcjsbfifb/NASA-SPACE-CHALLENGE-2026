@@ -55,7 +55,7 @@ def test_lola_values_are_available_and_measured(document):
     assert apollo11["slope"]["value"] == pytest.approx(0.8693, abs=0.0002)
 
 
-def test_diviner_and_hydrogen_stay_explicitly_missing(document):
+def test_diviner_and_hydrogen_are_available_for_apollo(document):
     by_id = {site["id"]: site["measurements"] for site in document["sites"]}
     for key in (
         "rock_abundance",
@@ -64,8 +64,8 @@ def test_diviner_and_hydrogen_stay_explicitly_missing(document):
         "hydrogen_abundance_ppm",
     ):
         item = by_id["apollo-11"][key]
-        assert item["available"] is False
-        assert item["reason"] == "processor_not_configured"
+        assert item["available"] is True
+        assert item["status"] == "valid"
 
 
 def test_find_builds_the_endpoint_payload():
@@ -75,8 +75,8 @@ def test_find_builds_the_endpoint_payload():
     assert payload["elevation_m"] == pytest.approx(-1915.036, abs=0.01)
     assert payload["roughness_m"] == pytest.approx(0.3518, abs=0.0002)
     assert payload["slope_deg"] == pytest.approx(0.8693, abs=0.0002)
-    assert payload["compared"] == ["elevation", "roughness", "slope"]
-    assert "hydrogen_abundance_ppm" in payload["unavailable"]
+    assert payload["compared"] == []
+    assert "hydrogen_abundance_ppm" not in payload["unavailable"]
     assert payload["elevation_status"] == "valid"
 
 

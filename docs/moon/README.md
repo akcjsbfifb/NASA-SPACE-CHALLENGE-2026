@@ -3,8 +3,27 @@
 Paquete único: `backend/processing/lunar_data/`, versión 0.3.0. No incorpora
 comparador, catálogo ni endpoints. Dos sitios `*_test_only` siguen siendo
 ejemplos; los seis alunizajes Apolo viajan en `apollo_measurements.json` y
-`.csv` con valores LOLA reales y Diviner/hidrógeno declarados no configurados.
+`.csv` con lecturas LOLA, Diviner e hidrógeno. Las coordenadas fueron facilitadas
+por el usuario y contrastadas por redondeo con el catálogo DE421 de NASA:
+https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html.
 Iluminación polar permanece complementaria y pospuesta.
+
+Para el servicio `/moon`, `LUNAR_DATA_ROOT` indica la carpeta que contiene
+`ldem`, `ldrm` y `diviner`; `LUNAR_HYDROGEN_ROOT` indica la carpeta con los
+archivos DAT y TXT de Lunar Prospector. Sin estas variables se usa `data/raw/`.
+Diviner remoto requiere `LUNAR_DIVINER_REMOTE=1`; si hay un TIFF local junto a
+su XML se usa el archivo local. La consulta remota comparte 16 MiB y un plazo
+de ocho segundos para iniciar y esperar solicitudes entre los tres productos;
+el tiempo total de una lectura en curso no está garantizado. Un error conserva
+LOLA e hidrógeno.
+La caché de puntos está limitada a 64 resultados, sin guardar errores de fuente.
+
+El buscador terrestre requiere coordinación: el promedio ponderado limita el
+denominador a uno incluso con suma de pesos inferior a uno; el tratamiento
+polar de pendiente limita la distancia longitudinal; y la rugosidad terrestre
+usa RMS de vecinos, mientras LOLA retira un plano. La respuesta terrestre
+redondea valores y no incluye todas las fuentes ni estados por candidato.
+Se necesitan valores originales y procedencia antes de presentarlos como crudos.
 
 ## Consumir los resultados sin datos NASA
 
