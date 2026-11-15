@@ -16,11 +16,12 @@ if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
 import similarity
+from activities import VARIABLES, ActivityError, resolve
 from similarity import EarthIndex, parse_criteria, write_shortlist
 
 # Payload keys that are not variables. Everything else in the payload is a
 # target value and the contract decides how to read it.
-CONTROL_KEYS = ("precision", "min_worst")
+CONTROL_KEYS = ("precision", "min_worst", "activity", "weights")
 NOTIFY_TOKEN_HEADER = "X-Gurvich-Notify-Token"
 DEFAULT_NOTIFY_TOKEN_PATH = Path("/tmp/gurvich-notify.token")
 
@@ -56,6 +57,16 @@ def _targets(payload: dict) -> dict[str, str]:
 
 def _search_query_params(payload: dict) -> list[tuple[str, str]]:
     params = list(_targets(payload).items())
+    activity = payload.get("activity")
+    if activity is not None and activity != "":
+        params.append(("activity", str(activity)))
+    # The HTTP layer takes one w_* per variable, so the dict is flattened here.
+    weights = payload.get("weights")
+    if isinstance(weights, dict):
+        for name in VARIABLES:
+            value = weights.get(name)
+            if value is not None:
+                params.append((f"w_{name}", str(value)))
     precision = payload.get("precision")
     params.append(("precision", "0.7" if precision is None else str(precision)))
     if payload.get("min_worst") is not None:
@@ -149,11 +160,20 @@ def _handle_line(line: str) -> dict:
 
     try:
         index = _lazy_index()
+        targets, weights, preset = resolve(
+            payload.get("activity"),
+            _targets(payload),
+            payload.get("weights") or {},
+        )
         result = index.search(
-            parse_criteria(index.contract, _targets(payload)),
+            parse_criteria(index.contract, targets),
             precision=0.7 if payload.get("precision") is None else float(payload["precision"]),
             min_worst=None if payload.get("min_worst") is None else float(payload["min_worst"]),
+            weights=weights,
+            activity={"id": preset["id"]} if preset else None,
         )
+    except ActivityError as error:
+        return {"error": error.code, "message": error.message}
     except (FileNotFoundError, ValueError) as error:
         return {"error": str(error)}
     return _notify_frontend(_write_shortlist(result))

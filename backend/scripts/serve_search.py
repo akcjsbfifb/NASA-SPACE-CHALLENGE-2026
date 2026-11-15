@@ -17,6 +17,7 @@ from queue import Empty, Queue
 from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
+from activities import VARIABLES, ActivityError, load_catalog, resolve
 from similarity import EarthIndex, parse_criteria, write_shortlist
 from moon_sites import MoonSites
 
@@ -174,6 +175,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/moon":
             self._moon(query)
             return
+        if parsed.path == "/activities":
+            self._activities()
+            return
         if parsed.path != "/search":
             self._send(404, {"error": "not found"})
             return
@@ -184,11 +188,23 @@ class Handler(BaseHTTPRequestHandler):
                 for name in query
                 if query[name] and query[name][0] != ""
             }
-            result = index.search(
+            activity_id = values.pop("activity", None)
+            weights = self._request_weights(values)
+            targets, resolved_weights, preset = resolve(
+                activity_id,
                 parse_criteria(index.contract, values),
+                weights,
+            )
+            result = index.search(
+                targets,
                 precision=float(values.get("precision", 0.7)),
                 min_worst=self._optional_float(query, "min_worst"),
+                weights=resolved_weights,
+                activity={"id": preset["id"]} if preset else None,
             )
+        except ActivityError as error:
+            self._send(400, {"error": error.code, "message": error.message})
+            return
         except (KeyError, ValueError) as error:
             self._send(400, {"error": str(error)})
             return
@@ -267,6 +283,32 @@ class Handler(BaseHTTPRequestHandler):
         if not values or values[0] == "":
             return None
         return float(values[0])
+
+    def _request_weights(self, values: dict[str, str]) -> dict[str, float]:
+        """Take the w_* values out of the query and return the ones that came."""
+        weights: dict[str, float] = {}
+        for name in VARIABLES:
+            raw = values.pop(f"w_{name}", None)
+            if raw is None:
+                continue
+            try:
+                weights[name] = float(raw)
+            except ValueError:
+                raise ActivityError("bad_weight", f"peso no numérico en {name}") from None
+        # A w_ key outside the five is a typo, not something to ignore.
+        unknown = sorted(name for name in values if name.startswith("w_"))
+        if unknown:
+            raise ActivityError("bad_weight", "peso desconocido: " + ", ".join(unknown))
+        return weights
+
+    def _activities(self) -> None:
+        """The catalog as it is. This path never touches the Earth grid."""
+        try:
+            catalog = load_catalog()
+        except (OSError, ValueError) as error:
+            self._send(500, {"error": str(error)})
+            return
+        self._send(200, {"activities": catalog})
 
     def _moon(self, query: dict[str, list[str]]) -> None:
         site_id = (query.get("site") or [""])[0]
