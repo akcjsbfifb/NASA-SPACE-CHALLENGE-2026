@@ -10,6 +10,7 @@ import platform
 from . import __version__
 from .lola import LolaRaster, normalize_coordinates
 from .metadata import FRAME, SOURCE_BASE
+from .slope import method_description
 
 
 def sha256_file(path):
@@ -58,8 +59,10 @@ def validate_registry(registry):
     if len(set(ids)) != len(ids):
         raise ValueError("Identificadores de variable duplicados")
     implemented = {item["id"] for item in variables if item.get("implemented") is True}
-    if implemented != {"elevation", "roughness"}:
-        raise ValueError("Esta versión implementa solamente elevation y roughness")
+    required = {"elevation", "roughness", "slope"}
+    supported = required | {"rock_abundance", "bolometric_temperature", "regolith_temperature", "hydrogen_abundance_ppm"}
+    if not required <= implemented <= supported:
+        raise ValueError("Registro reclama procesadores no implementados")
     for item in variables:
         if not isinstance(item.get("selected_for_project"), bool) or not isinstance(item.get("implemented"), bool):
             raise ValueError("Los estados de selección e implementación deben ser booleanos")
@@ -73,9 +76,10 @@ def validate_registry(registry):
             raise ValueError("El uso en similitud lo determina el comparador externo")
 
 
-def build_document(metadata, sites, registry, registry_path=None, sites_path=None):
+def build_document(metadata, sites, registry, registry_path=None, sites_path=None, processors=None):
     validate_sites(sites)
     validate_registry(registry)
+    processors = processors or {}
     if {meta.variable for meta in metadata} != {"elevation", "roughness"} or len(metadata) != 2:
         raise ValueError("Se requiere un producto de elevación y uno de rugosidad")
     sources = {}
@@ -103,6 +107,13 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             },
             "warnings": list(meta.warnings),
         }
+    sources["slope"] = {
+        "kind": "derived_measurement",
+        "derived_from": ["elevation"],
+        "method": method_description(),
+        "output_unit": "deg",
+        "independent_nasa_product": False,
+    }
     output_sites = []
     with ExitStack() as stack:
         readers = {meta.variable: stack.enter_context(LolaRaster(meta)) for meta in metadata}
@@ -111,15 +122,23 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             measurements = {}
             for variable in registry["variables"]:
                 key = variable["id"]
-                if variable["implemented"]:
+                if key in processors:
+                    measurement = processors[key].sample(lat, lon)
+                elif key == "slope":
+                    measurement = readers["elevation"].sample_slope(lat, lon)
+                    # Preservar exactamente la coordenada solicitada, antes de normalizar.
+                    measurement["requested_coordinates"] = {
+                        "latitude_deg": site["latitude_deg"], "longitude_deg": site["longitude_deg"]}
+                elif key in readers:
                     measurement = readers[key].sample(lat, lon)
                 else:
                     measurement = {
-                        "value": None, "unit": variable["unit"], "available": None,
-                        "status": "excluded" if variable["scope"] == "excluded" else "not_implemented",
+                        "value": None, "unit": variable["unit"], "available": False if variable["implemented"] else None,
+                        "status": ("excluded" if variable["scope"] == "excluded" else
+                                   "not_sampled" if variable["implemented"] else "not_implemented"),
                         "reason": (
                             "outside_current_analysis" if variable["scope"] == "excluded"
-                            else "processor_not_implemented"
+                            else "processor_not_configured" if variable["implemented"] else "processor_not_implemented"
                         ),
                         "source_ref": None,
                     }
@@ -146,6 +165,8 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
                 "normalized_coordinates": {"latitude_deg": lat, "longitude_deg_east": lon},
                 "measurements": measurements,
             })
+    for key, processor in processors.items():
+        sources[key] = processor.manifest()
     configuration = {}
     if registry_path is not None:
         configuration["variable_registry"] = _file_manifest(Path(registry_path))
@@ -163,6 +184,9 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             "not_a_landing_safety_assessment", "native_pixel_not_local_point_measurement",
             "numeric_validity_does_not_establish_scientific_uncertainty",
             "lunar_elevation_and_roughness_not_automatically_equivalent_to_terrestrial_metrics",
+            "slope_is_derived_at_ldem_grid_scale_not_a_point_or_landing_safety_measurement",
+            "slope_east_west_spacing_shrinks_toward_poles_no_polar_accuracy_claim",
+            "lunar_and_terrestrial_slope_boundary_missing_data_and_metric_policies_differ",
         ],
         "reproducibility": {
             "software": {

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "registry_version": "1.0.0",
-  "documentation": "docs/variables.md",
+  "registry_version": "2.0.0",
+  "documentation": "docs/moon/variables.md",
   "similarity_responsibility": "external_comparator",
   "variables": [
     {
@@ -15,7 +15,10 @@
       "similarity_eligibility": "requires_comparator_methodology",
       "unit": "m",
       "unit_validation": "validated_against_pds3_and_pds4",
-      "latitude_bounds_deg": [-90, 90],
+      "latitude_bounds_deg": [
+        -90,
+        90
+      ],
       "native_pixels_per_degree": 16,
       "nominal_equatorial_pixel_size_m": 1895.21,
       "source": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/data/lola_gdr/cylindrical/float_img/ldem_16_float.xml",
@@ -32,7 +35,10 @@
       "similarity_eligibility": "requires_comparator_methodology",
       "unit": "m",
       "unit_validation": "structured_pds_fields_agree_prose_conflict_documented",
-      "latitude_bounds_deg": [-90, 90],
+      "latitude_bounds_deg": [
+        -90,
+        90
+      ],
       "native_pixels_per_degree": 32,
       "nominal_equatorial_pixel_size_m": 947.60470075,
       "nominal_adjacent_spot_separation_m": 25,
@@ -46,16 +52,22 @@
       "definition": "Fracción de área rocosa inferida mediante un modelo de emisión térmica de rocas y regolito.",
       "scope": "selected",
       "selected_for_project": true,
-      "implemented": false,
+      "implemented": true,
       "used_in_similarity": null,
       "similarity_eligibility": "requires_comparator_methodology",
       "unit": "1",
       "unit_validation": "planned_physical_unit_not_yet_validated_by_processor",
-      "latitude_bounds_deg": [-70, 70],
+      "latitude_bounds_deg": [
+        -70,
+        70
+      ],
       "native_pixels_per_degree": 128,
       "nominal_equatorial_pixel_size_m": 236.90117518866782,
       "source": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_ra_sam_70s70n_tif.xml",
-      "intended_use": "Indicador superficial relacionado con rocas; no inventario individual de obstáculos."
+      "intended_use": "Indicador superficial relacionado con rocas; no inventario individual de obstáculos.",
+      "implementation_status": "implemented_window_sampling",
+      "unit_authority": "Diviner RDR and Derived Products SIS v1.21, section 11.1, page 69",
+      "unit_authority_url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
     },
     {
       "id": "bolometric_temperature",
@@ -63,16 +75,22 @@
       "definition": "Temperatura efectiva derivada radiométricamente para el producto de medianoche ajustada por pendiente.",
       "scope": "selected",
       "selected_for_project": true,
-      "implemented": false,
+      "implemented": true,
       "used_in_similarity": null,
       "similarity_eligibility": "requires_comparator_methodology",
       "unit": "K",
       "unit_validation": "planned_physical_unit_not_yet_validated_by_processor",
-      "latitude_bounds_deg": [-70, 70],
+      "latitude_bounds_deg": [
+        -70,
+        70
+      ],
       "native_pixels_per_degree": 128,
       "nominal_equatorial_pixel_size_m": 236.90117518866782,
       "source": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_tbol_sam_70s70n_tif.xml",
-      "intended_use": "Caracterizar condiciones térmicas nocturnas de referencia, sin inferir amplitud diurna."
+      "intended_use": "Caracterizar condiciones térmicas nocturnas de referencia, sin inferir amplitud diurna.",
+      "implementation_status": "implemented_window_sampling",
+      "unit_authority": "Diviner RDR and Derived Products SIS v1.21, section 11.1, page 69",
+      "unit_authority_url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
     },
     {
       "id": "regolith_temperature",
@@ -80,32 +98,38 @@
       "definition": "Temperatura inferida del componente regolito mediante separación térmica de rocas y regolito, a medianoche ajustada por pendiente.",
       "scope": "selected",
       "selected_for_project": true,
-      "implemented": false,
+      "implemented": true,
       "used_in_similarity": null,
       "similarity_eligibility": "requires_comparator_methodology",
       "unit": "K",
       "unit_validation": "planned_physical_unit_not_yet_validated_by_processor",
-      "latitude_bounds_deg": [-70, 70],
+      "latitude_bounds_deg": [
+        -70,
+        70
+      ],
       "native_pixels_per_degree": 128,
       "nominal_equatorial_pixel_size_m": 236.90117518866782,
       "source": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_ghrm/geotiff/dghrm_treg_sam_70s70n_tif.xml",
-      "intended_use": "Caracterización térmica del componente regolito; no temperatura a una profundidad arbitraria."
+      "intended_use": "Caracterización térmica del componente regolito; no temperatura a una profundidad arbitraria.",
+      "implementation_status": "implemented_window_sampling",
+      "unit_authority": "Diviner RDR and Derived Products SIS v1.21, section 11.1, page 69",
+      "unit_authority_url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/document/Diviner_RDR_SIS.pdf"
     },
     {
       "id": "polar_solar_illumination",
       "name": "Iluminación solar polar LOLA/Mazarico",
       "definition": "Estadística de iluminación solar modelada considerando geometría y relieve polar, dependiente del producto y período.",
-      "scope": "selected",
-      "selected_for_project": true,
+      "scope": "optional_operational",
+      "selected_for_project": false,
       "implemented": false,
       "used_in_similarity": null,
-      "similarity_eligibility": "complementary_requires_comparator_methodology",
+      "similarity_eligibility": "excluded_from_main_similarity_context_only",
       "unit": "1",
       "unit_validation": "planned_fraction_requires_product_scale_validation",
       "coverage": "Regiones polares; seleccionar producto específico antes de procesar.",
       "resolution": "Productos de 240, 120 y 60 m/píxel, con coberturas distintas; ninguno seleccionado todavía.",
       "source": "https://pgda.gsfc.nasa.gov/products/69",
-      "intended_use": "Información complementaria de iluminación y operaciones energéticas."
+      "intended_use": "Fuente complementaria no implementada y pospuesta: productos polares, aproximadamente 65 a 90 grados; no representa iluminación global ni entra en el puntaje principal. Falta de medición no significa oscuridad permanente."
     },
     {
       "id": "earth_visibility",
@@ -126,16 +150,37 @@
       "id": "slope",
       "name": "Pendiente",
       "definition": "Inclinación local de la superficie respecto de la horizontal, a una escala definida.",
-      "scope": "excluded",
-      "selected_for_project": false,
-      "implemented": false,
+      "scope": "selected",
+      "selected_for_project": true,
+      "implemented": true,
+      "implementation_status": "implemented_derived",
       "used_in_similarity": null,
-      "similarity_eligibility": "excluded",
+      "similarity_eligibility": "requires_cross_body_scale_and_policy_review",
       "unit": "deg",
-      "coverage": "No evaluada.",
-      "resolution": "Dependería del DEM y del procedimiento.",
+      "coverage": "LDEM global; sin resultado en polos exactos, primera/última fila o con alguna de las cinco alturas no válida.",
+      "resolution": "LDEM 16 px/deg (0.0625 deg); paso norte-sur 1895.2094 m, este-oeste multiplicado por cos(latitud central). Diferencias entre vecinos separados por dos pasos; resolución efectiva no determinada.",
       "source": "https://pds-geosciences.wustl.edu/lro/lro-l-lola-3-rdr-v1/lrolol_1xxx/document/rdrsis.htm",
-      "intended_use": "Futuro: movilidad y restricciones de operaciones; no se calcula en este MVP."
+      "method": "central_difference_spherical",
+      "method_version": "1.0.0",
+      "derived_from": "elevation",
+      "intended_use": "Pendiente derivada del LDEM mediante cinco alturas, en grados sin normalización. No es un producto NASA independiente ni una evaluación de seguridad. Comparabilidad terrestre pendiente; no habilita similitud automáticamente."
+    },
+    {
+      "id": "hydrogen_abundance_ppm",
+      "name": "Estimated hydrogen abundance (Lunar Prospector)",
+      "definition": "Model-derived H ppm by weight from corrected epithermal neutron measurements; not confirmed water or ice.",
+      "scope": "selected",
+      "selected_for_project": true,
+      "implemented": true,
+      "implementation_status": "implemented_binary_ascii_sampling",
+      "used_in_similarity": null,
+      "similarity_eligibility": "context_only_no_validated_terrestrial_equivalent",
+      "unit": "ppm",
+      "unit_validation": "official_ASCII_header_H_ppm_by_weight_and_binary_ASCII_full_comparison",
+      "coverage": "Global raster, exact poles not sampled; ASCII missing or negative estimates are not valid concentrations.",
+      "resolution": "720 x 360 cells, 0.5 degrees; effective spatial resolution not established by grid spacing.",
+      "source": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced_special.html",
+      "intended_use": "Contextual estimated hydrogen abundance only; no automatic similarity weight or water/ice conversion."
     },
     {
       "id": "mineralogy",

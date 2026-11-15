@@ -67,8 +67,8 @@ def test_xml_special_constant_parsed(pds_product):
 @pytest.mark.parametrize("subdir,product,unit", [
     ("ldem", "ldem_16_float", "KILOMETER"), ("ldrm", "ldrm_32_50_float", "METER"),
 ])
-def test_local_metadata(module_root, subdir, product, unit):
-    path = module_root / "data/raw/lola" / subdir / f"{product}.xml"
+def test_local_metadata(data_root, subdir, product, unit):
+    path = data_root / subdir / f"{product}.xml"
     if not path.exists():
         pytest.skip("Datos locales no distribuidos con el código")
     meta = load_metadata(path)

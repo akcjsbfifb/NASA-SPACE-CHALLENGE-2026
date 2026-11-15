@@ -6,8 +6,7 @@ import pytest
 from lunar_data.export import build_document, read_json, validate_registry, validate_sites, write_document
 
 
-def test_extensible_document_deterministic_no_invented_values(metadata_pair, module_root, tmp_path):
-    registry_path = module_root / "config/variables.json"
+def test_extensible_document_deterministic_no_invented_values(metadata_pair, registry_path, tmp_path):
     registry = read_json(registry_path)
     sites = [{"id": "test", "is_example": True, "latitude_deg": -85, "longitude_deg": -10}]
     first = build_document(metadata_pair, sites, registry, registry_path)
@@ -17,17 +16,30 @@ def test_extensible_document_deterministic_no_invented_values(metadata_pair, mod
     measures = first["sites"][0]["measurements"]
     assert measures["elevation"]["available"] is True
     assert measures["elevation"]["quality"]["uncertainty_m"] is None
-    assert measures["rock_abundance"]["implemented"] is False
+    assert measures["rock_abundance"]["implemented"] is True
     assert measures["rock_abundance"]["selected_for_project"] is True
     assert measures["rock_abundance"]["available"] is False  # fuera de ±70°
-    assert measures["rock_abundance"]["status"] == "not_implemented"
+    assert measures["rock_abundance"]["status"] == "not_sampled"
     assert measures["rock_abundance"]["value"] is None
-    assert measures["slope"]["status"] == "excluded"
-    assert measures["slope"]["available"] is None
+    # El fixture original tiene sólo dos filas: falta un vecino latitudinal.
+    assert measures["slope"]["status"] == "not_sampled"
+    assert measures["slope"]["selected_for_project"] is True
+    assert measures["slope"]["implemented"] is True
+    slope_definition = next(item for item in registry["variables"] if item["id"] == "slope")
+    assert slope_definition["implementation_status"] == "implemented_derived"
+    assert measures["hydrogen_abundance_ppm"]["status"] == "not_sampled"
+    assert measures["hydrogen_abundance_ppm"]["value"] is None
+    assert measures["hydrogen_abundance_ppm"]["unit"] == "ppm"
+    assert measures["hydrogen_abundance_ppm"]["implemented"] is True
+    assert measures["slope"]["available"] is False
     assert measures["earth_visibility"]["status"] == "not_implemented"
     assert all(item["used_in_similarity"] is None for item in measures.values())
     for source in first["sources"].values():
-        assert all(len(item["sha256"]) == 64 for item in source["files"])
+        if source.get("kind") == "derived_measurement":
+            assert source["derived_from"] == ["elevation"]
+            assert source["independent_nasa_product"] is False
+        else:
+            assert all(len(item["sha256"]) == 64 for item in source["files"])
     destination = tmp_path / "result.json"
     write_document(first, destination)
     assert json.loads(destination.read_text(encoding="utf-8")) == first
@@ -35,11 +47,12 @@ def test_extensible_document_deterministic_no_invented_values(metadata_pair, mod
         write_document(second, destination)
 
 
-def test_pending_inside_coverage_has_unknown_availability(metadata_pair, module_root):
+def test_pending_inside_coverage_has_unknown_availability(metadata_pair, registry_path):
     sites = [{"id": "test", "is_example": True, "latitude_deg": 0, "longitude_deg": 0}]
-    result = build_document(metadata_pair, sites, read_json(module_root / "config/variables.json"))
+    result = build_document(metadata_pair, sites, read_json(registry_path))
     measurement = result["sites"][0]["measurements"]["rock_abundance"]
-    assert measurement["available"] is None
+    assert measurement["available"] is False
+    assert measurement["reason"] == "processor_not_configured"
     assert measurement["within_declared_latitude_bounds"] is True
 
 
@@ -70,10 +83,10 @@ def test_bad_site_definitions_rejected(sites):
         validate_sites(sites)
 
 
-def test_registry_cannot_claim_new_processors_or_similarity(module_root):
-    original = read_json(module_root / "config/variables.json")
+def test_registry_cannot_claim_new_processors_or_similarity(registry_path):
+    original = read_json(registry_path)
     for field, value in [("implemented", True), ("used_in_similarity", True)]:
         registry = deepcopy(original)
-        registry["variables"][2][field] = value
+        next(item for item in registry["variables"] if item["id"] == "polar_solar_illumination")[field] = value
         with pytest.raises(ValueError):
             validate_registry(registry)

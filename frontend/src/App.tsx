@@ -114,7 +114,6 @@ function App() {
 		window.addEventListener('hashchange', onHash);
 		return () => window.removeEventListener('hashchange', onHash);
 	}, []);
-
 	useEffect(() => {
 		document.documentElement.lang = language;
 		document.title = copy.pageTitle;
@@ -389,7 +388,7 @@ function App() {
 					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
 				);
 				selectPlace(point.lat, point.lng, hit?.closeness); }} />
-			<PointPanel place={selection} onClose={() => setSelection(null)} />
+			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} />
 		</section>
 
 		</>

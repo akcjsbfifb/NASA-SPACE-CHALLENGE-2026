@@ -1,0 +1,17 @@
+.git
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/*.egg-info
+data/raw
+data/processed
+output
+**/*.img
+**/*.tif
+**/*.tiff
+**/*.dat
+**/*.lbl
+**/*.lbl.txt
+.env
+.env.*
+!.env.example

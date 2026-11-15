@@ -1,0 +1,198 @@
+{
+  "ascii_missing_cells": 1,
+  "cells_compared": 259200,
+  "external_validation": "PENDING; independent binary/ASCII comparison is not independent hydrogen calibration",
+  "files": [
+    {
+      "bytes": 518400,
+      "file_name": "hydrogenhd.dat",
+      "sha256": "7b9708c95cf3648a6ca6df754648fa18dbcdd2ebd4ae6e8b12dbc18d1e3ad6d4"
+    },
+    {
+      "bytes": 14256401,
+      "file_name": "hydrogenhd.txt",
+      "sha256": "10b218a29a8998070863a7da91e173c91aea5fdd1fe3d61dd9063af90c1b8083"
+    }
+  ],
+  "interpretation": "binary quantization consistency; not independent neutron calibration or external geodetic validation",
+  "max_absolute_binary_ascii_difference_ppm": 0.10000000000002274,
+  "measurements": [
+    {
+      "measurement": {
+        "ascii_raw_token": "52.353",
+        "ascii_reference_value_ppm": 52.353,
+        "available": true,
+        "binary_ascii_difference_ppm": -0.05300000000000438,
+        "quality": {
+          "uncertainty_ppm": null,
+          "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+          "warnings": [
+            "model_derived_hydrogen_not_confirmed_water_or_ice",
+            "reliability_limited_in_high_thorium_and_rare_earth_regions",
+            "half_degree_grid_does_not_establish_effective_resolution",
+            "special_product_not_pds_peer_reviewed_archive",
+            "body_fixed_frame_realization_not_declared",
+            "binary_quantized_ascii_has_more_precision"
+          ]
+        },
+        "quantity": "estimated_hydrogen_mass_abundance",
+        "raw_unit": "integer_tenths_ppm",
+        "raw_value": 523,
+        "reason": null,
+        "sampling": {
+          "angular_resolution_deg": 0.5,
+          "ascii_byte_offset": 7148201,
+          "binary_byte_offset": 259920,
+          "binary_scaling_factor": 0.1,
+          "center_latitude_deg": 0.25,
+          "center_longitude_deg_east": 0.25,
+          "column": 360,
+          "index_base": 0,
+          "latitude_bounds_deg": [
+            0.0,
+            0.5
+          ],
+          "longitude_bounds_deg_east_signed": [
+            0.0,
+            0.5
+          ],
+          "method": "containing_native_pixel_north_east_on_boundary",
+          "row": 180
+        },
+        "source_ref": "hydrogen_abundance_ppm",
+        "status": "valid",
+        "unit": "ppm",
+        "value": 52.3
+      },
+      "site_id": "equatorial_test_only"
+    },
+    {
+      "measurement": {
+        "ascii_raw_token": "103.18",
+        "ascii_reference_value_ppm": 103.18,
+        "available": true,
+        "binary_ascii_difference_ppm": -0.0800000000000125,
+        "quality": {
+          "uncertainty_ppm": null,
+          "validation": "binary_ascii_consistency_not_external_geodetic_validation",
+          "warnings": [
+            "model_derived_hydrogen_not_confirmed_water_or_ice",
+            "reliability_limited_in_high_thorium_and_rare_earth_regions",
+            "half_degree_grid_does_not_establish_effective_resolution",
+            "special_product_not_pds_peer_reviewed_archive",
+            "body_fixed_frame_realization_not_declared",
+            "binary_quantized_ascii_has_more_precision"
+          ]
+        },
+        "quantity": "estimated_hydrogen_mass_abundance",
+        "raw_unit": "integer_tenths_ppm",
+        "raw_value": 1031,
+        "reason": null,
+        "sampling": {
+          "angular_resolution_deg": 0.5,
+          "ascii_byte_offset": 415101,
+          "binary_byte_offset": 15080,
+          "binary_scaling_factor": 0.1,
+          "center_latitude_deg": -84.75,
+          "center_longitude_deg_east": 350.25,
+          "column": 340,
+          "index_base": 0,
+          "latitude_bounds_deg": [
+            -85.0,
+            -84.5
+          ],
+          "longitude_bounds_deg_east_signed": [
+            -10.0,
+            -9.5
+          ],
+          "method": "containing_native_pixel_north_east_on_boundary",
+          "row": 10
+        },
+        "source_ref": "hydrogen_abundance_ppm",
+        "status": "valid",
+        "unit": "ppm",
+        "value": 103.1
+      },
+      "site_id": "southern_high_latitude_test_only"
+    }
+  ],
+  "method": "streamed ASCII bounds and values versus sequential int.from_bytes signed big-endian",
+  "negative_ascii_estimates": 4180,
+  "non_negative_ascii_cells_encoded_zero": 36,
+  "source": {
+    "abundance_basis": "H ppm by weight, model-derived estimate",
+    "ascii_layout": {
+      "header_bytes": 401,
+      "record_bytes": 55
+    },
+    "ascii_url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced/hydrogenhd.txt",
+    "binary_ascii_tolerance_ppm": 0.100001,
+    "documentation_url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced_special.html",
+    "files": [
+      {
+        "bytes": 518400,
+        "file_name": "hydrogenhd.dat",
+        "sha256": "7b9708c95cf3648a6ca6df754648fa18dbcdd2ebd4ae6e8b12dbc18d1e3ad6d4"
+      },
+      {
+        "bytes": 14256401,
+        "file_name": "hydrogenhd.txt",
+        "sha256": "10b218a29a8998070863a7da91e173c91aea5fdd1fe3d61dd9063af90c1b8083"
+      }
+    ],
+    "limitations": [
+      "not_a_pds_peer_reviewed_archive",
+      "model_dependent_not_water_or_ice",
+      "less_reliable_in_high_thorium_and_rare_earth_regions",
+      "grid_spacing_not_effective_spatial_resolution",
+      "no_per_pixel_uncertainty"
+    ],
+    "missing_policy": "ASCII **********; no universal binary NoData: zero also encodes valid data",
+    "negative_policy": "retain raw and ASCII estimates, no physical concentration exported",
+    "product_id": "Lunar_Prospector_Hydrogen_halfdeg_December_2001",
+    "raster": {
+      "angular_resolution_deg": 0.5,
+      "byte_offset": 0,
+      "columns": 720,
+      "dtype": ">i2",
+      "longitude_interval_deg": [
+        -180,
+        180
+      ],
+      "row_order": "south_to_north",
+      "rows": 360
+    },
+    "release": "2002-01-03",
+    "transformation": {
+      "formula": "signed_int16_raw / 10",
+      "scaling_factor": 0.1
+    },
+    "unit": "ppm",
+    "url": "https://pds-geosciences.wustl.edu/missions/lunarp/reduced/hydrogenhd.dat"
+  },
+  "special_cells": [
+    {
+      "ascii_value_ppm": -0.72443,
+      "column": 403,
+      "kind": "negative",
+      "raw_value": -7,
+      "row": 25
+    },
+    {
+      "ascii_value_ppm": 0.060749,
+      "column": 344,
+      "kind": "zero_valid",
+      "raw_value": 0,
+      "row": 39
+    },
+    {
+      "ascii_token": "**********",
+      "column": 667,
+      "kind": "missing",
+      "raw_value": 0,
+      "row": 266
+    }
+  ],
+  "status": "PASS",
+  "tolerance_ppm": 0.100001
+}

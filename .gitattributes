@@ -1,0 +1,3 @@
+# Keep published lunar JSON bytes stable: the CSV records their SHA-256.
+/data/moon/*.json text eol=lf
+/data/moon/*.csv text eol=lf

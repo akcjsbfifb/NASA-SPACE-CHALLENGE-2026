@@ -1,7 +1,13 @@
 # Mediciones LOLA publicables
 
+Esta es la publicación histórica: el JSON vecino se conserva byte a byte.
+La versión mantenida está en [`data/moon/`](../../data/moon/lola_measurements.example.json),
+con [instrucciones actuales](../../docs/moon/README.md) y el registro de variables
+actualizado. No hay un segundo procesador en esta carpeta.
+
 `lola_measurements.example.json` contiene mediciones reales extraídas de los IMG
-locales originales, para los puntos de `../config/sites.example.json`. Es un
+locales originales, para los puntos ahora conservados como fixture en
+`backend/tests/lunar/fixtures/sites.example.json`. Es un
 archivo pequeño para que frontend y comparador prueben el contrato sin instalar
 Python ni descargar los mapas. No contiene datos sintéticos ni los mapas completos.
 
@@ -51,8 +57,8 @@ Desde la raíz del repositorio en PowerShell, con el entorno y datos ya instalad
 ```powershell
 .\.venv\Scripts\python.exe -m lunar_data `
   --data-root .\NASA-Lunar-Studies\data\raw\lola `
-  --registry .\NASA-Lunar-Studies\config\variables.json `
-  --sites .\NASA-Lunar-Studies\config\sites.example.json `
+  --registry .\data\moon\variables.json `
+  --sites .\backend\tests\lunar\fixtures\sites.example.json `
   --output .\NASA-Lunar-Studies\output\lola_measurements.regenerated.json
 ```
 
@@ -65,6 +71,6 @@ La carpeta `examples/` contiene este ejemplo revisado que se comparte mediante
 Git. Las ejecuciones ordinarias siguen en `output/`, que está ignorada. Los IMG,
 TIFF, entornos, cachés y el PDF de planificación permanecen fuera de Git.
 
-Ver también [metodología y contrato](../docs/lola_methodology.md) y
-[registro de variables](../docs/variables.md). Ningún resultado constituye una
+Ver también [metodología y contrato](../../docs/moon/lola_methodology.md) y
+[registro de variables](../../docs/moon/variables.md). Ningún resultado constituye una
 evaluación de seguridad de aterrizaje.

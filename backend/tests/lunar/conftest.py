@@ -9,8 +9,23 @@ from lunar_data.metadata import FRAME, LolaMetadata
 
 
 @pytest.fixture
-def module_root():
-    return Path(__file__).resolve().parents[1]
+def repo_root():
+    return Path(__file__).resolve().parents[3]
+
+
+@pytest.fixture
+def data_root(repo_root):
+    return repo_root / "NASA-Lunar-Studies/data/raw/lola"
+
+
+@pytest.fixture
+def registry_path(repo_root):
+    return repo_root / "data/moon/variables.json"
+
+
+@pytest.fixture
+def sites_path():
+    return Path(__file__).resolve().parent / "fixtures/sites.example.json"
 
 
 @pytest.fixture

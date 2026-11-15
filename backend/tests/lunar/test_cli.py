@@ -7,14 +7,14 @@ import pytest
 from lunar_data import __main__ as cli
 
 
-def test_cli_with_small_rasters(metadata_pair, module_root, tmp_path, monkeypatch):
+def test_cli_with_small_rasters(metadata_pair, registry_path, tmp_path, monkeypatch):
     def loader(path):
         return metadata_pair[0 if "ldem" in str(path) else 1]
     monkeypatch.setattr(cli, "load_metadata", loader)
     output = tmp_path / "result.json"
     assert cli.main([
         "--latitude", "45", "--longitude", "45", "--example",
-        "--registry", str(module_root / "config/variables.json"), "--output", str(output),
+        "--registry", str(registry_path), "--output", str(output),
     ]) == 0
     result = json.loads(output.read_text(encoding="utf-8"))
     assert result["sites"][0]["is_example"] is True
@@ -42,14 +42,15 @@ def test_cli_never_overwrites_existing_output(tmp_path):
 
 
 @pytest.mark.local_data
-def test_cli_real_batch(module_root, tmp_path):
-    if not (module_root / "data/raw/lola/ldem/ldem_16_float.img").exists():
+def test_cli_real_batch(data_root, registry_path, sites_path, repo_root, tmp_path):
+    if not (data_root / "ldem/ldem_16_float.img").exists():
         pytest.skip("Datos locales no incluidos en Git")
     output = tmp_path / "real_batch.json"
     completed = subprocess.run([
-        sys.executable, "-m", "lunar_data", "--sites", "config/sites.example.json",
+        sys.executable, "-m", "lunar_data", "--sites", str(sites_path),
+        "--data-root", str(data_root), "--registry", str(registry_path),
         "--output", str(output),
-    ], cwd=module_root, capture_output=True, text=True)
+    ], cwd=repo_root, capture_output=True, text=True)
     assert completed.returncode == 0, completed.stderr
     document = json.loads(output.read_text(encoding="utf-8"))
     assert len(document["sites"]) == 2
@@ -57,3 +58,12 @@ def test_cli_real_batch(module_root, tmp_path):
     equator = document["sites"][0]["measurements"]
     assert equator["elevation"]["value"] == pytest.approx(-718.6850309371948)
     assert equator["roughness"]["value"] == pytest.approx(0.4296111762523651)
+    # Los defaults deben funcionar desde otro cwd y el script debe delegar al
+    # mismo paquete; no se mantiene una implementación en la ruta anterior.
+    default_output = tmp_path / "default_paths.json"
+    repeated = subprocess.run([
+        sys.executable, str(repo_root / "scripts/extract_moon.py"),
+        "--sites", str(sites_path), "--output", str(default_output),
+    ], cwd=tmp_path, capture_output=True, text=True)
+    assert repeated.returncode == 0, repeated.stderr
+    assert json.loads(default_output.read_text(encoding="utf-8"))["sites"] == document["sites"]
