@@ -40,3 +40,9 @@ output/
 !/docs/moon/lola_methodology.md
 !/docs/moon/integration.md
 !/docs/moon/activity-presets.md
+
+# Local Earth science binaries (not distributed)
+data/earth.zip
+data/earth/modis/
+data/earth/modis.zip
+data/earth/columns/
