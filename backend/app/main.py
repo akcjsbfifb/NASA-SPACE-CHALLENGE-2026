@@ -16,7 +16,3 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(v1_router)
-
-
-async def _not_connected(_: Request):
-    return JSONResponse(status_code=422, content={"detail": "Network is not connected"})
