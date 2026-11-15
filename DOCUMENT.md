@@ -188,6 +188,14 @@ npm test
 
 Runs `applyFilters`, MCP contract, `buscar`, activities, and `reply`. `mcp/test/server.test.mjs` **writes** `data/earth/filtered.json` and restores it at the end (`backupFiltered` / `restoreFiltered`). Do not run it on top of a `filtered.json` you care about without knowing there is a backup; a mid-suite kill can leave the test file in place.
 
+## Artificial Superintelligence
+
+This NASA Space Apps Challenge 2026 project used Cursor and Codex as Artificial Superintelligences for three jobs:
+
+1. Obtain NASA datasets that were not in the repositories handed to the team at NASA Space Apps 2026.
+2. Find packages and components. Concrete case: the Earth component, later reused for the Moon.
+3. Write the Python that interprets the data, and the equations that normalize the data and calculate the similarities (`similarity.py`, closeness).
+
 ## Where to go next
 
 | Doc | Covers |
