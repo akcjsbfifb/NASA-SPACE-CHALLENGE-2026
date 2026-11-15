@@ -337,7 +337,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 								</p>
 								{sample.roughness !== null && (
 									<>
-										<h3>Análogos en la Tierra</h3>
+										<h3>ANALOGOS EN LA TIERRA</h3>
 										{analogState === 'loading' && (
 											<p className="muted">Buscando lugares con esta rugosidad…</p>
 										)}
@@ -383,6 +383,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 							</>
 						)}
 						<button
+							className="earth-compare"
 							type="button"
 							disabled={sampleState !== 'ready'}
 							onClick={() => {

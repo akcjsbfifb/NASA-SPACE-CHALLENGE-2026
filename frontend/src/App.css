@@ -463,6 +463,10 @@
   margin-top: 10px;
 }
 
+.sidebar button.earth-compare {
+  margin-top: 36px;
+}
+
 .result-list button {
   width: 100%;
   margin: 0;
