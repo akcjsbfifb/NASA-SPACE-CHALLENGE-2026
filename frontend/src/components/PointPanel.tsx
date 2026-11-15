@@ -380,11 +380,11 @@ function PointPanelContent({ place, lunar, onClose, language, variables, activit
 						</div>
 					</dl>
 					{lunar && <section className="compare">
-						<h4>{extra.title}</h4>
+						<h4>{({ es: 'Mediciones adicionales · enero 2025', en: 'Additional measurements · January 2025', fr: 'Mesures supplémentaires · janvier 2025', it: 'Misure aggiuntive · gennaio 2025' })[language]}</h4>
 						<p>{extra.scope} {extraStatus === 'loading' ? extra.loading : extraStatus === 'failed' ? extra.failed : ''}</p>
-						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending)} · {extra.approx}, {place.scores?.tbol_modis === undefined ? extra.noScore : `${(place.scores.tbol_modis * 100).toFixed(1)}%`}.</p>
-						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending)} · {extra.context}, {place.scores?.treg_era5 === undefined ? extra.noScore : `${(place.scores.treg_era5 * 100).toFixed(1)}%`}.</p>
-						<p>{extra.soil}: {extra.lunar} RA {lunar.sample.measurements.rock_abundance?.value ?? extra.pending} · {extra.earth} {extraValue(additional?.coarse_fragments_0_to_5cm, extra.pending)} · {extra.context}, {extra.noScore}.</p>
+						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending, language)} · {extra.approx}, {place.scores?.tbol_modis === undefined ? extra.noScore : `${(place.scores.tbol_modis * 100).toFixed(1)}%`}.</p>
+						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending, language)} · {place.scores?.treg_era5 === undefined ? extra.context : lunarSearchCopy[language].indirect}, {place.scores?.treg_era5 === undefined ? extra.noScore : `${(place.scores.treg_era5 * 100).toFixed(1)}%`}.</p>
+						<p>{extra.soil}: {extra.lunar} RA {lunar.sample.measurements.rock_abundance?.value ?? extra.pending} · {extra.earth} {extraValue(additional?.coarse_fragments_0_to_5cm, extra.pending, language)} · {extra.context}, {extra.noScore}.</p>
 						<p>Lunar Prospector H: {lunar.sample.measurements.hydrogen_abundance_ppm?.value ?? extra.pending} ppm · {extra.noScore}.</p>
 					</section>}
 					{place.scores && Object.keys(place.scores).length > 0 && (

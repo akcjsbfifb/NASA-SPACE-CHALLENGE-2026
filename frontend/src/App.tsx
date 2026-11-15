@@ -7,6 +7,7 @@ import PointPanel from './components/PointPanel';
 import PrecisionDial from './components/PrecisionDial';
 import type { SelectedPlace } from './components/PointPanel';
 import type { AdditionalMeasurements } from './data/earthMeasurements';
+import { extraCopy } from './data/earthMeasurements';
 
 import type {
 	GlobeController,
@@ -461,10 +462,10 @@ function App() {
 		<strong className="brand">ARTEMIS</strong>
 		<nav className="page-nav" aria-label="Cuerpo">
 			<button type="button" aria-current={page === 'moon' ? 'page' : undefined} onClick={() => openPage('moon')}>
-				Luna
+				{extraCopy[language].lunar}
 			</button>
 			<button type="button" aria-current={page === 'earth' ? 'page' : undefined} onClick={() => openPage('earth')}>
-				Tierra
+				{extraCopy[language].earth}
 			</button>
 		</nav>
 			<div className="language-selects">

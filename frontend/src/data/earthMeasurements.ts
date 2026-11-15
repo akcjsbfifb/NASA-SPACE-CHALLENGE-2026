@@ -16,9 +16,12 @@ export type AdditionalMeasurement = {
 
 export type AdditionalMeasurements = Record<string, AdditionalMeasurement>;
 
-export function extraValue(item: AdditionalMeasurement | undefined, pending: string): string {
+export function extraValue(item: AdditionalMeasurement | undefined, pending: string, language: 'es' | 'en' | 'fr' | 'it' = 'es'): string {
 	if (!item) return pending;
-	if (!item.available || item.value === null) return `${item.status}: ${item.reason ?? pending}`;
+	if (!item.available || item.value === null) {
+		const status = { es: 'sin dato', en: 'unavailable', fr: 'indisponible', it: 'non disponibile' }[language];
+		return `${status} (${item.status}: ${item.reason ?? pending})`;
+	}
 	const raw = item.original_value ?? item.raw_value ?? item.raw?.LST_Night_CMG;
 	const rawUnit = item.original_unit ?? item.raw_unit;
 	const qa = item.quality?.mandatory_qa;

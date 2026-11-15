@@ -18,9 +18,8 @@ el tiempo total de una lectura en curso no está garantizado. Un error conserva
 LOLA e hidrógeno.
 La caché de puntos está limitada a 64 resultados, sin guardar errores de fuente.
 
-El buscador terrestre requiere coordinación: el promedio ponderado limita el
-denominador a uno incluso con suma de pesos inferior a uno; el tratamiento
-polar de pendiente limita la distancia longitudinal; y la rugosidad terrestre
+El buscador usa la suma real de pesos disponibles como denominador del promedio.
+El tratamiento polar de pendiente limita la distancia longitudinal; la rugosidad terrestre
 usa RMS de vecinos, mientras LOLA retira un plano. Los campos históricos de la
 respuesta terrestre redondean valores; los campos aditivos conservan los
 valores originales del índice.
@@ -32,8 +31,41 @@ valores de las columnas y sus estados. La procedencia procede del `columns.json`
 del directorio padre; si no existe, se informa como desconocida. Los campos
 originales, redondeados para presentación, se mantienen por compatibilidad.
 La asociación entre `columns.json` y los binarios debe verificarse con hashes
-del productor; el manifiesto actual no los contiene. El cambio no corrige el
-promedio ponderado ni modifica la política polar o el método de rugosidad.
+del productor; el manifiesto actual no los contiene. La política polar y el
+método de rugosidad terrestre no fueron modificados.
+
+## Ejecutar el MVP en otra computadora
+
+Desde la raíz, con Python 3.12 y Node.js instalados:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r .\backend\requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r .\backend\requirements-lunar-geospatial.lock.txt
+.\.venv\Scripts\python.exe -m pip install -r .\backend\requirements-earth-extras.txt
+.\.venv\Scripts\python.exe -m pip install --no-deps -e .\backend
+$env:GURVICH_COLUMNS_DIR = 'C:\ruta\al\indice\columns'
+$env:LUNAR_DATA_ROOT = 'C:\ruta\a\datos\lola'
+$env:LUNAR_HYDROGEN_ROOT = 'C:\ruta\a\datos\lunar_prospector\hydrogen'
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8787
+```
+
+En otra terminal, desde la raíz: `cd frontend`, `npm.cmd ci` y
+`npm.cmd run dev`. El índice debe ser el conjunto de columnas compatible con
+`data/earth/columns.json`; la variable apunta a la carpeta de columnas, no a
+un archivo individual. Colocar el HDF existente en
+`data/raw/earth/modis/MOD11C3.A2025001.061.2025035172114.hdf`. No se distribuye
+en Git. Para coordenadas libres se requieren los originales LOLA y Lunar
+Prospector indicados arriba; los seis Apollo publicados pueden leerse del JSON.
+
+El enriquecimiento consulta ERA5-Land mediante Open-Meteo y fragmentos del
+suelo mediante SoilGrids WCS para hasta 50 candidatos; conserva cachés en
+`data/raw/earth/`. El mes terrestre es enero de 2025. Los originales NASA, HDF,
+índice, cachés, entorno virtual y salidas temporales permanecen fuera de Git.
+Si falta MODIS o falla un servicio remoto, la variable queda sin valor y con
+motivo de ausencia; se conservan las demás mediciones válidas. Sin el índice
+terrestre configurado no se puede ejecutar la búsqueda. La ausencia de datos
+lunares para una coordenada libre limita las mediciones disponibles.
 
 ## Consumir los resultados sin datos NASA
 
