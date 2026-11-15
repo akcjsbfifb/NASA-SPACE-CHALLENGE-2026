@@ -327,8 +327,9 @@
   top: 50%;
   width: 14px;
   height: 14px;
-  border: 2px solid #7dffe1;
+  border: 2px solid #ff4438;
   border-radius: 50%;
+  box-shadow: 0 0 0 3px #ff443826;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -393,8 +394,9 @@
 }
 
 .result-list button.active {
-  border-color: #7dffe1;
-  color: #7dffe1;
+  border-color: #ff4438;
+  background: #ff443814;
+  color: #ff6a5f;
 }
 
 .result-list button:hover {

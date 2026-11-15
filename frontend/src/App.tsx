@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import InteractiveGlobe from './components/Globe/InteractiveGlobe';
 import MoonPage from './components/MoonPage';
-import type { EarthAnalogSet, LunarSelection } from './components/MoonPage';
+import type { EarthAnalog, EarthAnalogSet, LunarSelection } from './components/MoonPage';
 import PointPanel from './components/PointPanel';
 import PrecisionDial from './components/PrecisionDial';
 import type { SelectedPlace } from './components/PointPanel';
@@ -18,6 +18,14 @@ import type {
 
 import { getCopy, isLanguage } from './i18n';
 import type { Language } from './i18n';
+
+import {
+	SELECTED_ALTITUDE,
+	SELECTED_COLOR,
+	SELECTED_FLY_ALTITUDE,
+	SELECTED_FLY_MS,
+	SELECTED_SIZE,
+} from './theme';
 
 import './App.css';
 
@@ -161,6 +169,31 @@ function App() {
 		);
 	}, [copy, points, visibleLayers.points]);
 
+	// One red marker on its own layer, and the camera turns to face it. Running
+	// this on `page` too covers arriving from the Moon page, where the globe
+	// mounts after the selection already exists.
+	useEffect(() => {
+		if (page !== 'earth' || !selection) {
+			globe.current?.setPoints('selected', []);
+			return;
+		}
+		globe.current?.setPoints('selected', [
+			{
+				id: 'selected',
+				lat: selection.lat,
+				lng: selection.lng,
+				label: '',
+				color: SELECTED_COLOR,
+				size: SELECTED_SIZE,
+				altitude: SELECTED_ALTITUDE,
+			},
+		]);
+		globe.current?.flyTo(
+			{ lat: selection.lat, lng: selection.lng, altitude: SELECTED_FLY_ALTITUDE },
+			SELECTED_FLY_MS,
+		);
+	}, [page, selection]);
+
 	function applySearchResult(body: SearchResponse) {
 		setPoints(body.points);
 		if (body.precision !== undefined) setPrecision(body.precision);
@@ -227,13 +260,23 @@ function App() {
 		}
 	}
 
-	function compareFromMoon(lunar: LunarSelection, analogs: EarthAnalogSet | null) {
+	function compareFromMoon(
+		lunar: LunarSelection,
+		analogs: EarthAnalogSet | null,
+		chosen?: EarthAnalog,
+	) {
 		if (lunar.sample.roughness === null) return;
 		setSlope('');
 		setTmin('');
 		setIce('');
 		setRock('');
 		setRoughness(String(lunar.sample.roughness));
+		// The analog the user clicked in the Moon panel keeps its red marker on
+		// Earth. The footer button has no specific row, so it falls back to the
+		// closest point of the set.
+		const picked = chosen ?? analogs?.points[0];
+		setSelection(picked ? { lat: picked.lat, lng: picked.lon, closeness: picked.closeness } : null);
+		setLocation(picked ? { lat: picked.lat, lng: picked.lon, altitude: 0 } : null);
 		openPage('earth');
 		if (analogs) {
 			applySearchResult(analogs);

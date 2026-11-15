@@ -10,6 +10,7 @@ import {
 	type LunarLanding,
 	type LunarSample,
 } from '../data/lunarLandings';
+import { SELECTED_COLOR } from '../theme';
 
 const MOON_GLOBE = {
 	initialView: { lat: 8, lng: 6, altitude: 2.45 },
@@ -50,7 +51,11 @@ export type EarthAnalogSet = {
 
 type MoonPageProps = {
 	precision: number;
-	onCompare: (selection: LunarSelection, analogs: EarthAnalogSet | null) => void;
+	onCompare: (
+		selection: LunarSelection,
+		analogs: EarthAnalogSet | null,
+		chosen?: EarthAnalog,
+	) => void;
 };
 
 function percent(value: number | null) {
@@ -80,7 +85,7 @@ function markersFor(picked: PickedPoint | null): GlobePoint[] {
 		lat: site.lat,
 		lng: site.lng,
 		label: `${site.mission} · ${site.name}`,
-		color: picked?.siteId === site.id ? '#7dffe1' : '#f0c14a',
+		color: picked?.siteId === site.id ? SELECTED_COLOR : '#f0c14a',
 		size: picked?.siteId === site.id ? 0.42 : 0.28,
 		altitude: 0.012,
 	}));
@@ -90,7 +95,7 @@ function markersFor(picked: PickedPoint | null): GlobePoint[] {
 			lat: picked.lat,
 			lng: picked.lng,
 			label: picked.label,
-			color: '#7dffe1',
+			color: SELECTED_COLOR,
 			size: 0.36,
 			altitude: 0.012,
 		});
@@ -122,7 +127,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 					lat: labeled.lat,
 					lng: labeled.lng,
 					text: labeled.mission,
-					color: '#ffd15c',
+					color: SELECTED_COLOR,
 					size: 1.6,
 					altitude: 0.02,
 				}]
@@ -304,7 +309,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 															type="button"
 															onClick={() => {
 																if (!picked || !sample) return;
-																onCompare({ ...picked, sample }, analogs);
+																onCompare({ ...picked, sample }, analogs, point);
 															}}
 														>
 															{percent(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
@@ -322,7 +327,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 							disabled={sampleState !== 'ready'}
 							onClick={() => {
 								if (!picked || !sample || sample.roughness === null) return;
-								onCompare({ ...picked, sample }, analogs);
+								onCompare({ ...picked, sample }, analogs, analogs?.points[0]);
 							}}
 						>
 							{sampleState === 'loading'
