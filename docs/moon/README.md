@@ -26,6 +26,9 @@ Consultar `available`, `status`, `reason` y advertencias antes de usar un númer
 Nulo no es cero ni condición favorable. `used_in_similarity: null` no autoriza
 a asignar peso; hidrógeno es contextual, sin equivalente terrestre validado.
 
+Los presets de actividad del buscador terrestre están en `activity-presets.md`:
+son importancia relativa y valores de búsqueda de un MVP, no mediciones.
+
 ## Instalación y extracción desde PowerShell
 
 Desde la raíz del repositorio, Python 3.12:
