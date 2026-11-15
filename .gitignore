@@ -7,6 +7,7 @@ __pycache__/
 # Earth and Moon rasters, and the built land grid
 data/raw/
 data/earth/audience.json
+data/earth/history.json
 data/**/*.parquet
 
 # Local notes

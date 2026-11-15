@@ -68,6 +68,15 @@ type SearchSummary =
 	| { type: 'offline' }
 	| { type: 'failed' };
 
+type SearchQuerySnapshot = {
+	target?: Record<string, number | string | null>;
+	activity?: { id: string } | string | null;
+	weights?: Record<string, number | null>;
+	precision?: number;
+	temperature_mode?: string;
+	min_closeness?: number;
+};
+
 type SearchPoint = ScoreDetail & {
 	lat: number;
 	lon: number;
@@ -77,6 +86,22 @@ type SearchPoint = ScoreDetail & {
 	grades?: Record<string, Grade>;
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
+	query?: SearchQuerySnapshot;
+};
+
+type HistoryEntry = {
+	id: string;
+	at: string;
+	point: {
+		lat: number;
+		lon: number;
+		closeness?: number;
+		rock?: string;
+		scores?: Record<string, number>;
+		grade?: Grade;
+	};
+	query: SearchQuerySnapshot;
+	cell: Record<string, unknown>;
 };
 
 type SearchResponse = {
@@ -108,6 +133,23 @@ function colorFor(match: MatchLevel | undefined) {
 	if (match === 'very') return '#7dffe1';
 	if (match === 'close') return '#f0c14a';
 	return '#e07a4a';
+}
+
+function searchQuerySnapshot(body: SearchResponse): SearchQuerySnapshot {
+	return {
+		target: body.target,
+		activity: body.activity ?? null,
+		weights: body.weights,
+		precision: body.precision,
+		temperature_mode: body.temperature_mode,
+		min_closeness: body.min_closeness,
+	};
+}
+
+function activityId(snapshot: SearchQuerySnapshot | undefined): string | null {
+	if (!snapshot?.activity) return null;
+	if (typeof snapshot.activity === 'string') return snapshot.activity;
+	return snapshot.activity.id ?? null;
 }
 
 function toGlobePoint(point: SearchPoint, rockLabel: string): GlobePoint {
@@ -153,6 +195,7 @@ function App() {
 	const [summary, setSummary] = useState<SearchSummary>({ type: 'initial' });
 	const [busy, setBusy] = useState(false);
 	const [selection, setSelection] = useState<SelectedPlace | null>(null);
+	const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>([]);
 
 	function openPage(next: 'moon' | 'earth') {
 		setPage(next);
@@ -165,6 +208,23 @@ function App() {
 		window.addEventListener('hashchange', onHash);
 		return () => window.removeEventListener('hashchange', onHash);
 	}, []);
+
+	useEffect(() => {
+		if (page !== 'earth') return;
+		let alive = true;
+		fetch(`${SEARCH_API}/history`)
+			.then(async (response) => {
+				const body = (await response.json()) as { entries?: HistoryEntry[] };
+				if (!response.ok) throw new Error('History request failed');
+				if (alive) setHistoryEntries(body.entries ?? []);
+			})
+			.catch(() => {
+				if (alive) setHistoryEntries([]);
+			});
+		return () => {
+			alive = false;
+		};
+	}, [page]);
 	useEffect(() => {
 		document.documentElement.lang = language;
 		document.title = copy.pageTitle;
@@ -225,6 +285,78 @@ function App() {
 		}
 	})();
 
+	async function postAnalogHistory(point: SearchPoint) {
+		if (!point.query) return;
+		const payload = {
+			point: {
+				lat: point.lat,
+				lon: point.lon,
+				closeness: point.closeness,
+				rock: point.rock,
+				...(point.scores ? { scores: point.scores } : {}),
+				...(point.grade ? { grade: point.grade } : {}),
+			},
+			query: point.query,
+		};
+		try {
+			const response = await fetch(`${SEARCH_API}/history`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			});
+			if (!response.ok) return;
+			const entry = (await response.json()) as HistoryEntry;
+			setHistoryEntries((current) => [entry, ...current.filter((item) => item.id !== entry.id)].slice(0, 50));
+		} catch {
+			// Offline: keep the UI usable without blocking selection.
+		}
+	}
+
+	function applyQuerySnapshot(query: SearchQuerySnapshot) {
+		if (query.precision !== undefined) setPrecision(query.precision);
+		const resultWeights = query.weights;
+		if (resultWeights) {
+			setWeights((current) => {
+				const next = { ...current };
+				for (const key of WEIGHT_KEYS) {
+					const value = resultWeights[key];
+					if (typeof value === 'number') next[key] = value;
+				}
+				return next;
+			});
+		}
+		const target = query.target;
+		if (target) {
+			if (target.slope != null) setSlope(text(target.slope));
+			if (target.roughness != null) setRoughness(text(target.roughness));
+			if (target.temperature != null) setTmin(text(target.temperature));
+			if (target.ice != null) setIce(text(target.ice));
+			if (target.rock != null) setRock(String(target.rock));
+			setIncluded({
+				slope: target.slope != null,
+				roughness: target.roughness != null,
+				temperature: target.temperature != null,
+				ice: target.ice != null,
+				rock: target.rock != null,
+			});
+		}
+	}
+
+	function restoreHistoryEntry(entry: HistoryEntry) {
+		const { point, query } = entry;
+		applyQuerySnapshot(query);
+		setSelection({
+			lat: point.lat,
+			lng: point.lon,
+			closeness: point.closeness,
+			scores: point.scores,
+			grade: point.grade,
+			target: query.target,
+			activity: activityId(query),
+		});
+		setLocation({ lat: point.lat, lng: point.lon, altitude: 0 });
+	}
+
 	function selectPlace(lat: number, lng: number, point?: SearchPoint) {
 		setLocation({ lat, lng, altitude: 0 });
 		setSelection(
@@ -244,6 +376,9 @@ function App() {
 				}
 				: { lat, lng },
 		);
+		if (point?.query) {
+			void postAnalogHistory(point);
+		}
 	}
 
 	useEffect(() => {
@@ -284,7 +419,8 @@ function App() {
 		// Every point keeps the reference it was searched against, so the panel
 		// shows the target of that search and not the inputs of a later one.
 		const activity = body.activity?.id ?? null;
-		setPoints(body.points.map((point) => ({ ...point, target: body.target, activity })));
+		const query = searchQuerySnapshot(body);
+		setPoints(body.points.map((point) => ({ ...point, target: body.target, activity, query })));
 		const usedList = body.variables_used ?? body.variables;
 		setVariables(usedList ?? []);
 		if (usedList && usedList.length > 0) {
@@ -396,7 +532,24 @@ function App() {
 		setLocation(picked ? { lat: picked.lat, lng: picked.lon, altitude: 0 } : null);
 		openPage('earth');
 		if (analogs) {
-			applySearchResult(analogs);
+			const body = analogs as SearchResponse;
+			applySearchResult(body);
+			if (picked) {
+				const query = searchQuerySnapshot(body);
+				const hit = body.points.find(
+					(item) => item.lat === picked.lat && item.lon === picked.lon,
+				);
+				const source: SearchPoint = hit
+					? { ...hit, query }
+					: {
+						lat: picked.lat,
+						lon: picked.lon,
+						closeness: picked.closeness,
+						rock: picked.rock,
+						query,
+					};
+				void postAnalogHistory(source);
+			}
 			return;
 		}
 		const params = new URLSearchParams({
@@ -674,6 +827,33 @@ function App() {
 				<p>{copy.latitude}: {location.lat.toFixed(5)}</p>
 				<p>{copy.longitude}: {location.lng.toFixed(5)}</p>
 			</>) : (<p>{copy.noPointSelected}</p>)}
+		</section>
+
+		<section className="sidebar-section">
+			<h4>{copy.analogHistory}</h4>
+			{historyEntries.length === 0 ? (
+				<p className="muted">{copy.analogHistoryEmpty}</p>
+			) : (
+				<div className="result-list">
+					{historyEntries.map((entry) => {
+						const id = activityId(entry.query);
+						const preset = id ? activities.find((item) => item.id === id) : undefined;
+						const label = preset?.serves[language] ?? id ?? '';
+						const closeness = entry.point.closeness;
+						return (
+							<button
+								key={entry.id}
+								type="button"
+								onClick={() => restoreHistoryEntry(entry)}
+							>
+								{closeness !== undefined ? `${percent(closeness, 1)}% · ` : ''}
+								{entry.point.lat.toFixed(2)}, {entry.point.lon.toFixed(2)}
+								{label ? ` · ${label}` : ''}
+							</button>
+						);
+					})}
+				</div>
+			)}
 		</section>
 
 		</aside>

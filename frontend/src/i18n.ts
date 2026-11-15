@@ -51,6 +51,8 @@ type TranslationStrings = {
 	areas: string;
 	labels: string;
 	selectedPoint: string;
+	analogHistory: string;
+	analogHistoryEmpty: string;
 	latitude: string;
 	longitude: string;
 	noPointSelected: string;
@@ -135,6 +137,8 @@ const translations = {
 		areas: 'Áreas',
 		labels: 'Etiquetas',
 		selectedPoint: 'Punto seleccionado',
+		analogHistory: 'Análogos elegidos',
+		analogHistoryEmpty: 'Todavía no hay elecciones desde una búsqueda.',
 		latitude: 'Latitud',
 		longitude: 'Longitud',
 		noPointSelected: 'Ningún punto seleccionado.',
@@ -241,6 +245,8 @@ const translations = {
 		areas: 'Areas',
 		labels: 'Labels',
 		selectedPoint: 'Selected point',
+		analogHistory: 'Chosen analogs',
+		analogHistoryEmpty: 'No choices from a search yet.',
 		latitude: 'Latitude',
 		longitude: 'Longitude',
 		noPointSelected: 'No point selected.',
@@ -347,6 +353,8 @@ const translations = {
 		areas: 'Zones',
 		labels: 'Étiquettes',
 		selectedPoint: 'Point sélectionné',
+		analogHistory: 'Analogues choisis',
+		analogHistoryEmpty: 'Aucun choix issu d\'une recherche pour l\'instant.',
 		latitude: 'Latitude',
 		longitude: 'Longitude',
 		noPointSelected: 'Aucun point sélectionné.',
@@ -453,6 +461,8 @@ const translations = {
 		areas: 'Aree',
 		labels: 'Etichette',
 		selectedPoint: 'Punto selezionato',
+		analogHistory: 'Analoghi scelti',
+		analogHistoryEmpty: 'Nessuna scelta da una ricerca per ora.',
 		latitude: 'Latitudine',
 		longitude: 'Longitudine',
 		noPointSelected: 'Nessun punto selezionato.',

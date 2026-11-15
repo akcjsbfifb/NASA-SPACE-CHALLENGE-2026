@@ -10,6 +10,7 @@ from fastapi import APIRouter, Header, Query, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from app.config import get_settings
+from app.services.earth import history as earth_history
 from app.services.earth.activities import VARIABLES, ActivityError, load_catalog, resolve
 from app.services.earth.similarity import parse_criteria, write_shortlist
 from app.services import notify
@@ -24,6 +25,10 @@ AUDIENCE_LANGUAGES = frozenset({"es", "en", "fr", "it"})
 
 def audience_path() -> Path:
     return get_settings().paths.shortlist.parent / "audience.json"
+
+
+def history_path() -> Path:
+    return get_settings().paths.shortlist.parent / "history.json"
 
 
 def _optional_float(raw: str | None) -> float | None:
@@ -158,6 +163,42 @@ async def notify_endpoint(
         return JSONResponse({"error": "body must be a JSON object"}, status_code=400)
     listeners = notify.broadcast_search_event(body)
     return JSONResponse({"listeners": listeners})
+
+
+@router.get("/history")
+def list_history() -> JSONResponse:
+    return JSONResponse({"entries": earth_history.read_entries(history_path())})
+
+
+@router.post("/history")
+async def post_history(request: Request) -> JSONResponse:
+    try:
+        body = json.loads((await request.body()).decode() or "{}")
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    if not isinstance(body, dict):
+        return JSONResponse({"error": "body must be a JSON object"}, status_code=400)
+    point = body.get("point")
+    query = body.get("query")
+    if not isinstance(point, dict) or not isinstance(query, dict):
+        return JSONResponse({"error": "point and query required"}, status_code=400)
+    try:
+        lat = float(point["lat"])
+        lon = float(point["lon"])
+    except (KeyError, TypeError, ValueError):
+        return JSONResponse({"error": "point.lat and point.lon required"}, status_code=400)
+    try:
+        found = search_state.earth_index().nearest(lat, lon)
+    except Exception as error:
+        return JSONResponse({"error": str(error)}, status_code=500)
+    if found is None:
+        return JSONResponse({"error": "no land cell"}, status_code=404)
+    entry = earth_history.new_entry(point, query, found)
+    try:
+        earth_history.append_entry(history_path(), entry)
+    except OSError as error:
+        return JSONResponse({"error": str(error)}, status_code=500)
+    return JSONResponse(entry)
 
 
 @router.get("/cell")
