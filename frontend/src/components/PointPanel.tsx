@@ -4,7 +4,7 @@ import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
 import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
-import { formatDelta, truncated } from '../score';
+import { formatDelta, percent } from '../score';
 import type { VariableInfo } from '../score';
 
 export type SelectedPlace = {
@@ -199,7 +199,7 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 							<>
 								<div>
 									<dt>{copy.closeness}</dt>
-									<dd>{truncated(place.closeness, 2)}%</dd>
+									<dd>{percent(place.closeness, 2)}%</dd>
 								</div>
 								{variables.length > 0 && (
 									<div>
@@ -210,7 +210,7 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 								{place.worst !== undefined && variables.length > 1 && (
 									<div>
 										<dt>{copy.worstVariable}</dt>
-										<dd>{truncated(place.worst, 1)}%</dd>
+										<dd>{percent(place.worst, 1)}%</dd>
 									</div>
 								)}
 							</>
@@ -257,7 +257,7 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 												<span className={`tier tier-${variable.tier ?? 'C'}`}>{variable.tier ?? '?'}</span>
 											</span>
 											<span>
-												{score === undefined ? copy.noData : `${truncated(score, 1)}%${change}`}
+												{score === undefined ? copy.noData : `${percent(score, 1)}%${change}`}
 											</span>
 										</li>
 									);

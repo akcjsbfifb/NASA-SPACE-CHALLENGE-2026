@@ -10,7 +10,7 @@ import {
 	type LunarLanding,
 	type LunarSample,
 } from '../data/lunarLandings';
-import { truncated } from '../score';
+import { percent } from '../score';
 import { SELECTED_COLOR } from '../theme';
 
 const MOON_GLOBE = {
@@ -59,9 +59,9 @@ type MoonPageProps = {
 	) => void;
 };
 
-function percent(value: number | null) {
+function percentText(value: number | null) {
 	if (value === null) return '—';
-	return `${truncated(value, 1)}%`;
+	return `${percent(value, 1)}%`;
 }
 
 export function listPreview<T extends { closeness: number }>(items: T[], count = 6): T[] {
@@ -303,8 +303,8 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 														<dt>Cercanía</dt>
 														<dd>
 															{analogs.returned === 0
-																? `ninguno llega a ${percent(analogs.min_closeness)}`
-																: `${percent(analogs.loosest)} – ${percent(analogs.closest)}`}
+																? `ninguno llega a ${percentText(analogs.min_closeness)}`
+																: `${percentText(analogs.loosest)} – ${percentText(analogs.closest)}`}
 														</dd>
 													</div>
 												</dl>
@@ -318,7 +318,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 																onCompare({ ...picked, sample }, analogs, point);
 															}}
 														>
-															{percent(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
+															{percentText(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
 														</button>
 													))}
 												</div>

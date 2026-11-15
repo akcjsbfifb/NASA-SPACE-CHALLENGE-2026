@@ -19,7 +19,7 @@ import type {
 import { getCopy, isLanguage } from './i18n';
 import type { Language } from './i18n';
 
-import { primaryDelta, truncated } from './score';
+import { percent, worstDelta } from './score';
 import type { ScoreDetail, VariableInfo } from './score';
 
 import {
@@ -137,12 +137,12 @@ function App() {
 			case 'searching':
 				return copy.searchingSummary;
 			case 'no-results':
-				return copy.noResults(truncated(summary.closeness, 1));
+				return copy.noResults(percent(summary.closeness, 1));
 			case 'results':
 				return copy.resultSummary(
 					summary.count,
-					truncated(summary.lowest, 1),
-					truncated(summary.highest, 1),
+					percent(summary.lowest, 1),
+					percent(summary.highest, 1),
 				) + (summary.relativeCold ? copy.relativeColdNote : '');
 			case 'offline':
 				return copy.serverOffline;
@@ -390,14 +390,14 @@ function App() {
 			<p className="muted search-summary">{summaryText}</p>
 			<div className="result-list">
 				{points.slice(0, 6).map((point) => {
-					const delta = primaryDelta(point, variables);
+					const delta = worstDelta(point, variables);
 					return (
 					<button
 					key={`${point.lat},${point.lon}`}
 					type="button"
 					onClick={() => selectPlace(point.lat, point.lon, point)}
 					>
-					{truncated(point.closeness, 1)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
+					{percent(point.closeness, 1)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
 					{delta ? ` · ${delta}` : ''}
 					</button>
 					);

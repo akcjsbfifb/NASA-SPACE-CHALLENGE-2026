@@ -28,6 +28,14 @@ export function truncated(value: number, decimals: number): string {
 	return (Math.floor(value * factor) / factor).toFixed(decimals);
 }
 
+/** A 0..1 closeness as a percentage, truncated, and capped below 100. */
+export function percent(value: number, decimals: number): string {
+	// Two different sensors on two bodies never produce an identical place, and
+	// "100%" reads as "same place". The physical delta carries the exact match.
+	const capped = Math.min(value, 0.999);
+	return truncated(capped * 100, decimals);
+}
+
 export function formatDelta(value: number, unit: string | null): string {
 	if (unit === 'deg') return `${value.toFixed(2)}°`;
 	if (unit === 'C') return `${value.toFixed(1)} °C`;
@@ -35,15 +43,25 @@ export function formatDelta(value: number, unit: string | null): string {
 	return value.toFixed(2);
 }
 
-/** First difference the contract can express in a physical unit. */
-export function primaryDelta(point: ScoreDetail, variables: VariableInfo[]): string {
+/**
+ * The difference of the variable that matches worst: that is what limits the
+ * analog. Showing the best one reads "0.00°" and says nothing.
+ */
+export function worstDelta(point: ScoreDetail, variables: VariableInfo[]): string {
+	let worst: { value: number; unit: string | null } | null = null;
+	let worstScore = Infinity;
 	for (const variable of variables) {
 		const delta = point.deltas?.[variable.id];
-		if (typeof delta === 'number' && variable.unit && variable.unit !== 'class') {
-			return formatDelta(delta, variable.unit);
+		const score = point.scores?.[variable.id];
+		if (typeof delta !== 'number' || !variable.unit || variable.unit === 'class') continue;
+		if (typeof score === 'number' && score < worstScore) {
+			worstScore = score;
+			worst = { value: delta, unit: variable.unit };
+		} else if (!worst) {
+			worst = { value: delta, unit: variable.unit };
 		}
 	}
-	return '';
+	return worst ? formatDelta(worst.value, worst.unit) : '';
 }
 
 export const TIER_NOTE: Record<string, string> = {
