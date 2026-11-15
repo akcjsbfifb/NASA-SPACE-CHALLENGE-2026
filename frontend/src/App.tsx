@@ -16,6 +16,8 @@ import type {
 	GlobePoint,
 } from './components/Globe/globe.types';
 
+import { SEARCH_API } from './searchApi';
+import { subscribeSearchEvents } from './searchEvents';
 import { getCopy, isLanguage } from './i18n';
 import type { Language } from './i18n';
 
@@ -151,7 +153,7 @@ function App() {
 	// The catalog is the only source of activity labels: no `activity.<id>` keys.
 	useEffect(() => {
 		let alive = true;
-		fetch('http://127.0.0.1:8787/activities')
+		fetch(`${SEARCH_API}/activities`)
 			.then(async (response) => {
 				const body = (await response.json()) as { activities?: ActivityPreset[] };
 				if (!response.ok) throw new Error('Activities request failed');
@@ -280,25 +282,13 @@ function App() {
 			});
 	}
 
+	const applySearchResultRef = useRef(applySearchResult);
+	applySearchResultRef.current = applySearchResult;
+
 	useEffect(() => {
-		let events: EventSource | null = null;
-		let stopped = false;
-		const connect = () => {
-			if (stopped) return;
-			events = new EventSource('http://127.0.0.1:8787/events');
-			events.onmessage = (event) => {
-				applySearchResult(JSON.parse(event.data) as SearchResponse);
-			};
-			events.onerror = () => {
-				if (!events || events.readyState !== EventSource.CLOSED) return;
-				window.setTimeout(connect, 2000);
-			};
-		};
-		connect();
-		return () => {
-			stopped = true;
-			events?.close();
-		};
+		return subscribeSearchEvents((body) => {
+			applySearchResultRef.current(body as SearchResponse);
+		});
 	}, []);
 
 	async function search() {
@@ -317,7 +307,7 @@ function App() {
 			if (weights[key] !== 1) params.set(`w_${key}`, String(weights[key]));
 		}
 		try {
-			const response = await fetch(`http://127.0.0.1:8787/search?${params}`);
+			const response = await fetch(`${SEARCH_API}/search?${params}`);
 			const body = (await response.json()) as SearchResponse;
 			if (!response.ok) throw new Error('Search request failed');
 			applySearchResult(body);
@@ -356,7 +346,7 @@ function App() {
 		});
 		setBusy(true);
 		setSummary({ type: 'searching' });
-		void fetch(`http://127.0.0.1:8787/search?${params}`)
+		void fetch(`${SEARCH_API}/search?${params}`)
 			.then(async (response) => {
 				const body = (await response.json()) as SearchResponse;
 				if (!response.ok) throw new Error('Search request failed');

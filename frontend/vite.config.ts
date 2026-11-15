@@ -14,9 +14,21 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8787',
+        changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-        timeout: 120_000,
-        proxyTimeout: 120_000,
+        timeout: 0,
+        proxyTimeout: 0,
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            const type = proxyRes.headers['content-type'] ?? ''
+            if (!type.includes('text/event-stream')) {
+              return
+            }
+            proxyRes.headers['cache-control'] = 'no-cache'
+            proxyRes.headers['connection'] = 'keep-alive'
+            delete proxyRes.headers['content-encoding']
+          })
+        },
       },
     },
   },
