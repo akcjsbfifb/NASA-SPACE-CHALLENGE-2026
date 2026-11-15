@@ -29,6 +29,7 @@ output/
 !.env.example
 
 # Lunar inputs and derived data (local rasters; not committed)
+/NASA-Lunar-Studies/
 /data/raw/lola/
 /data/raw/lunar_prospector/
 !/docs/

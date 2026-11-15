@@ -258,20 +258,20 @@ MCP, registrar el comando `node` con el argumento `mcp/index.mjs` y el directori
 de trabajo en la raíz del checkout; consultar [mcp/README.md](mcp/README.md) para
 ejemplos específicos del cliente. No incluir tokens en la configuración compartida.
 
-El worker MCP busca por defecto `.venv/bin/python`, por lo que el comando estándar
-del MCP **no es compatible todavía con el entorno virtual habitual de Windows**
-(`.venv/Scripts/python.exe`). La web no depende de ese worker. En Linux/macOS,
-si el índice está fuera de `data/earth/columns/`, configurar también
+El worker MCP espera por defecto el entorno `.venv` en la raíz: usa
+`.venv/Scripts/python.exe` en Windows y `.venv/bin/python` en Linux/macOS. Al
+crear el servidor mediante `createServer({ python: ... })` se puede indicar otro
+ejecutable explícitamente; esa opción tiene prioridad. La web no depende del
+worker. Si el índice está fuera de `data/earth/columns/`, configurar también
 `ARTEMIS_COLUMNS_DIR` con la carpeta de columnas para el fallback del worker;
 `GURVICH_COLUMNS_DIR` configura la API. El MCP dispone de criterios terrestres
 propios y no sustituye la etapa térmica lunar de la web.
 
 ## Datos fuera de Git y problemas frecuentes
 
-`data/raw/`, `data/earth/columns/`, `.venv/`, cachés y `output/` están ignorados.
-No subir HDF, IMG, TIFF, índices, cachés ni credenciales. Una carpeta alternativa
-como `NASA-Lunar-Studies/` **no está ignorada por regla general** en este checkout:
-revisar `git status` y evitar `git add -A` antes de compartir datos locales.
+`data/raw/`, `NASA-Lunar-Studies/`, `data/earth/columns/`, `.venv/`, cachés y
+`output/` están ignorados. No subir HDF, IMG, TIFF, índices, cachés ni credenciales;
+revisar `git status` antes de compartir cambios locales.
 
 - **API sin columnas:** copiar el índice y verificar `GURVICH_COLUMNS_DIR`,
   `manifest.json`, los nombres y tamaños de las columnas.

@@ -4,13 +4,21 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
 
 ## Instalación
 
-1. Extraer columnas (una vez por dataset):
+1. Preparar el índice terrestre y el entorno Python `.venv` en la raíz del
+   repositorio. Si el equipo comparte las columnas ya construidas, no hace falta
+   extraerlas nuevamente; ver el [README principal](../README.md#índice-terrestre-ya-construido).
+   Si se reconstruye a partir del parquet, el comando desde `backend/` es:
 
    ```bash
-   backend/.venv/bin/python -m app.cli.extract_earth_columns
+   ../.venv/bin/python -m app.cli.extract_earth_columns
    ```
 
-2. Registrar el server MCP.
+   En Windows/PowerShell usar `..\.venv\Scripts\python.exe` en lugar de
+   `../.venv/bin/python`. La extracción escribe las columnas de destino: no
+   ejecutarla sobre un índice que se quiera preservar.
+
+2. Instalar dependencias desde `mcp/` con `npm ci` (`npm.cmd ci` en PowerShell)
+   y registrar el server MCP.
 
    El server es MCP por stdio (`node mcp/index.mjs`). Cursor, Claude Code y OpenCode lo lanzan igual. Lo único de Cursor es `.cursor/mcp.json`.
 
@@ -56,9 +64,9 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
    }
    ```
 
-   Las tools y el worker de Python son los mismos. El aviso al mapa sigue siendo el browser contra el puerto `8787`, no el IDE. Hacen falta Node, el `.venv` del repo y `data/earth/columns/`.
+   Las tools y el worker de Python son los mismos. El aviso al mapa sigue siendo el browser contra el puerto `8787`, no el IDE. Hacen falta Node, el `.venv` del repo y el índice terrestre. El worker selecciona `.venv/Scripts/python.exe` en Windows y `.venv/bin/python` en Linux/macOS. Al crear el servidor mediante `createServer({ python: ... })` puede indicarse otro ejecutable explícitamente, con prioridad sobre el predeterminado.
 
-3. Opcional: `cd backend && make dev` deja la API en `http://127.0.0.1:8787` para que el mapa reciba eventos SSE y el worker evite cargar otra `EarthIndex`.
+3. Opcional: iniciar la API desde la raíz con `.venv/bin/python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8787` (en Windows, `.\.venv\Scripts\python.exe`), para que el mapa reciba eventos SSE y el worker evite cargar otra `EarthIndex`.
 
 ## Herramientas
 

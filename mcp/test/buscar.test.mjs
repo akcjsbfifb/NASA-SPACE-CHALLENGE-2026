@@ -1,12 +1,34 @@
 import assert from 'node:assert/strict';
 import process from 'node:process';
+import path from 'node:path';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/server';
-import { ArtemisSearchWorker, buscarWithWorker } from '../artemisWorker.mjs';
+import { ArtemisSearchWorker, buscarWithWorker, DEFAULT_PYTHON, REPO_ROOT, defaultPythonPath } from '../artemisWorker.mjs';
 import { buildBuscarPayload, createServer, summarizeBuscarResult } from '../index.mjs';
 
 const fakeWorkerScript = fileURLToPath(new URL('./fake_artemis_worker.mjs', import.meta.url));
+
+test('default Python follows the platform and explicit Python takes priority', () => {
+  assert.equal(defaultPythonPath('win32'), path.join(REPO_ROOT, '.venv', 'Scripts', 'python.exe'));
+  for (const platform of ['linux', 'darwin']) {
+    assert.equal(defaultPythonPath(platform), path.join(REPO_ROOT, '.venv', 'bin', 'python'));
+  }
+  assert.equal(DEFAULT_PYTHON, defaultPythonPath(process.platform));
+  const worker = new ArtemisSearchWorker({ python: 'explicit-python' });
+  assert.equal(worker.python, 'explicit-python');
+});
+
+test('default Python starts the real worker', { skip: !existsSync(DEFAULT_PYTHON) && 'root .venv Python is unavailable' }, async () => {
+  const worker = new ArtemisSearchWorker();
+  try {
+    const result = await worker.send(null);
+    assert.equal(result.error, 'request must be a JSON object');
+  } finally {
+    worker.stop();
+  }
+});
 
 function parseToolJson(result) {
   assert.equal(result.result.content[0].type, 'text');
