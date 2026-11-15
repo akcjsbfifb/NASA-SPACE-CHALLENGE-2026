@@ -13,6 +13,7 @@ import { SEARCH_API } from '../searchApi';
 import type { VariableInfo } from '../score';
 import type { Language } from '../i18n';
 import { extraCopy, extraValue } from '../data/earthMeasurements';
+import { lunarSearchCopy } from '../data/lunarSearchCopy';
 import type { AdditionalMeasurements } from '../data/earthMeasurements';
 import { SELECTED_COLOR, SELECTED_PIN_SIZE } from '../theme';
 
@@ -45,7 +46,11 @@ export type EarthAnalog = {
 	rock: string;
 	slope_deg: number;
 	scores?: Record<string, number>;
+	weighted_shares?: Record<string, number>;
+	effective_weights?: Record<string, number>;
 	coverage?: number;
+	coverage_requested?: number;
+	quality_warnings?: string[];
 	tmin_c?: number | null;
 	ice_thickness_m?: number | null;
 	measurements?: Record<string, { value: number | null; unit: string; available: boolean; status: string; reason: string | null; source: string | null; method: string | null }>;
@@ -62,7 +67,11 @@ export type EarthAnalogSet = {
 	points: EarthAnalog[];
 	variables_used?: VariableInfo[];
 	target?: Record<string, number | string | null>;
+	candidate_generation?: { scope: string; evaluated: number; minimum_coverage: number; limitation: string; variables: string[] };
 };
+
+type LunarCriterion = 'slope' | 'roughness' | 'tbol_modis' | 'treg_era5';
+const CRITERIA: LunarCriterion[] = ['slope', 'roughness', 'tbol_modis', 'treg_era5'];
 
 type MoonPageProps = {
 	precision: number;
@@ -77,15 +86,6 @@ type MoonPageProps = {
 function percentText(value: number | null) {
 	if (value === null) return '—';
 	return `${(value * 100).toFixed(1)}%`;
-}
-
-export function listPreview<T extends { closeness: number }>(items: T[], count = 6): T[] {
-	if (items.length <= count) return items;
-	const head = items.slice(0, count);
-	const percents = new Set(head.map((item) => Math.round(item.closeness * 100)));
-	if (percents.size > 1) return head;
-	const last = items.length - 1;
-	return Array.from({ length: count }, (_, index) => items[Math.round((index * last) / (count - 1))]);
 }
 
 type PickedPoint = {
@@ -127,6 +127,7 @@ function pinsFor(picked: PickedPoint | null): GlobeMarker[] {
 
 export default function MoonPage({ precision, language, onCompare }: MoonPageProps) {
 	const extras = extraCopy[language];
+	const searchCopy = lunarSearchCopy[language];
 	const globe = useRef<GlobeController>(null);
 	const request = useRef(0);
 	const analogRequest = useRef(0);
@@ -139,6 +140,10 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 	const [analogError, setAnalogError] = useState('');
 	const [analogState, setAnalogState] = useState<'idle' | 'loading' | 'ready'>('idle');
 	const [enrichment, setEnrichment] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
+	const [included, setIncluded] = useState<Record<LunarCriterion, boolean>>({ slope: true, roughness: true, tbol_modis: false, treg_era5: false });
+	const [weights, setWeights] = useState<Record<LunarCriterion, number>>({ slope: 1, roughness: 1, tbol_modis: 1, treg_era5: 1 });
+	const [minimumCoverage, setMinimumCoverage] = useState(1);
+	const [applied, setApplied] = useState({ included, weights, minimumCoverage });
 
 	useEffect(() => {
 		globe.current?.setPoints('landings', pointsFor(picked));
@@ -161,24 +166,30 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 	}, [picked]);
 
 	useEffect(() => {
-		if (!picked || sampleState !== 'ready' || !sample || sample.roughness === null) {
+		if (!picked || sampleState !== 'ready' || !sample) {
 			return;
 		}
 		const ticket = ++analogRequest.current;
 		const controller = new AbortController();
-		setAnalogs(null);
-		setAnalogError('');
-		setAnalogState('loading');
-		setEnrichment('idle');
-		const params = new URLSearchParams({
-			roughness: String(sample.roughness),
-			precision: String(precision),
-		});
-		if (sample.slope !== null) params.set('slope', String(sample.slope));
+		const params = new URLSearchParams({ precision: String(precision), min_coverage: String(applied.minimumCoverage), candidate_limit: '50' });
+		const targets: Record<LunarCriterion, number | null> = {
+			slope: sample.slope, roughness: sample.roughness,
+			tbol_modis: sample.measurements.bolometric_temperature?.available ? sample.measurements.bolometric_temperature.value : null,
+			treg_era5: sample.measurements.regolith_temperature?.available ? sample.measurements.regolith_temperature.value : null,
+		};
+		for (const name of CRITERIA) {
+			if (applied.included[name] && targets[name] !== null) {
+				params.set(name, String(targets[name]));
+				params.set(`w_${name}`, String(applied.weights[name]));
+			}
+		}
 		fetch(`${SEARCH_API}/search?${params}`, { signal: controller.signal })
 			.then(async (response) => {
 				const body = (await response.json()) as EarthAnalogSet & { error?: string };
-				if (!response.ok) throw new Error(body.error || 'la búsqueda falló');
+				if (!response.ok) {
+					if (body.error === 'unsupported_candidate_generation') throw new Error(({ es: 'Seleccioná pendiente o rugosidad con peso positivo para generar candidatos.', en: 'Select slope or roughness with a positive weight to generate candidates.', fr: 'Sélectionnez une pente ou une rugosité avec un poids positif pour générer des candidats.', it: 'Seleziona pendenza o rugosità con peso positivo per generare candidati.' })[language]);
+					throw new Error((body as EarthAnalogSet & { message?: string }).message || body.error || 'la búsqueda falló');
+				}
 				return body;
 			})
 			.then((body) => {
@@ -196,7 +207,13 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 					return response.json() as Promise<{ candidates: { lat: number; lon: number; additional_measurements: AdditionalMeasurements }[] }>;
 				}).then(data => {
 					if (ticket !== analogRequest.current) return;
-					setAnalogs(current => current ? { ...current, points: current.points.map((point, index) => ({ ...point, additional_measurements: data.candidates[index]?.additional_measurements })) } : current);
+					setAnalogs(current => current ? { ...current, points: current.points.map((point, index) => {
+						const additional = { ...data.candidates[index]?.additional_measurements };
+						for (const [key, value] of Object.entries(point.additional_measurements ?? {})) {
+							if (value.available && !additional[key]?.available) additional[key] = value;
+						}
+						return { ...point, additional_measurements: additional };
+					}) } : current);
 					setEnrichment('ready');
 				}).catch(() => {
 					if (ticket === analogRequest.current && !controller.signal.aborted) setEnrichment('failed');
@@ -215,7 +232,7 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 				setAnalogState('ready');
 			});
 		return () => controller.abort();
-	}, [picked, sample, sampleState, precision]);
+	}, [picked, sample, sampleState, precision, applied, language]);
 
 	function choose(next: PickedPoint) {
 		const ticket = ++request.current;
@@ -226,13 +243,13 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 		setSampleState('loading');
 		setAnalogs(null);
 		setAnalogError('');
-		setAnalogState('idle');
+		setAnalogState('loading');
 		globe.current?.flyTo({ lat: next.lat, lng: next.lng, altitude: 1.05 }, 900);
 		lookupLunarSample(next.siteId, next.lat, next.lng)
 			.then((found) => {
 				if (ticket !== request.current) return;
 				setSample(found);
-				setSampleState(found.roughness === null ? 'missing' : 'ready');
+				setSampleState(found.roughness === null && found.slope === null ? 'missing' : 'ready');
 			})
 			.catch((error: unknown) => {
 				if (ticket !== request.current) return;
@@ -300,6 +317,17 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 						)}
 						{sample && (
 							<>
+								<fieldset>
+									<legend>{searchCopy.criteria}</legend>
+									{CRITERIA.map(name => {
+										const labels: Record<LunarCriterion, string> = { slope: searchCopy.slope, roughness: searchCopy.roughness, tbol_modis: `TBOL / MODIS · ${searchCopy.approx}`, treg_era5: `TREG / ERA5-Land · ${searchCopy.indirect}` };
+										const available = name === 'slope' ? sample.slope !== null : name === 'roughness' ? sample.roughness !== null : name === 'tbol_modis' ? sample.measurements.bolometric_temperature?.available : sample.measurements.regolith_temperature?.available;
+										return <div key={name}><label><input type="checkbox" checked={included[name]} onChange={event => setIncluded(old => ({ ...old, [name]: event.target.checked }))} /> {labels[name]}{!available ? ` · ${searchCopy.missing}` : ''}</label> <input aria-label={`${searchCopy.weight} ${labels[name]}`} type="range" min="0" max="1" step="0.1" value={weights[name]} onChange={event => setWeights(old => ({ ...old, [name]: Number(event.target.value) }))} /> {weights[name]}</div>;
+									})}
+									<p>{searchCopy.context}</p>
+									<label>{searchCopy.coverage} <input type="number" min="1" max="4" value={minimumCoverage} onChange={event => setMinimumCoverage(Number(event.target.value))} /></label>
+									<button type="button" onClick={() => { setAnalogs(null); setAnalogError(''); setAnalogState('loading'); setEnrichment('idle'); setApplied({ included: { ...included }, weights: { ...weights }, minimumCoverage }); }}>{searchCopy.apply}</button>
+								</fieldset>
 								<dl className="cell-facts">
 									<div>
 										<dt>Elevación</dt>
@@ -326,13 +354,13 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 									})}
 								</dl>
 								<p className="muted">
-									El puntaje es relativo; pendiente y rugosidad son aproximaciones con diferencias de escala y método. Las demás mediciones son contexto.
+									{searchCopy.note}
 								</p>
-								{sample.roughness !== null && (
+								{(sample.roughness !== null || sample.slope !== null) && (
 									<>
 										<h4>Análogos en la Tierra</h4>
 										{analogState === 'loading' && (
-											<p className="muted">Buscando lugares con esta rugosidad…</p>
+											<p className="muted">{searchCopy.loading}</p>
 										)}
 										{analogError && <p className="muted">{analogError}</p>}
 										{analogs && (
@@ -340,8 +368,8 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 												<p className="muted">{extras.scope} {enrichment === 'loading' ? extras.loading : enrichment === 'failed' ? extras.failed : ''}</p>
 												<dl className="cell-facts">
 													<div>
-														<dt>Rugosidad usada</dt>
-														<dd>{sample.roughness.toFixed(3)} m</dd>
+																<dt>Variables usadas</dt>
+																<dd>{analogs.variables_used?.map(v => v.id).join(', ') ?? '—'}</dd>
 													</div>
 													<div>
 														<dt>Lugares</dt>
@@ -356,6 +384,7 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 														</dd>
 													</div>
 												</dl>
+																{analogs.candidate_generation && <p className="muted">{searchCopy.preselect} {analogs.candidate_generation.variables?.join(', ')} · {analogs.candidate_generation.evaluated}</p>}
 												<div className="result-list">
 														{analogs.points.map((point) => (
 														<button
@@ -367,13 +396,16 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 															}}
 														>
 															{percentText(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
+																	<br />Cobertura: {point.coverage ?? 0}/{point.coverage_requested ?? analogs.variables_used?.length ?? 0}. {point.quality_warnings?.join(', ')}
+																			<br />Participación ponderada: {Object.entries(point.weighted_shares ?? {}).map(([name, share]) => `${name} ${percentText(share)}`).join(' · ') || 'no disponible'}.
+																			{point.effective_weights && <><br />Pesos efectivos: {Object.entries(point.effective_weights).map(([name, weight]) => `${name} ${percentText(weight)}`).join(' · ')}.</>}
 																	<br />Pendiente: Luna {sample.slope ?? 'sin dato'}° · Tierra {point.measurements?.slope?.value ?? 'sin dato'}° · {point.scores?.slope === undefined ? 'sin puntaje' : percentText(point.scores.slope)} · peso {analogs.variables_used?.find(v => v.id === 'slope')?.weight ?? 'no utilizado'}
 																	<br />Rugosidad: Luna {sample.roughness} m · Tierra {point.measurements?.roughness?.value ?? 'sin dato'} m · {point.scores?.roughness === undefined ? 'sin puntaje' : percentText(point.scores.roughness)} · peso {analogs.variables_used?.find(v => v.id === 'roughness')?.weight ?? 'no utilizado'}
 																	<br />Tierra: {point.measurements?.slope?.source ?? 'fuente no disponible'}; Luna: LOLA. Comparaciones aproximadas.
 																	<br />Elevación LOLA: Luna {sample.elevation ?? 'sin dato'} m · Tierra ETOPO: {point.measurements?.elevation?.value ?? 'sin dato'} m · contextual.
 																	<br />{extras.soil}: {extras.lunar} RA {sample.measurements.rock_abundance?.value ?? extras.pending} · {extras.earth} {extraValue(point.additional_measurements?.coarse_fragments_0_to_5cm, extras.pending)} · {extras.context}, {extras.noScore}.
-																	<br />{extras.modis}: {extras.lunar} TBOL {sample.measurements.bolometric_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.surface_temperature_modis, extras.pending)} · {extras.approx}, {extras.noScore}.
-																	<br />{extras.era}: {extras.lunar} TREG {sample.measurements.regolith_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.soil_temperature_0_to_7cm, extras.pending)} · {extras.context}, {extras.noScore}.
+																	<br />{extras.modis}: {extras.lunar} TBOL {sample.measurements.bolometric_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.surface_temperature_modis, extras.pending)} · {extras.approx}, {point.scores?.tbol_modis === undefined ? extras.noScore : `${percentText(point.scores.tbol_modis)} · peso ${analogs.variables_used?.find(v => v.id === 'tbol_modis')?.weight}` }.
+																	<br />{extras.era}: {extras.lunar} TREG {sample.measurements.regolith_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.soil_temperature_0_to_7cm, extras.pending)} · {extras.context}, {point.scores?.treg_era5 === undefined ? extras.noScore : `${percentText(point.scores.treg_era5)} · peso ${analogs.variables_used?.find(v => v.id === 'treg_era5')?.weight}` }.
 																	<br />Hidrógeno Lunar Prospector: Luna {sample.measurements.hydrogen_abundance_ppm?.value ?? 'sin dato'} ppm · Tierra: sin equivalente · contextual.
 																	<br />Contexto terrestre: mínima del aire del mes más frío WorldClim {point.tmin_c ?? 'sin dato'} °C · hielo ETOPO {point.ice_thickness_m ?? 'sin dato'} m · litología GLiM {point.rock}.
 														</button>
@@ -387,9 +419,9 @@ export default function MoonPage({ precision, language, onCompare }: MoonPagePro
 						)}
 						<button
 							type="button"
-							disabled={sampleState !== 'ready'}
+							disabled={sampleState !== 'ready' || !analogs || analogState !== 'ready'}
 							onClick={() => {
-								if (!picked || !sample || sample.roughness === null) return;
+								if (!picked || !sample || (sample.roughness === null && sample.slope === null)) return;
 								onCompare({ ...picked, sample }, analogs, analogs?.points[0]);
 							}}
 						>

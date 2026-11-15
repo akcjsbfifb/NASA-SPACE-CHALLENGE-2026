@@ -24,6 +24,14 @@ from test_search_score_buffers import _reference_scores, _shortlist_all_indices 
 ALL_WEIGHTS = ("slope", "roughness", "temperature", "ice", "rock")
 
 
+def test_single_fractional_weight_does_not_reduce_a_perfect_match(tiny_index):
+    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
+        result = tiny_index.search({"slope": 8.0}, weights={"slope": 0.2})
+    exact = next(point for point in result["points"] if point["row_index"] == 1)
+    assert exact["scores"]["slope"] == 1.0
+    assert exact["closeness"] == 1.0
+
+
 def _two_cell_parquet(path: Path) -> None:
     """Cell A is close in slope and far in roughness; cell B is the other way."""
     data = {

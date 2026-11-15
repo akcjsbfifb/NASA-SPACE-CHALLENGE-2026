@@ -9,6 +9,7 @@ import { formatDelta, formatValue, percent, truncated } from '../score';
 import type { ActivityPreset, Grade, VariableInfo } from '../score';
 import type { LunarSelection } from './MoonPage';
 import { extraCopy, extraValue } from '../data/earthMeasurements';
+import { lunarSearchCopy } from '../data/lunarSearchCopy';
 import type { AdditionalMeasurements } from '../data/earthMeasurements';
 
 export type SelectedPlace = {
@@ -18,12 +19,16 @@ export type SelectedPlace = {
 	coverage?: number;
 	worst?: number;
 	scores?: Record<string, number>;
+	weighted_shares?: Record<string, number>;
+	effective_weights?: Record<string, number>;
 	grades?: Record<string, Grade>;
 	grade?: Grade;
 	deltas?: Record<string, number>;
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
 	additional_measurements?: AdditionalMeasurements;
+	measurements?: Record<string, { value: number | null; source: string | null; unit: string; status: string; reason: string | null }>;
+	quality_warnings?: string[];
 	coordinates_original?: { lat: number; lon: number };
 };
 
@@ -56,6 +61,8 @@ function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
 		temperature: copy.nightTemperature,
 		ice: copy.ice,
 		rock: copy.rock,
+		tbol_modis: 'TBOL / MODIS',
+		treg_era5: 'TREG / ERA5-Land',
 	};
 	return known[id] ?? id;
 }
@@ -99,6 +106,7 @@ function breakdownSlices(
 	variables: VariableInfo[],
 	scores: Record<string, number>,
 	copy: ReturnType<typeof getCopy>,
+	weightedShares?: Record<string, number>,
 ): BreakdownSlice[] {
 	const active = variables.filter((variable) => typeof scores[variable.id] === 'number');
 	const scoreSum = active.reduce((sum, variable) => sum + scores[variable.id]!, 0);
@@ -106,7 +114,7 @@ function breakdownSlices(
 	let cursor = 0;
 	return active.map((variable) => {
 		const score = scores[variable.id]!;
-		const share = score / scoreSum;
+		const share = weightedShares?.[variable.id] ?? score / scoreSum;
 		const span = share * 360;
 		const startDeg = cursor;
 		const endDeg = cursor + span;
@@ -151,12 +159,20 @@ function formatMeters(value: number | null, noData: string, digits = 0) {
 	return `${value.toFixed(digits)} m`;
 }
 
-export default function PointPanel({ place, lunar, onClose, language, variables, activities }: PointPanelProps) {
+export default function PointPanel(props: PointPanelProps) {
+	const key = props.place ? `${props.place.lat},${props.place.lng}` : 'none';
+	return <PointPanelContent key={key} {...props} />;
+}
+
+function PointPanelContent({ place, lunar, onClose, language, variables, activities }: PointPanelProps) {
 	const copy = getCopy(language);
 	const extra = extraCopy[language];
 	const [extraResult, setExtraResult] = useState<{ key: string; values: AdditionalMeasurements | null; failed: boolean } | null>(null);
 	const extraKey = place ? `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}` : '';
-	const additional = place?.additional_measurements ?? (extraResult?.key === extraKey ? extraResult.values : null);
+	const enriched = extraResult?.key === extraKey ? extraResult.values : null;
+	const additional = enriched ? { ...place?.additional_measurements, ...enriched,
+		...Object.fromEntries(Object.entries(place?.additional_measurements ?? {}).filter(([key, value]) => value.available && !enriched[key]?.available)),
+	} : place?.additional_measurements ?? null;
 	const extraStatus = additional ? 'ready' : extraResult?.key === extraKey && extraResult.failed ? 'failed' : 'loading';
 	const [cell, setCell] = useState<EarthCell | null>(null);
 	const [cellError, setCellError] = useState(false);
@@ -166,7 +182,9 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 	const [where, setWhere] = useState<PlaceInfo | null | undefined>(undefined);
 
 	useEffect(() => {
-		if (!place || !lunar || place.additional_measurements) return;
+		if (!place || !lunar) return;
+		const existing = place.additional_measurements;
+		if (existing && !Object.values(existing).some(item => item.reason === 'source_not_selected')) return;
 		const controller = new AbortController();
 		const key = `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}`;
 		const load = async () => {
@@ -192,12 +210,8 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 	// Continent and country come from a bundled Natural Earth extract: no key,
 	// no quota, and it still answers over Antarctica and ice shelves.
 	useEffect(() => {
-		if (!place) {
-			setWhere(undefined);
-			return;
-		}
+		if (!place) return;
 		let alive = true;
-		setWhere(undefined);
 		loadCountries()
 			.then((features) => {
 				if (alive) setWhere(locate(features, place.lat, place.lng));
@@ -213,9 +227,6 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 	useEffect(() => {
 		if (!place) return;
 		const controller = new AbortController();
-		setCell(null);
-		setCellError(false);
-		setImageError(false);
 		const params = new URLSearchParams({
 			lat: String(place.lat),
 			lon: String(place.lng),
@@ -237,9 +248,6 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 		if (!place) return;
 		const controller = new AbortController();
 		let objectUrl = '';
-		setSceneUrl('');
-		setSceneSource('');
-		setImageError(false);
 		const params = new URLSearchParams({
 			lat: String(place.lat),
 			lon: String(place.lng),
@@ -328,7 +336,7 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 									<dt>{copy.closeness}</dt>
 									<dd>
 										{place.grade && <span className={`grade grade-${place.grade}`}>{place.grade}</span>}
-										{percent(place.closeness, 2)}%
+										{lunar ? (place.closeness * 100).toFixed(2) : percent(place.closeness, 2)}%
 									</dd>
 								</div>
 								{variables.length > 0 && (
@@ -373,8 +381,8 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 					{lunar && <section className="compare">
 						<h4>{extra.title}</h4>
 						<p>{extra.scope} {extraStatus === 'loading' ? extra.loading : extraStatus === 'failed' ? extra.failed : ''}</p>
-						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending)} · {extra.approx}, {extra.noScore}.</p>
-						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending)} · {extra.context}, {extra.noScore}.</p>
+						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending)} · {extra.approx}, {place.scores?.tbol_modis === undefined ? extra.noScore : `${(place.scores.tbol_modis * 100).toFixed(1)}%`}.</p>
+						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending)} · {extra.context}, {place.scores?.treg_era5 === undefined ? extra.noScore : `${(place.scores.treg_era5 * 100).toFixed(1)}%`}.</p>
 						<p>{extra.soil}: {extra.lunar} RA {lunar.sample.measurements.rock_abundance?.value ?? extra.pending} · {extra.earth} {extraValue(additional?.coarse_fragments_0_to_5cm, extra.pending)} · {extra.context}, {extra.noScore}.</p>
 						<p>Lunar Prospector H: {lunar.sample.measurements.hydrogen_abundance_ppm?.value ?? extra.pending} ppm · {extra.noScore}.</p>
 					</section>}
@@ -388,7 +396,7 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 								<span>{copy.differsBy}</span>
 							</div>
 							{variables.map((variable) => {
-								const earth = cell ? cellValue(cell, variable.id) : null;
+								const earth = variable.id === 'tbol_modis' ? additional?.surface_temperature_modis?.value ?? null : variable.id === 'treg_era5' ? additional?.soil_temperature_0_to_7cm?.value ?? null : place.measurements?.[variable.id]?.value ?? (cell ? cellValue(cell, variable.id) : null);
 								const delta = place.deltas?.[variable.id];
 								return (
 									<div className="compare-row" key={variable.id}>
@@ -397,9 +405,10 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 											{formatValue(place.target?.[variable.id], variable.unit)}
 										</span>
 										<span className="compare-earth">
-											{cell
+											{cell || place.measurements?.[variable.id] || variable.id === 'tbol_modis' || variable.id === 'treg_era5'
 												? formatValue(earth, variable.unit) || copy.noData
 												: '…'}
+										{lunar && typeof earth === 'number' && <small> ({earth} {variable.unit ?? ''})</small>}
 										</span>
 										<span className="compare-differs">
 											{typeof delta === 'number'
@@ -414,10 +423,12 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 						</section>
 					)}
 					{place.scores && Object.keys(place.scores).length > 0 && (() => {
-						const slices = breakdownSlices(variables, place.scores, copy);
+						const slices = breakdownSlices(variables, place.scores, copy, place.weighted_shares);
 						return (
 						<section className="breakdown">
 							<h4>{copy.breakdown}</h4>
+							{lunar && <p className="muted">{lunarSearchCopy[language].weight}: {variables.map(v => `${variableLabel(copy, v.id)} ${v.weight ?? '—'}`).join(' · ')}</p>}
+							{place.effective_weights && <p className="muted">{lunarSearchCopy[language].effective}: {Object.entries(place.effective_weights).map(([id, weight]) => `${variableLabel(copy, id)} ${(weight * 100).toFixed(1)}%`).join(' · ')}</p>}
 							{slices.length > 0 && (
 								<div className="breakdown-pie">
 									<svg className="breakdown-pie-chart" viewBox="0 0 100 100" role="img" aria-hidden>
@@ -499,7 +510,8 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 					{cell && cell.distance_km > 1.5 && (
 						<p className="muted">{copy.nearestCellDistance(cell.distance_km.toFixed(1))}</p>
 					)}
-					<p className="muted limitations">{copy.limitations}</p>
+					<p className="muted limitations">{lunar ? lunarSearchCopy[language].limitations : copy.limitations}</p>
+					{place.quality_warnings?.map(warning => <p className="muted warn" key={warning}>{warning}</p>)}
 				</>
 			)}
 		</aside>

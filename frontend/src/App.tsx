@@ -70,6 +70,8 @@ type SearchSummary =
 	| { type: 'failed' };
 
 type SearchPoint = ScoreDetail & {
+	weighted_shares?: Record<string, number>;
+	effective_weights?: Record<string, number>;
 	lat: number;
 	lon: number;
 	rock: string;
@@ -79,6 +81,8 @@ type SearchPoint = ScoreDetail & {
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
 	additional_measurements?: AdditionalMeasurements;
+	measurements?: EarthAnalog['measurements'];
+	quality_warnings?: string[];
 	coordinates_original?: { lat: number; lon: number };
 };
 
@@ -129,9 +133,14 @@ function App() {
 	const globe = useRef<GlobeController>(null);
 
 	const [page, setPage] = useState<'moon' | 'earth'>(pageFromHash);
-	const [language, setLanguage] = useState<Language>('es');
-	const [audience, setAudience] = useState<Audience>('profesional');
-	const [preferenceReady, setPreferenceReady] = useState(false);
+	const [language, setLanguage] = useState<Language>(() => {
+		const saved = localStorage.getItem('artemis.language');
+		return saved && isLanguage(saved) ? saved : 'es';
+	});
+	const [audience, setAudience] = useState<Audience>(() => {
+		const saved = localStorage.getItem('artemis.audience');
+		return saved && isAudience(saved) ? saved : 'profesional';
+	});
 	const copy = getCopy(language);
 	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
 
@@ -174,14 +183,6 @@ function App() {
 		document.title = copy.pageTitle;
 	}, [copy.pageTitle, language]);
 	useEffect(() => {
-		const storedLanguage = localStorage.getItem('artemis.language');
-		const storedAudience = localStorage.getItem('artemis.audience');
-		if (storedLanguage && isLanguage(storedLanguage)) setLanguage(storedLanguage);
-		if (storedAudience && isAudience(storedAudience)) setAudience(storedAudience);
-		setPreferenceReady(true);
-	}, []);
-	useEffect(() => {
-		if (!preferenceReady) return;
 		localStorage.setItem('artemis.language', language);
 		localStorage.setItem('artemis.audience', audience);
 		fetch(`${SEARCH_API}/audience`, {
@@ -189,7 +190,7 @@ function App() {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ audience, language }),
 		}).catch(() => {});
-	}, [preferenceReady, audience, language]);
+	}, [audience, language]);
 
 	// The catalog is the only source of activity labels: no `activity.<id>` keys.
 	useEffect(() => {
@@ -240,12 +241,16 @@ function App() {
 					coverage: point.coverage,
 					worst: point.worst,
 					scores: point.scores,
+					weighted_shares: point.weighted_shares,
+					effective_weights: point.effective_weights,
 					grades: point.grades,
 					grade: point.grade,
 					deltas: point.deltas,
 					target: point.target,
 					activity: point.activity ?? null,
 					additional_measurements: point.additional_measurements,
+					measurements: point.measurements,
+					quality_warnings: point.quality_warnings,
 					coordinates_original: point.coordinates_original,
 				}
 				: { lat, lng },
@@ -337,7 +342,7 @@ function App() {
 	}
 
 	const applySearchResultRef = useRef(applySearchResult);
-	applySearchResultRef.current = applySearchResult;
+	useEffect(() => { applySearchResultRef.current = applySearchResult; });
 
 	useEffect(() => {
 		return subscribeSearchEvents((body) => {
@@ -388,29 +393,27 @@ function App() {
 		analogs: EarthAnalogSet | null,
 		chosen?: EarthAnalog,
 	) {
-		if (lunar.sample.roughness === null) return;
+		if (lunar.sample.roughness === null && lunar.sample.slope === null) return;
 		setLunarOrigin(lunar);
 		setSlope(lunar.sample.slope === null ? '' : String(lunar.sample.slope));
 		setTmin('');
 		setIce('');
 		setRock('');
-		setRoughness(String(lunar.sample.roughness));
+		setRoughness(lunar.sample.roughness === null ? '' : String(lunar.sample.roughness));
 		setIncluded(ROUGHNESS_ONLY_INCLUDED);
 		// The analog the user clicked in the Moon panel keeps its red marker on
 		// Earth. The footer button has no specific row, so it falls back to the
 		// closest point of the set.
 		const picked = chosen ?? analogs?.points[0];
-		setSelection(picked ? { lat: picked.lat, lng: picked.lon, closeness: picked.closeness, coverage: picked.coverage, scores: picked.scores, deltas: picked.deltas, target: analogs?.target, additional_measurements: picked.additional_measurements, coordinates_original: picked.coordinates_original } : null);
+		setSelection(picked ? { lat: picked.lat, lng: picked.lon, closeness: picked.closeness, coverage: picked.coverage, scores: picked.scores, weighted_shares: picked.weighted_shares, effective_weights: picked.effective_weights, deltas: picked.deltas, target: analogs?.target, measurements: picked.measurements, quality_warnings: picked.quality_warnings, additional_measurements: picked.additional_measurements, coordinates_original: picked.coordinates_original } : null);
 		setLocation(picked ? { lat: picked.lat, lng: picked.lon, altitude: 0 } : null);
 		openPage('earth');
 		if (analogs) {
 			applySearchResult(analogs);
 			return;
 		}
-		const params = new URLSearchParams({
-			roughness: String(lunar.sample.roughness),
-			precision: String(precision),
-		});
+		const params = new URLSearchParams({ precision: String(precision) });
+		if (lunar.sample.roughness !== null) params.set('roughness', String(lunar.sample.roughness));
 		if (lunar.sample.slope !== null) params.set('slope', String(lunar.sample.slope));
 		setBusy(true);
 		setSummary({ type: 'searching' });
@@ -502,6 +505,7 @@ function App() {
 
 		<aside className="sidebar">
 		<section className="sidebar-section">
+		{!lunarOrigin && <>
 		<h4>{copy.objective}</h4>
 		<p className="muted">{copy.objectiveDescription}</p>
 
@@ -634,6 +638,9 @@ function App() {
 			<button type="button" onClick={search} disabled={busy || !anyIncluded(included)}>
 			{busy ? copy.searching : copy.searchAnalogs}
 			</button>
+		</>}
+		{lunarOrigin && <p className="muted">{({ es: 'Resultados de la búsqueda lunar. Para cambiar criterios y pesos, volvé a la Luna.', en: 'Lunar search results. Return to the Moon to change criteria and weights.', fr: 'Résultats de la recherche lunaire. Revenez à la Lune pour modifier les critères et les poids.', it: 'Risultati della ricerca lunare. Torna alla Luna per modificare criteri e pesi.' })[language]}</p>}
+		{lunarOrigin && <button type="button" onClick={() => setLunarOrigin(null)}>{({ es: 'Nueva búsqueda terrestre', en: 'New Earth search', fr: 'Nouvelle recherche terrestre', it: 'Nuova ricerca terrestre' })[language]}</button>}
 			<p className="muted search-summary">{summaryText}</p>
 			<div className="result-list">
 				{points.slice(0, 6).map((point) => {

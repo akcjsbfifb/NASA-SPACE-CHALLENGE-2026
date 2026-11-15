@@ -1,7 +1,6 @@
 # Lectores terrestres independientes
 
-Estos lectores enriquecen una lista ya seleccionada; no modifican el buscador,
-las puntuaciones ni sus pesos. Las entradas originales y cachés deben quedar
+Estos lectores enriquecen una lista ya seleccionada. Las entradas originales y cachés deben quedar
 en `data/raw/earth/`, ignorado por Git. Se necesitan NumPy, Rasterio y
 `pyhdf==0.11.7` (`backend/requirements-earth-extras.txt`). Desde la raíz:
 
@@ -46,9 +45,49 @@ periodo reproducible de prueba; evita consultas concurrentes y responde sin
 incluir la serie horaria completa, que queda en la caché. La interfaz solicita
 enriquecimiento para los primeros 50 resultados después de mostrar el ranking;
 los demás aparecen como no procesados. El panel seleccionado puede solicitar
-su propia coordenada. Ninguna fuente adicional recibe puntuación o peso.
-La rama remota `artemis` de Nico contiene cambios en `search.py`,
-`PointPanel.tsx` y contratos MCP; se requiere revisión conjunta antes del merge.
+su propia coordenada. El endpoint `/enrich` conserva las puntuaciones recibidas.
+
+## Comparación térmica exploratoria
+
+La rugosidad conserva la función existente `exp(-abs(R_tierra-R_luna)/s)`,
+con `s = max(0.25 m, 1.6666666666666667 * abs(R_luna))`, según
+`data/earth/analogs.json`. Produce un índice entre 0 y 1; los valores originales
+siguen en metros y la ausencia no recibe puntaje. LOLA LDRM y la rugosidad de
+ETOPO tienen definiciones y escalas diferentes: el índice no las equipara.
+
+Cuando se elige TBOL/MODIS o TREG/ERA5, `/search` calcula para cada pareja
+válida `min(T_lunar_K, T_terrestre_K) / max(T_lunar_K, T_terrestre_K)`.
+El cociente de temperaturas absolutas está entre 0 y 1 y equivale a uno menos
+la diferencia absoluta dividida por la mayor temperatura. No tiene parámetro
+de escala ajustable: por ejemplo, con referencia 100 K, valores de 100, 200,
+300 y 400 K producen 1, 0,5, 0,333 y 0,25. Es un índice relativo exploratorio,
+no una calibración ni equivalencia física entre productos, profundidades,
+horarios o períodos. Los valores originales, control de calidad y enero de 2025
+se conservan. No representa una climatología anual.
+
+La búsqueda calcula primero el ranking existente por pendiente y/o rugosidad,
+extrae un máximo de 50 candidatos y sólo entonces incorpora temperaturas y
+reordena mediante el promedio de puntuaciones disponibles ponderado por los
+pesos elegidos. La cobertura mínima se puede elegir sin penalización oculta.
+El resultado no es un óptimo global multivariable: el filtro geométrico puede
+excluir otras regiones. Una búsqueda sólo térmica aún no genera candidatos y
+responde con un error explícito. Datos ausentes no se convierten en cero.
+
+Diviner RA mide fracción superficial de rocas y SoilGrids cfvo fracción
+volumétrica de fragmentos: no hay una conversión validada entre ambas. Se
+mantienen como contexto sin porcentaje hasta aprobar y validar un proxy.
+
+Ejemplo desde PowerShell con el backend iniciado y el índice externo configurado:
+
+```powershell
+Invoke-RestMethod 'http://127.0.0.1:8787/search?slope=1&roughness=0.35&w_slope=0.5&w_roughness=1&tbol_modis=102&w_tbol_modis=0.7&min_coverage=3'
+```
+
+`min_coverage=3` exige las tres puntuaciones; el valor predeterminado es 1.
+Para ERA5 se usan `treg_era5` y `w_treg_era5`. Los pesos válidos son 0 a 1;
+un peso cero excluye la variable. La media usa la suma real de los pesos
+de las mediciones disponibles. Esta corrección también afecta búsquedas
+geométricas con pesos cuya suma sea menor que uno; coordinarla con Nico.
 
 ## Revisión de pendiente
 
