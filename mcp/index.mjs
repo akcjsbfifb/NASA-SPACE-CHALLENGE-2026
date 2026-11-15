@@ -235,6 +235,8 @@ const BUSCAR_SUMMARY_KEYS = [
   'loosest',
   'temperature_mode',
   'variables',
+  'activity',
+  'weights',
   'frontend_error',
   'shortlist_error',
 ];
