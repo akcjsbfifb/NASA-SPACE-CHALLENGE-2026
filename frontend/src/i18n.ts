@@ -10,6 +10,19 @@ type TranslationStrings = {
 	nightTemperature: string;
 	ice: string;
 	rock: string;
+	weight: string;
+	activityLabel: string;
+	differsBy: string;
+	compare: string;
+	reference: string;
+	earthColumn: string;
+	matchVery: string;
+	matchClose: string;
+	matchBarely: string;
+	scoreHigh: (name: string) => string;
+	scoreMid: (name: string) => string;
+	scoreLow: (name: string) => string;
+	limitations: string;
 	precision: string;
 	morePlaces: string;
 	morePrecise: string;
@@ -44,7 +57,6 @@ type TranslationStrings = {
 	coverageOf: (available: string, total: string) => string;
 	worstVariable: string;
 	breakdown: string;
-	tierNote: string;
 	unalikeWarning: string;
 	continent: string;
 	country: string;
@@ -71,6 +83,19 @@ const translations = {
 		nightTemperature: 'Temperatura nocturna',
 		ice: 'Hielo',
 		rock: 'Roca',
+		weight: 'Peso',
+		activityLabel: 'Actividad',
+		differsBy: 'Difiere en',
+		compare: 'Referencia y Tierra',
+		reference: 'Referencia',
+		earthColumn: 'Tierra',
+		matchVery: 'muy parecido',
+		matchClose: 'parecido',
+		matchBarely: 'apenas entra',
+		scoreHigh: (name: string) => `Se parece en ${name}.`,
+		scoreMid: (name: string) => `Se parece a medias en ${name}.`,
+		scoreLow: (name: string) => `No se parece en ${name}.`,
+		limitations: 'Este porcentaje solo compara las variables de los datasets que entraron en la búsqueda: pendiente, rugosidad, temperatura del mes más frío, espesor de hielo y tipo de roca. No incluye gravedad, atmósfera, vacío ni radiación. Ningún lugar de la Tierra es igual a la Luna. El número es tentativo.',
 		precision: 'Precisión',
 		morePlaces: 'más lugares',
 		morePrecise: 'más precisos',
@@ -106,7 +131,6 @@ const translations = {
 		coverageOf: (available: string, total: string) => `${available} de ${total} variables`,
 		worstVariable: 'Peor variable',
 		breakdown: 'Desglose',
-		tierNote: 'A comparable · B proxy · C sin equivalencia validada',
 		unalikeWarning: 'Este promedio incluye variables sin equivalencia terrestre validada.',
 		continent: 'Continente',
 		country: 'País',
@@ -155,6 +179,19 @@ const translations = {
 		nightTemperature: 'Nighttime temperature',
 		ice: 'Ice',
 		rock: 'Rock',
+		weight: 'Weight',
+		activityLabel: 'Activity',
+		differsBy: 'Differs by',
+		compare: 'Reference and Earth',
+		reference: 'Reference',
+		earthColumn: 'Earth',
+		matchVery: 'very close',
+		matchClose: 'close',
+		matchBarely: 'barely in',
+		scoreHigh: (name: string) => `Close on ${name}.`,
+		scoreMid: (name: string) => `Only partly close on ${name}.`,
+		scoreLow: (name: string) => `Not close on ${name}.`,
+		limitations: 'This percentage only compares the dataset variables included in the search: slope, roughness, coldest-month temperature, ice thickness, and rock type. It does not include gravity, atmosphere, vacuum, or radiation. No place on Earth matches the Moon. The number is tentative.',
 		precision: 'Precision',
 		morePlaces: 'more places',
 		morePrecise: 'more precise',
@@ -190,7 +227,6 @@ const translations = {
 		coverageOf: (available: string, total: string) => `${available} of ${total} variables`,
 		worstVariable: 'Worst variable',
 		breakdown: 'Breakdown',
-		tierNote: 'A comparable · B proxy · C no validated equivalent',
 		unalikeWarning: 'This average includes variables without a validated terrestrial equivalent.',
 		continent: 'Continent',
 		country: 'Country',
@@ -239,6 +275,19 @@ const translations = {
 		nightTemperature: 'Température nocturne',
 		ice: 'Glace',
 		rock: 'Roche',
+		weight: 'Poids',
+		activityLabel: 'Activité',
+		differsBy: 'Diffère de',
+		compare: 'Référence et Terre',
+		reference: 'Référence',
+		earthColumn: 'Terre',
+		matchVery: 'très proche',
+		matchClose: 'proche',
+		matchBarely: 'tout juste',
+		scoreHigh: (name: string) => `Proche pour ${name}.`,
+		scoreMid: (name: string) => `Proche en partie pour ${name}.`,
+		scoreLow: (name: string) => `Pas proche pour ${name}.`,
+		limitations: `Ce pourcentage ne compare que les variables des jeux de données incluses dans la recherche : pente, rugosité, température du mois le plus froid, épaisseur de glace et type de roche. Il n'inclut ni la gravité, ni l'atmosphère, ni le vide, ni le rayonnement. Aucun lieu sur Terre n'égale la Lune. Le nombre est indicatif.`,
 		precision: 'Précision',
 		morePlaces: 'plus de lieux',
 		morePrecise: 'plus précis',
@@ -274,7 +323,6 @@ const translations = {
 		coverageOf: (available: string, total: string) => `${available} sur ${total} variables`,
 		worstVariable: 'Pire variable',
 		breakdown: 'Détail',
-		tierNote: 'A comparable · B proxy · C sans équivalent validé',
 		unalikeWarning: 'Cette moyenne inclut des variables sans équivalent terrestre validé.',
 		continent: 'Continent',
 		country: 'Pays',
@@ -323,6 +371,19 @@ const translations = {
 		nightTemperature: 'Temperatura notturna',
 		ice: 'Ghiaccio',
 		rock: 'Roccia',
+		weight: 'Peso',
+		activityLabel: 'Attività',
+		differsBy: 'Differisce di',
+		compare: 'Riferimento e Terra',
+		reference: 'Riferimento',
+		earthColumn: 'Terra',
+		matchVery: 'molto simile',
+		matchClose: 'simile',
+		matchBarely: 'appena dentro',
+		scoreHigh: (name: string) => `Simile per ${name}.`,
+		scoreMid: (name: string) => `Simile solo in parte per ${name}.`,
+		scoreLow: (name: string) => `Non simile per ${name}.`,
+		limitations: 'Questa percentuale confronta solo le variabili dei dataset entrate nella ricerca: pendenza, rugosità, temperatura del mese più freddo, spessore del ghiaccio e tipo di roccia. Non include gravità, atmosfera, vuoto né radiazione. Nessun luogo sulla Terra è uguale alla Luna. Il numero è indicativo.',
 		precision: 'Precisione',
 		morePlaces: 'più luoghi',
 		morePrecise: 'più precisi',
@@ -358,7 +419,6 @@ const translations = {
 		coverageOf: (available: string, total: string) => `${available} di ${total} variabili`,
 		worstVariable: 'Variabile peggiore',
 		breakdown: 'Dettaglio',
-		tierNote: 'A comparabile · B proxy · C senza equivalente validato',
 		unalikeWarning: 'Questa media include variabili senza equivalente terrestre validato.',
 		continent: 'Continente',
 		country: 'Paese',

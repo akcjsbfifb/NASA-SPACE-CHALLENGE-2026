@@ -14,6 +14,22 @@ export type VariableInfo = {
 	unit: string | null;
 };
 
+/** How close a point is, as the server decides it. The UI only paints it. */
+export type MatchLevel = 'very' | 'close' | 'barely';
+
+/** Letter for a percentage: A 90+, B 80+, C 70+, D 60+, F below. */
+export type Grade = 'A' | 'B' | 'C' | 'D' | 'F';
+
+/** One entry of `GET /activities`: weights and search values of a preset. */
+export type ActivityPreset = {
+	id: string;
+	weights: Record<string, number>;
+	search: Record<string, number | string | null>;
+	measured: string[];
+	serves: Record<string, string>;
+	source: string;
+};
+
 export type ScoreDetail = {
 	closeness: number;
 	coverage?: number;
@@ -37,9 +53,28 @@ export function percent(value: number, decimals: number): string {
 }
 
 export function formatDelta(value: number, unit: string | null): string {
+	const size = Math.abs(value);
+	if (unit === 'deg') return `${value.toFixed(2)}°`;
+	// A difference that rounds to 0.0 hides why a score is not 100%.
+	if (unit === 'C') return `${value.toFixed(size > 0 && size < 0.1 ? 2 : 1)} °C`;
+	if (unit === 'm') {
+		if (size > 0 && size < 0.001) return `${value.toFixed(4)} m`;
+		return value >= 10 ? `${value.toFixed(0)} m` : `${value.toFixed(3)} m`;
+	}
+	return value.toFixed(2);
+}
+
+/**
+ * The same units as `formatDelta`, for values that are shown, not subtracted:
+ * a target may be a rock code and a cell may have no value at all.
+ */
+export function formatValue(value: number | string | null | undefined, unit: string | null): string {
+	if (value === null || value === undefined) return '';
+	if (typeof value === 'string') return value;
 	if (unit === 'deg') return `${value.toFixed(2)}°`;
 	if (unit === 'C') return `${value.toFixed(1)} °C`;
 	if (unit === 'm') return value >= 10 ? `${value.toFixed(0)} m` : `${value.toFixed(3)} m`;
+	if (unit === 'class') return String(value);
 	return value.toFixed(2);
 }
 

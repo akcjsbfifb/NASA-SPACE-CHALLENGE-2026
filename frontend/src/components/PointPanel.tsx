@@ -4,8 +4,8 @@ import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
 import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
-import { formatDelta, percent } from '../score';
-import type { VariableInfo } from '../score';
+import { formatDelta, formatValue, percent } from '../score';
+import type { ActivityPreset, Grade, VariableInfo } from '../score';
 
 export type SelectedPlace = {
 	lat: number;
@@ -14,7 +14,11 @@ export type SelectedPlace = {
 	coverage?: number;
 	worst?: number;
 	scores?: Record<string, number>;
+	grades?: Record<string, Grade>;
+	grade?: Grade;
 	deltas?: Record<string, number>;
+	target?: Record<string, number | string | null>;
+	activity?: string | null;
 };
 
 type EarthCell = {
@@ -34,6 +38,7 @@ type PointPanelProps = {
 	onClose: () => void;
 	language: Language;
 	variables: VariableInfo[];
+	activities: ActivityPreset[];
 };
 
 /** Labels come from i18n by id, with the raw id as a fallback for new variables. */
@@ -48,12 +53,38 @@ function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
 	return known[id] ?? id;
 }
 
+/** What the Earth cell holds for a variable, in the panel's own column names. */
+function cellValue(cell: EarthCell, id: string): number | string | null {
+	switch (id) {
+		case 'slope':
+			return cell.slope_deg;
+		case 'roughness':
+			return cell.roughness_m;
+		case 'temperature':
+			return cell.tmin_c;
+		case 'ice':
+			return cell.ice_thickness_m;
+		case 'rock':
+			return cell.rock;
+		default:
+			return null;
+	}
+}
+
+/** The sentence next to the percentage, cut where the score says it hurts. */
+function scorePhrase(copy: ReturnType<typeof getCopy>, score: number | undefined, name: string): string {
+	if (typeof score !== 'number') return '';
+	if (score >= 0.75) return copy.scoreHigh(name);
+	if (score < 0.4) return copy.scoreLow(name);
+	return copy.scoreMid(name);
+}
+
 function formatMeters(value: number | null, noData: string, digits = 0) {
 	if (value === null) return noData;
 	return `${value.toFixed(digits)} m`;
 }
 
-export default function PointPanel({ place, onClose, language, variables }: PointPanelProps) {
+export default function PointPanel({ place, onClose, language, variables, activities }: PointPanelProps) {
 	const copy = getCopy(language);
 	const [cell, setCell] = useState<EarthCell | null>(null);
 	const [cellError, setCellError] = useState(false);
@@ -199,7 +230,10 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 							<>
 								<div>
 									<dt>{copy.closeness}</dt>
-									<dd>{percent(place.closeness, 2)}%</dd>
+									<dd>
+										{place.grade && <span className={`grade grade-${place.grade}`}>{place.grade}</span>}
+										{percent(place.closeness, 2)}%
+									</dd>
 								</div>
 								{variables.length > 0 && (
 									<div>
@@ -241,38 +275,84 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 						</div>
 					</dl>
 					{place.scores && Object.keys(place.scores).length > 0 && (
+						<section className="compare">
+							<h4>{copy.compare}</h4>
+							<div className="compare-head">
+								<span />
+								<span>{copy.reference}</span>
+								<span>{copy.earthColumn}</span>
+								<span>{copy.differsBy}</span>
+							</div>
+							{variables.map((variable) => {
+								const earth = cell ? cellValue(cell, variable.id) : null;
+								const delta = place.deltas?.[variable.id];
+								return (
+									<div className="compare-row" key={variable.id}>
+										<span className="compare-name">{variableLabel(copy, variable.id)}</span>
+										<span className="compare-reference">
+											{formatValue(place.target?.[variable.id], variable.unit)}
+										</span>
+										<span className="compare-earth">
+											{cell
+												? formatValue(earth, variable.unit) || copy.noData
+												: '…'}
+										</span>
+										<span className="compare-differs">
+											{typeof delta === 'number'
+												? formatDelta(delta, variable.unit)
+												: cell
+													? '—'
+													: '…'}
+										</span>
+									</div>
+								);
+							})}
+						</section>
+					)}
+					{place.scores && Object.keys(place.scores).length > 0 && (
 						<section className="breakdown">
 							<h4>{copy.breakdown}</h4>
 							<ul>
 								{variables.map((variable) => {
+									const name = variableLabel(copy, variable.id);
 									const score = place.scores?.[variable.id];
+									const grade = place.grades?.[variable.id];
 									const delta = place.deltas?.[variable.id];
 									const change = typeof delta === 'number' && variable.unit && variable.unit !== 'class'
 										? ` · ${formatDelta(delta, variable.unit)}`
 										: '';
+									const phrase = scorePhrase(copy, score, name);
 									return (
 										<li key={variable.id}>
 											<span className="breakdown-name">
-												{variableLabel(copy, variable.id)}
-												<span className={`tier tier-${variable.tier ?? 'C'}`}>{variable.tier ?? '?'}</span>
+												{name}
+												{grade && <span className={`grade grade-${grade}`}>{grade}</span>}
 											</span>
 											<span>
 												{score === undefined ? copy.noData : `${percent(score, 1)}%${change}`}
+												{phrase ? ` · ${phrase}` : ''}
 											</span>
 										</li>
 									);
 								})}
 							</ul>
-							<p className="muted">{copy.tierNote}</p>
 							{variables.some((variable) => variable.tier === 'C') && (
 								<p className="muted warn">{copy.unalikeWarning}</p>
 							)}
 						</section>
 					)}
+					{place.activity && (
+						<p className="muted activity-line">
+							{copy.activityLabel}:{' '}
+							{activities.find((activity) => activity.id === place.activity)?.serves[language]
+								?? place.activity}
+						</p>
+					)}
 					{cellError && <p className="muted">{copy.cellError}</p>}
 					{cell && cell.distance_km > 1.5 && (
 						<p className="muted">{copy.nearestCellDistance(cell.distance_km.toFixed(1))}</p>
 					)}
+					<p className="muted limitations">{copy.limitations}</p>
 				</>
 			)}
 		</aside>

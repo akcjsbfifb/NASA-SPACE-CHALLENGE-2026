@@ -20,19 +20,27 @@ import { getCopy, isLanguage } from './i18n';
 import type { Language } from './i18n';
 
 import { percent, worstDelta } from './score';
-import type { ScoreDetail, VariableInfo } from './score';
+import type { ActivityPreset, Grade, MatchLevel, ScoreDetail, VariableInfo } from './score';
 
 import {
 	SELECTED_ALTITUDE,
 	SELECTED_COLOR,
 	SELECTED_FLY_ALTITUDE,
 	SELECTED_FLY_MS,
-	SELECTED_SIZE,
+	SELECTED_PIN_SIZE,
 } from './theme';
 
 import './App.css';
 
 const ROCKS = ['vb', 'va', 'vi', 'py', 'pb', 'pa', 'pi', 'su', 'ss', 'sm', 'sc', 'mt', 'ev', 'ig'] as const;
+
+const WEIGHT_KEYS = ['slope', 'roughness', 'temperature', 'ice', 'rock'] as const;
+
+type WeightKey = (typeof WEIGHT_KEYS)[number];
+
+type Weights = Record<WeightKey, number>;
+
+const NEUTRAL_WEIGHTS: Weights = { slope: 1, roughness: 1, temperature: 1, ice: 1, rock: 1 };
 
 type SearchSummary =
 	| { type: 'initial' }
@@ -46,6 +54,11 @@ type SearchPoint = ScoreDetail & {
 	lat: number;
 	lon: number;
 	rock: string;
+	match?: MatchLevel;
+	grade?: Grade;
+	grades?: Record<string, Grade>;
+	target?: Record<string, number | string | null>;
+	activity?: string | null;
 };
 
 type SearchResponse = {
@@ -59,6 +72,8 @@ type SearchResponse = {
 	target?: Record<string, number | string | null>;
 	variables_used?: VariableInfo[];
 	ignored?: string[];
+	weights?: Record<string, number | null>;
+	activity?: { id: string } | null;
 };
 
 function text(value: unknown): string {
@@ -69,9 +84,10 @@ function pageFromHash(): 'moon' | 'earth' {
 	return window.location.hash === '#luna' ? 'moon' : 'earth';
 }
 
-function colorFor(closeness: number) {
-	if (closeness >= 0.8) return '#7dffe1';
-	if (closeness >= 0.65) return '#f0c14a';
+/** The server decides the cut; the list, the globe and the panel share it. */
+function colorFor(match: MatchLevel | undefined) {
+	if (match === 'very') return '#7dffe1';
+	if (match === 'close') return '#f0c14a';
 	return '#e07a4a';
 }
 
@@ -81,7 +97,7 @@ function toGlobePoint(point: SearchPoint, rockLabel: string): GlobePoint {
 		lat: point.lat,
 		lng: point.lon,
 		label: `${rockLabel} · ${(point.closeness * 100).toFixed(0)}%`,
-		color: colorFor(point.closeness),
+		color: colorFor(point.match),
 		size: 0.12 + point.closeness * 0.1,
 		altitude: 0.01,
 	};
@@ -108,6 +124,8 @@ function App() {
 	const [ice, setIce] = useState('0');
 	const [rock, setRock] = useState('vb');
 	const [precision, setPrecision] = useState(0.75);
+	const [weights, setWeights] = useState<Weights>(NEUTRAL_WEIGHTS);
+	const [activities, setActivities] = useState<ActivityPreset[]>([]);
 	const [points, setPoints] = useState<SearchPoint[]>([]);
 	const [variables, setVariables] = useState<VariableInfo[]>([]);
 	const [summary, setSummary] = useState<SearchSummary>({ type: 'initial' });
@@ -129,6 +147,23 @@ function App() {
 		document.documentElement.lang = language;
 		document.title = copy.pageTitle;
 	}, [copy.pageTitle, language]);
+
+	// The catalog is the only source of activity labels: no `activity.<id>` keys.
+	useEffect(() => {
+		let alive = true;
+		fetch('http://127.0.0.1:8787/activities')
+			.then(async (response) => {
+				const body = (await response.json()) as { activities?: ActivityPreset[] };
+				if (!response.ok) throw new Error('Activities request failed');
+				if (alive) setActivities(body.activities ?? []);
+			})
+			.catch(() => {
+				if (alive) setActivities([]);
+			});
+		return () => {
+			alive = false;
+		};
+	}, []);
 
 	const summaryText = (() => {
 		switch (summary.type) {
@@ -162,7 +197,11 @@ function App() {
 					coverage: point.coverage,
 					worst: point.worst,
 					scores: point.scores,
+					grades: point.grades,
+					grade: point.grade,
 					deltas: point.deltas,
+					target: point.target,
+					activity: point.activity ?? null,
 				}
 				: { lat, lng },
 		);
@@ -177,22 +216,22 @@ function App() {
 		);
 	}, [copy, points, visibleLayers.points]);
 
-	// One red marker on its own layer, and the camera turns to face it. Running
+	// One pin on its own layer, and the camera turns to face it. Running
 	// this on `page` too covers arriving from the Moon page, where the globe
 	// mounts after the selection already exists.
 	useEffect(() => {
 		if (page !== 'earth' || !selection) {
-			globe.current?.setPoints('selected', []);
+			globe.current?.setMarkers('selected', []);
 			return;
 		}
-		globe.current?.setPoints('selected', [
+		globe.current?.setMarkers('selected', [
 			{
 				id: 'selected',
 				lat: selection.lat,
 				lng: selection.lng,
 				label: '',
 				color: SELECTED_COLOR,
-				size: SELECTED_SIZE,
+				size: SELECTED_PIN_SIZE,
 				altitude: SELECTED_ALTITUDE,
 			},
 		]);
@@ -203,9 +242,25 @@ function App() {
 	}, [page, selection]);
 
 	function applySearchResult(body: SearchResponse) {
-		setPoints(body.points);
+		// Every point keeps the reference it was searched against, so the panel
+		// shows the target of that search and not the inputs of a later one.
+		const activity = body.activity?.id ?? null;
+		setPoints(body.points.map((point) => ({ ...point, target: body.target, activity })));
 		setVariables(body.variables_used ?? []);
 		if (body.precision !== undefined) setPrecision(body.precision);
+		// A null weight means the variable had no target: the slider stays where
+		// the user left it. A number, 0 included, is the weight the server used.
+		const resultWeights = body.weights;
+		if (resultWeights) {
+			setWeights((current) => {
+				const next = { ...current };
+				for (const key of WEIGHT_KEYS) {
+					const value = resultWeights[key];
+					if (typeof value === 'number') next[key] = value;
+				}
+				return next;
+			});
+		}
 		const target = body.target;
 		if (target) {
 			setSlope(text(target.slope));
@@ -257,6 +312,10 @@ function App() {
 			rock,
 			precision: String(precision),
 		});
+		// Only a weight that differs from the neutral one is sent.
+		for (const key of WEIGHT_KEYS) {
+			if (weights[key] !== 1) params.set(`w_${key}`, String(weights[key]));
+		}
 		try {
 			const response = await fetch(`http://127.0.0.1:8787/search?${params}`);
 			const body = (await response.json()) as SearchResponse;
@@ -308,6 +367,20 @@ function App() {
 			})
 			.finally(() => setBusy(false));
 	}
+
+	const weightNames: Record<WeightKey, string> = {
+		slope: copy.slope,
+		roughness: copy.roughness,
+		temperature: copy.nightTemperature,
+		ice: copy.ice,
+		rock: copy.rock,
+	};
+
+	const matchLabels: Record<MatchLevel, string> = {
+		very: copy.matchVery,
+		close: copy.matchClose,
+		barely: copy.matchBarely,
+	};
 
 	return (
 		<main className="app">
@@ -372,6 +445,25 @@ function App() {
 			))}
 		</select>
 		</label>
+		<div className="weight-group">
+			<span className="weight-label">{copy.weight}</span>
+			{WEIGHT_KEYS.map((key) => (
+				<label className="weight-row" key={key}>
+					<span className="weight-name">{weightNames[key]}</span>
+					<input
+						type="range"
+						min={0}
+						max={1}
+						step={0.1}
+						value={weights[key]}
+						onChange={(event) => {
+							const value = Number(event.target.value);
+							setWeights((current) => ({ ...current, [key]: value }));
+						}}
+					/>
+				</label>
+			))}
+		</div>
 		<div className="precision-control">
 			<span className="precision-label">{copy.precision}</span>
 			<PrecisionDial
@@ -391,6 +483,7 @@ function App() {
 			<div className="result-list">
 				{points.slice(0, 6).map((point) => {
 					const delta = worstDelta(point, variables);
+					const match = point.match ? matchLabels[point.match] ?? '' : '';
 					return (
 					<button
 					key={`${point.lat},${point.lon}`}
@@ -399,6 +492,7 @@ function App() {
 					>
 					{percent(point.closeness, 1)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
 					{delta ? ` · ${delta}` : ''}
+					{match ? ` · ${match}` : ''}
 					</button>
 					);
 				})}
@@ -444,7 +538,7 @@ function App() {
 					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
 				);
 				selectPlace(point.lat, point.lng, hit); }} />
-			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} variables={variables} />
+			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} variables={variables} activities={activities} />
 		</section>
 
 		</>
