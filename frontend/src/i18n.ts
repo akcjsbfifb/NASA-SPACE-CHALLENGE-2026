@@ -46,6 +46,12 @@ type TranslationStrings = {
 	breakdown: string;
 	tierNote: string;
 	unalikeWarning: string;
+	continent: string;
+	country: string;
+	noCountry: string;
+	openOcean: string;
+	nearby: string;
+	continentNames: Record<string, string>;
 	elevation: string;
 	coldNight: string;
 	noData: string;
@@ -102,6 +108,21 @@ const translations = {
 		breakdown: 'Desglose',
 		tierNote: 'A comparable · B proxy · C sin equivalencia validada',
 		unalikeWarning: 'Este promedio incluye variables sin equivalencia terrestre validada.',
+		continent: 'Continente',
+		country: 'País',
+		noCountry: 'sin país',
+		openOcean: 'océano abierto',
+		nearby: 'aproximado',
+		continentNames: {
+			Africa: 'África',
+			Antarctica: 'Antártida',
+			Asia: 'Asia',
+			Europe: 'Europa',
+			'North America': 'América del Norte',
+			Oceania: 'Oceanía',
+			'South America': 'América del Sur',
+			'Seven seas (open ocean)': 'Océano',
+		},
 		elevation: 'Elevación',
 		coldNight: 'Noche fría',
 		noData: 'sin dato',
@@ -171,6 +192,21 @@ const translations = {
 		breakdown: 'Breakdown',
 		tierNote: 'A comparable · B proxy · C no validated equivalent',
 		unalikeWarning: 'This average includes variables without a validated terrestrial equivalent.',
+		continent: 'Continent',
+		country: 'Country',
+		noCountry: 'no country',
+		openOcean: 'open ocean',
+		nearby: 'approximate',
+		continentNames: {
+			Africa: 'Africa',
+			Antarctica: 'Antarctica',
+			Asia: 'Asia',
+			Europe: 'Europe',
+			'North America': 'North America',
+			Oceania: 'Oceania',
+			'South America': 'South America',
+			'Seven seas (open ocean)': 'Ocean',
+		},
 		elevation: 'Elevation',
 		coldNight: 'Nighttime low',
 		noData: 'no data',
@@ -240,6 +276,21 @@ const translations = {
 		breakdown: 'Détail',
 		tierNote: 'A comparable · B proxy · C sans équivalent validé',
 		unalikeWarning: 'Cette moyenne inclut des variables sans équivalent terrestre validé.',
+		continent: 'Continent',
+		country: 'Pays',
+		noCountry: 'sans pays',
+		openOcean: 'haute mer',
+		nearby: 'approximatif',
+		continentNames: {
+			Africa: 'Afrique',
+			Antarctica: 'Antarctique',
+			Asia: 'Asie',
+			Europe: 'Europe',
+			'North America': 'Amérique du Nord',
+			Oceania: 'Océanie',
+			'South America': 'Amérique du Sud',
+			'Seven seas (open ocean)': 'Océan',
+		},
 		elevation: 'Altitude',
 		coldNight: 'Minimum nocturne',
 		noData: 'aucune donnée',
@@ -309,6 +360,21 @@ const translations = {
 		breakdown: 'Dettaglio',
 		tierNote: 'A comparabile · B proxy · C senza equivalente validato',
 		unalikeWarning: 'Questa media include variabili senza equivalente terrestre validato.',
+		continent: 'Continente',
+		country: 'Paese',
+		noCountry: 'senza paese',
+		openOcean: 'alto mare',
+		nearby: 'approssimativo',
+		continentNames: {
+			Africa: 'Africa',
+			Antarctica: 'Antartide',
+			Asia: 'Asia',
+			Europe: 'Europa',
+			'North America': 'America del Nord',
+			Oceania: 'Oceania',
+			'South America': 'America del Sud',
+			'Seven seas (open ocean)': 'Oceano',
+		},
 		elevation: 'Elevazione',
 		coldNight: 'Minima notturna',
 		noData: 'nessun dato',

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
+import { locate, loadCountries } from '../data/geo';
+import type { PlaceInfo } from '../data/geo';
 import { formatDelta, truncated } from '../score';
 import type { VariableInfo } from '../score';
 
@@ -58,6 +60,28 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 	const [sceneUrl, setSceneUrl] = useState('');
 	const [sceneSource, setSceneSource] = useState('');
 	const [imageError, setImageError] = useState(false);
+	const [where, setWhere] = useState<PlaceInfo | null | undefined>(undefined);
+
+	// Continent and country come from a bundled Natural Earth extract: no key,
+	// no quota, and it still answers over Antarctica and ice shelves.
+	useEffect(() => {
+		if (!place) {
+			setWhere(undefined);
+			return;
+		}
+		let alive = true;
+		setWhere(undefined);
+		loadCountries()
+			.then((features) => {
+				if (alive) setWhere(locate(features, place.lat, place.lng));
+			})
+			.catch(() => {
+				if (alive) setWhere(null);
+			});
+		return () => {
+			alive = false;
+		};
+	}, [place]);
 
 	useEffect(() => {
 		if (!place) return;
@@ -146,6 +170,23 @@ export default function PointPanel({ place, onClose, language, variables }: Poin
 						<a href={mapsUrl} target="_blank" rel="noreferrer">{copy.viewGoogleMaps}</a>
 					</p>
 					<dl className="cell-facts">
+						{where !== undefined && (
+							<>
+								<div>
+									<dt>{copy.continent}</dt>
+									<dd>
+										{where === null
+											? copy.openOcean
+											: (copy.continentNames[where.continent ?? ''] ?? where.continent ?? copy.noData)}
+										{where?.approximate ? ` · ${copy.nearby}` : ''}
+									</dd>
+								</div>
+								<div>
+									<dt>{copy.country}</dt>
+									<dd>{where?.country ?? copy.noCountry}</dd>
+								</div>
+							</>
+						)}
 						<div>
 							<dt>{copy.latitude}</dt>
 							<dd>{(cell?.lat ?? place.lat).toFixed(4)}</dd>
