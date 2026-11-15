@@ -12,13 +12,13 @@ import pyarrow.parquet as pq
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS = REPO_ROOT / "backend" / "scripts"
+BACKEND = REPO_ROOT / "backend"
 TESTS = REPO_ROOT / "backend" / "tests" / "earth"
-sys.path.insert(0, str(SCRIPTS))
+sys.path.insert(0, str(BACKEND))
 sys.path.insert(0, str(TESTS))
 
-from extract_earth_columns import extract  # noqa: E402
-from similarity import EarthIndex, grade_for, match_for  # noqa: E402
+from app.cli.extract_earth_columns import extract  # noqa: E402
+from app.services.earth.similarity import EarthIndex, grade_for, match_for  # noqa: E402
 from test_search_score_buffers import _reference_scores, _shortlist_all_indices  # noqa: E402
 
 ALL_WEIGHTS = ("slope", "roughness", "temperature", "ice", "rock")

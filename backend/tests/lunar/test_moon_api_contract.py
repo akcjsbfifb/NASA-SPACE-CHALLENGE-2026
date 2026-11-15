@@ -4,10 +4,10 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "backend" / "scripts"))
-from moon_sites import MEASURED, MoonSites
-from serve_search import MoonSampler
-import serve_search
+sys.path.insert(0, str(ROOT / "backend"))
+from app.services.moon.moon_sites import MEASURED, MoonSites
+from app.services.moon.lola_sampler import MoonSampler
+from app.services.moon import lola_sampler
 
 
 def test_apollo_payload_contains_seven_real_measurements():
@@ -48,7 +48,7 @@ def test_remote_failure_does_not_hide_other_measurements(monkeypatch):
     monkeypatch.setenv("LUNAR_DIVINER_REMOTE", "1")
     def unavailable(*args, **kwargs):
         raise OSError("network unavailable")
-    monkeypatch.setattr(serve_search, "DivinerRaster", unavailable)
+    monkeypatch.setattr(lola_sampler, "DivinerRaster", unavailable)
     result = MoonSampler().sample(12.3, 45.6)
     assert result["measurements"]["slope"]["available"]
     assert result["measurements"]["hydrogen_abundance_ppm"]["available"]

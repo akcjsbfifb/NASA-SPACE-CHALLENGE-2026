@@ -15,10 +15,10 @@ import numpy as np
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS = REPO_ROOT / "backend" / "scripts"
-sys.path.insert(0, str(SCRIPTS))
+BACKEND = REPO_ROOT / "backend"
+sys.path.insert(0, str(BACKEND))
 
-from similarity import EarthIndex, rock_names  # noqa: E402
+from app.services.earth.similarity import EarthIndex, rock_names  # noqa: E402
 
 
 def _reference_scores(

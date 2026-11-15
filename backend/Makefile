@@ -1,19 +1,19 @@
-VENV := .venv
+MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+VENV := $(MAKEFILE_DIR)/.venv
 PYTHON := $(VENV)/bin/python
 
 .PHONY: venv dev release clean
 
 venv:
 	python3 -m venv $(VENV)
-	$(VENV)/bin/pip install -r requirements.txt
+	$(PYTHON) -m pip install -r $(MAKEFILE_DIR)/requirements.txt
 
 dev:
-	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787 --log-level debug
+	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --timeout-graceful-shutdown 2 --host 127.0.0.1 --port 8787 --log-level debug
 
 release:
-	$(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787
+	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --timeout-graceful-shutdown 2 --host 127.0.0.1 --port 8787
 
 clean:
-	rm -rf $(VENV) .pytest_cache
-	$(MAKE) -C $(C_DIR) clean
-	find . -type d -name __pycache__ -exec rm -rf {} +
+	rm -rf $(VENV) $(MAKEFILE_DIR)/.pytest_cache
+	find $(MAKEFILE_DIR) -type d -name __pycache__ -exec rm -rf {} +

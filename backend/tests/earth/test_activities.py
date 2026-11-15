@@ -10,10 +10,10 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS = REPO_ROOT / "backend" / "scripts"
-sys.path.insert(0, str(SCRIPTS))
+BACKEND = REPO_ROOT / "backend"
+sys.path.insert(0, str(BACKEND))
 
-from activities import ActivityError, load_catalog, resolve  # noqa: E402
+from app.services.earth.activities import ActivityError, load_catalog, resolve  # noqa: E402
 
 VARIABLES = ("slope", "roughness", "temperature", "ice", "rock")
 CONTINUOUS = ("slope", "roughness", "temperature", "ice")

@@ -80,9 +80,7 @@ review, o PyArrow para la versión de main. El entorno lunar no instala el stack
 web/terrestre. No se afirmó una prueba HTTP o frontend extremo a extremo.
 
 El frontend llama 127.0.0.1:8787 para `/search`, `/cell` y `/scene`.
-`backend/scripts/serve_search.py` ocupa ese puerto; el Makefile FastAPI propone el mismo, pero
-su router sólo registra health/network. Coordinar un responsable del puerto y
-el servicio correcto; este módulo offline no necesita ninguno.
+`cd backend && make dev` ocupa ese puerto. Este módulo offline no necesita ninguno.
 
 Orden recomendado: revisar la rama lunar e integrarla en main cuando se apruebe;
 luego el responsable de review incorpora main y actualiza el adaptador/imports.

@@ -1,3 +1,5 @@
+import { SEARCH_API } from '../searchApi';
+
 export type LunarSample = {
 	elevation: number | null;
 	roughness: number | null;
@@ -93,7 +95,7 @@ export async function lookupLunarSample(
 	const params = siteId
 		? new URLSearchParams({ site: siteId })
 		: new URLSearchParams({ lat: String(lat), lon: String(lng) });
-	const response = await fetch(`http://127.0.0.1:8787/moon?${params}`);
+	const response = await fetch(`${SEARCH_API}/moon?${params}`);
 	const body = (await response.json()) as MoonResponse;
 	if (!response.ok) throw new Error(body.error || 'sin mediciones de este punto');
 	return {

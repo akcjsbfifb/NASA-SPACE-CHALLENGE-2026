@@ -1,7 +1,7 @@
 """Stream land-grid parquet columns into raw mmap-friendly files.
 
 Run once before serve_search / search_earth:
-  .venv/bin/python backend/scripts/extract_earth_columns.py
+  .venv/bin/python -m app.cli.extract_earth_columns
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import pyarrow.parquet as pq
 
-from similarity import COLUMNS_DIR, DATA
+from app.services.earth.similarity import COLUMNS_DIR, DATA
 
 EXTRACT_SPECS: list[tuple[str, str, str]] = [
     ("lat", "lat.f32", "float32"),

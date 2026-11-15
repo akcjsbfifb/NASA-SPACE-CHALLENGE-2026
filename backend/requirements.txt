@@ -1,9 +1,11 @@
+# Single install for `make venv`, `make dev`, and the earth tests.
+# Pinned lunar env: requirements-lunar.lock.txt
+# Rasterio/GDAL (build_earth, lunar geospatial): requirements-lunar-geospatial.lock.txt
 fastapi>=0.110
 uvicorn[standard]>=0.29
 pydantic>=2.6
-pandas
-joblib
-scikit-learn
-# dev
+numpy>=2.0,<3
+pyarrow>=18
+pvl>=1.3.2,<2
 pytest>=8
 httpx>=0.27

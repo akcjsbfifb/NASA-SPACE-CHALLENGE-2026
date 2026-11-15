@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { SEARCH_API } from '../searchApi';
 import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
 import { locate, loadCountries } from '../data/geo';
@@ -124,7 +125,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 			lat: String(place.lat),
 			lon: String(place.lng),
 		});
-		fetch(`http://127.0.0.1:8787/cell?${params}`, { signal: controller.signal })
+		fetch(`${SEARCH_API}/cell?${params}`, { signal: controller.signal })
 			.then(async (response) => {
 				const body = (await response.json()) as EarthCell & { error?: string };
 				if (!response.ok) throw new Error(body.error || 'Cell data request failed');
@@ -148,7 +149,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 			lat: String(place.lat),
 			lon: String(place.lng),
 		});
-		fetch(`http://127.0.0.1:8787/scene?${params}`, { signal: controller.signal })
+		fetch(`${SEARCH_API}/scene?${params}`, { signal: controller.signal })
 			.then(async (response) => {
 				if (!response.ok) throw new Error('sin imagen');
 				const blob = await response.blob();

@@ -12,11 +12,11 @@ import pyarrow.parquet as pq
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS = REPO_ROOT / "backend" / "scripts"
-sys.path.insert(0, str(SCRIPTS))
+BACKEND = REPO_ROOT / "backend"
+sys.path.insert(0, str(BACKEND))
 
-from extract_earth_columns import extract  # noqa: E402
-from similarity import EarthIndex  # noqa: E402
+from app.cli.extract_earth_columns import extract  # noqa: E402
+from app.services.earth.similarity import EarthIndex  # noqa: E402
 
 
 def _synthetic_parquet(path: Path) -> dict[str, np.ndarray]:

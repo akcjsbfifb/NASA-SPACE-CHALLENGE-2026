@@ -10,8 +10,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-SITES_PATH = ROOT / "data" / "moon" / "apollo_measurements.json"
+from app.config import get_settings
+
+SITES_PATH = get_settings().paths.moon_sites
 
 # The seven magnitudes the processor can produce. Everything else in the
 # document (mineralogy, landing safety, ...) is out of scope for this adapter.

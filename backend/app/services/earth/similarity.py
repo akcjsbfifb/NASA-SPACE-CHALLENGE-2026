@@ -22,13 +22,28 @@ import math
 from pathlib import Path
 
 import numpy as np
-ROOT = Path(__file__).resolve().parents[2]
-DATA = ROOT / "data" / "earth" / "land_60s.parquet"
-COLUMNS_DIR = DATA.parent / "columns"
-COLUMNS = ROOT / "data" / "earth" / "columns.json"
-ANALOGS = ROOT / "data" / "earth" / "analogs.json"
-SHORTLIST = ROOT / "data" / "earth" / "shortlist.json"
-EXTRACT_CMD = ".venv/bin/python backend/scripts/extract_earth_columns.py"
+
+from app.config import get_settings
+
+
+def _bind_runtime_paths() -> None:
+    global DATA, COLUMNS_DIR, COLUMNS, ANALOGS, SHORTLIST, EXTRACT_CMD
+    paths = get_settings().paths
+    DATA = paths.land_parquet
+    COLUMNS_DIR = paths.columns_dir
+    COLUMNS = paths.columns_json
+    ANALOGS = paths.analogs
+    SHORTLIST = paths.shortlist
+    EXTRACT_CMD = get_settings().commands.extract_earth_columns
+
+
+DATA: Path
+COLUMNS_DIR: Path
+COLUMNS: Path
+ANALOGS: Path
+SHORTLIST: Path
+EXTRACT_CMD: str
+_bind_runtime_paths()
 
 SCORE_TYPES = {
     "gaussian",

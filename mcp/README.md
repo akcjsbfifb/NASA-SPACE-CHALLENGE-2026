@@ -7,7 +7,7 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
 1. Extraer columnas (una vez por dataset):
 
    ```bash
-   .venv/bin/python backend/scripts/extract_earth_columns.py
+   backend/.venv/bin/python -m app.cli.extract_earth_columns
    ```
 
 2. Registrar el server MCP.
@@ -58,7 +58,7 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
 
    Las tools y el worker de Python son los mismos. El aviso al mapa sigue siendo el browser contra el puerto `8787`, no el IDE. Hacen falta Node, el `.venv` del repo y `data/earth/columns/`.
 
-3. Opcional: tener `backend/scripts/serve_search.py` en `http://127.0.0.1:8787` para que el mapa reciba eventos SSE y el worker evite cargar otra `EarthIndex`.
+3. Opcional: `cd backend && make dev` deja la API en `http://127.0.0.1:8787` para que el mapa reciba eventos SSE y el worker evite cargar otra `EarthIndex`.
 
 ## Herramientas
 

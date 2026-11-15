@@ -9,6 +9,7 @@ import {
 	type LunarLanding,
 	type LunarSample,
 } from '../data/lunarLandings';
+import { SEARCH_API } from '../searchApi';
 import { percent } from '../score';
 import { SELECTED_COLOR, SELECTED_PIN_SIZE } from '../theme';
 
@@ -162,7 +163,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 			precision: String(precision),
 		});
 		if (sample.slope !== null) params.set('slope', String(sample.slope));
-		fetch(`http://127.0.0.1:8787/search?${params}`, { signal: controller.signal })
+		fetch(`${SEARCH_API}/search?${params}`, { signal: controller.signal })
 			.then(async (response) => {
 				const body = (await response.json()) as EarthAnalogSet & { error?: string };
 				if (!response.ok) throw new Error(body.error || 'la búsqueda falló');

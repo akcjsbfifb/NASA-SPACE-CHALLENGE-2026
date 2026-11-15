@@ -15,14 +15,14 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TESTS = REPO_ROOT / "backend" / "tests" / "earth"
-SCRIPTS = REPO_ROOT / "backend" / "scripts"
-sys.path.insert(0, str(SCRIPTS))
+BACKEND = REPO_ROOT / "backend"
+sys.path.insert(0, str(BACKEND))
 sys.path.insert(0, str(TESTS))
 
-from extract_earth_columns import extract  # noqa: E402
+from app.cli.extract_earth_columns import extract  # noqa: E402
 from test_earth_columns_mmap import _synthetic_parquet  # noqa: E402
 
-WORKER = SCRIPTS / "gurvich_search.py"
+WORKER = BACKEND / "app" / "workers" / "gurvich_search.py"
 PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 
 
@@ -94,6 +94,7 @@ def _run_worker(columns_dir: Path, shortlist_path: Path, extra_env: dict | None 
     }
     if extra_env:
         env.update(extra_env)
+    env["PYTHONPATH"] = str(BACKEND)
     return subprocess.Popen(
         [str(PYTHON), str(WORKER)],
         cwd=REPO_ROOT,
