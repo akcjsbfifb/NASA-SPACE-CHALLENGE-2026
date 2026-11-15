@@ -1,6 +1,26 @@
-#  Central settings for the backend.  Point RTS_LOCATION at another file to override its location.
-libgraph_engine_loc = "./graph_engine/libgraph_engine.so"
- 
+# Central settings for the backend. Point RTS_LOCATION at another file to override its location.
+
+[paths]
+repo_root = ".."
+land_parquet = "data/earth/land_60s.parquet"
+columns_json = "data/earth/columns.json"
+analogs = "data/earth/analogs.json"
+shortlist = "data/earth/shortlist.json"
+activities_catalog = "mcp/activities.json"
+moon_sites = "data/moon/apollo_measurements.json"
+lola_raw = "data/raw/lola"
+notify_token = "/tmp/gurvich-notify.token"
+raw_data = "data/raw"
+
+[server]
+host = "127.0.0.1"
+port = 8787
+search_base = "http://127.0.0.1:8787"
+max_notify_body_bytes = 2097152
+
+[commands]
+extract_earth_columns = ".venv/bin/python -m app.cli.extract_earth_columns"
+
 [cors]
-allow_origins = ["http://localhost:5173", "http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:8080"]
- 
+allow_origins = ["http://127.0.0.1:5173", "http://localhost:5173"]
+allow_credentials = false

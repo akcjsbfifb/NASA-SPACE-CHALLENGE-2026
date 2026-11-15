@@ -10,20 +10,13 @@ from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-ROOT = Path(__file__).resolve().parents[2]
-_SCRIPTS = ROOT / "backend" / "scripts"
-if str(_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(_SCRIPTS))
+from app.config import get_settings
+from app.services.earth import similarity
+from app.services.earth.activities import VARIABLES, ActivityError, resolve
+from app.services.earth.similarity import EarthIndex, parse_criteria, write_shortlist
 
-import similarity
-from activities import VARIABLES, ActivityError, resolve
-from similarity import EarthIndex, parse_criteria, write_shortlist
-
-# Payload keys that are not variables. Everything else in the payload is a
-# target value and the contract decides how to read it.
 CONTROL_KEYS = ("precision", "min_worst", "activity", "weights")
 NOTIFY_TOKEN_HEADER = "X-Gurvich-Notify-Token"
-DEFAULT_NOTIFY_TOKEN_PATH = Path("/tmp/gurvich-notify.token")
 
 _index: EarthIndex | None = None
 
@@ -43,8 +36,10 @@ def _shortlist_path() -> Path:
 
 
 def _search_base_url() -> str:
-    raw = os.environ.get("GURVICH_SEARCH_BASE", "http://127.0.0.1:8787").strip()
-    return raw.rstrip("/")
+    raw = os.environ.get("GURVICH_SEARCH_BASE")
+    if raw:
+        return raw.strip().rstrip("/")
+    return get_settings().server.search_base.rstrip("/")
 
 
 def _targets(payload: dict) -> dict[str, str]:
@@ -60,7 +55,6 @@ def _search_query_params(payload: dict) -> list[tuple[str, str]]:
     activity = payload.get("activity")
     if activity is not None and activity != "":
         params.append(("activity", str(activity)))
-    # The HTTP layer takes one w_* per variable, so the dict is flattened here.
     weights = payload.get("weights")
     if isinstance(weights, dict):
         for name in VARIABLES:
@@ -82,7 +76,12 @@ def _notify_url() -> str | None:
 
 
 def _notify_token() -> str | None:
-    path = Path(os.environ.get("GURVICH_NOTIFY_TOKEN_PATH", str(DEFAULT_NOTIFY_TOKEN_PATH)))
+    path = Path(
+        os.environ.get(
+            "GURVICH_NOTIFY_TOKEN_PATH",
+            str(get_settings().paths.notify_token),
+        )
+    )
     if not path.is_file():
         return None
     token = path.read_text().strip()
@@ -174,7 +173,11 @@ def _handle_line(line: str) -> dict:
         )
     except ActivityError as error:
         return {"error": error.code, "message": error.message}
-    except (FileNotFoundError, ValueError) as error:
+    except ValueError as error:
+        if str(error) == "falta al menos una medición":
+            return {"error": str(error)}
+        return {"error": str(error)}
+    except FileNotFoundError as error:
         return {"error": str(error)}
     return _notify_frontend(_write_shortlist(result))
 

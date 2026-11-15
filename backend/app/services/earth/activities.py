@@ -15,8 +15,9 @@ import json
 import math
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-CATALOG = ROOT / "mcp" / "activities.json"
+from app.config import get_settings
+
+CATALOG = get_settings().paths.activities_catalog
 
 VARIABLES = ("slope", "roughness", "temperature", "ice", "rock")
 CONTINUOUS = ("slope", "roughness", "temperature", "ice")

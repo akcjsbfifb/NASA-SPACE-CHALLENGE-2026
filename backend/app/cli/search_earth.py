@@ -1,23 +1,9 @@
-"""Search Earth for places close to a lunar target.
-
-  .venv/bin/python backend/scripts/search_earth.py --precision 0.85 \
-      --target slope=8 --target roughness=30 --target temperature=-20 \
-      --target ice=0 --target rock=vb
-
-Any variable declared in data/earth/analogs.json can be passed with --target,
-so a new column needs no change here.
-
-Precision near 1 returns a few very close places.
-Precision near 0 returns more places that match less tightly.
-The shortlist is written to data/earth/shortlist.json for a later AI filter.
-"""
-
 from __future__ import annotations
 
 import argparse
 import time
 
-from similarity import EarthIndex, parse_criteria, write_shortlist
+from app.services.earth.similarity import EarthIndex, parse_criteria, write_shortlist
 
 
 def main() -> None:
@@ -59,7 +45,7 @@ def main() -> None:
         f"devueltos={result['returned']} de tope {result['limit']}"
     )
     print(f"variables: {', '.join(result['variables'])}")
-    print(f"temperatura: {result['temperature_mode']}")
+    print(f"temperature_mode: {result['temperature_mode']}")
     print(f"shortlist: {path}")
     for point in result["points"][:8]:
         print(

@@ -10,9 +10,9 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "backend" / "scripts"))
+sys.path.insert(0, str(REPO_ROOT / "backend"))
 
-from moon_sites import MoonSites  # noqa: E402
+from app.services.moon.moon_sites import MoonSites  # noqa: E402
 
 SITES = REPO_ROOT / "data" / "moon" / "apollo_measurements.json"
 TABLE = REPO_ROOT / "data" / "moon" / "apollo_measurements.csv"
