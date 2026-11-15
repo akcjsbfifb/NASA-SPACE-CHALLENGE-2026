@@ -4,9 +4,11 @@ import {
 	useImperativeHandle,
 	useRef,
 	useState,
+	type ComponentProps,
+	type MutableRefObject,
 } from 'react';
 
-import Globe from 'react-globe.gl';
+import Globe, { type GlobeMethods } from 'react-globe.gl';
 
 import type {GlobeController} from './globe.controller';
 
@@ -14,6 +16,7 @@ import type {
 	GlobeEarthConfig,
 	GlobeHeatmap,
 	GlobeLabel,
+	GlobeMarker,
 	GlobePoint,
 	GlobePolygon,
 	GlobeView,
@@ -22,6 +25,10 @@ import type {
 } from './globe.types';
 
 import {DEFAULT_GLOBE_CONFIG} from './globe.defaults';
+
+import {createMarkerElement} from './globe.marker';
+
+import {SELECTED_FLY_MS} from '../../theme';
 
 interface InteractiveGlobeProps {
 	config?: InteractiveGlobeConfig;
@@ -33,6 +40,14 @@ interface InteractiveGlobeProps {
 interface GlobeRuntime {
 	pointOfView(view?: Partial<GlobeView>, transitionDuration?: number): GlobeRuntime | GlobeView;
 }
+
+// react-globe.gl declares this accessor with a GeoJSON union whose
+// `coordinates` is narrower than a Polygon's. The prop accepts the real shape
+// at runtime, so the value is cast to whatever the prop asks for.
+type GlobePolygonAccessor = NonNullable<ComponentProps<typeof Globe>['polygonGeoJsonGeometry']>;
+type GlobePolygonGeometry = GlobePolygonAccessor extends (obj: object) => infer Geometry
+	? Geometry
+	: never;
 
 type LayerData<T> = Record<string, T[]>;
 
@@ -71,6 +86,8 @@ function InteractiveGlobe(
 	const [highResolution, setHighResolution] = useState(false);
 
 	const [points, setPoints] = useState<LayerData<GlobePoint>>({});
+
+	const [markers, setMarkers] = useState<LayerData<GlobeMarker>>({});
 
 	const [polygons, setPolygons] = useState<LayerData<GlobePolygon>>({});
 
@@ -133,6 +150,13 @@ function InteractiveGlobe(
 		}));
 	};
 
+	const setMarkersForLayer = (layerId: string, data: GlobeMarker[]) => {
+		setMarkers(previous => ({
+			...previous,
+			[layerId]: data,
+		}));
+	};
+
 	const setPolygonsForLayer = (layerId: string, data: GlobePolygon[]) => {
 		setPolygons(previous => ({
 			...previous,
@@ -179,6 +203,12 @@ function InteractiveGlobe(
 			return next;
 		});
 
+		setMarkers(previous => {
+			const next = { ...previous };
+			delete next[layerId];
+			return next;
+		});
+
 		setPolygons(previous => {
 			const next = { ...previous };
 			delete next[layerId];
@@ -200,6 +230,7 @@ function InteractiveGlobe(
 
 	const clearLayers = () => {
 		setPoints({});
+		setMarkers({});
 		setPolygons({});
 		setHeatmaps({});
 		setLabels({});
@@ -235,6 +266,8 @@ function InteractiveGlobe(
 			addPoint,
 			removePoint,
 
+			setMarkers: setMarkersForLayer,
+
 			setPolygons: setPolygonsForLayer,
 			addPolygon,
 
@@ -250,6 +283,8 @@ function InteractiveGlobe(
 	);
 
 	const allPoints = Object.values(points).flat();
+
+	const allMarkers = Object.values(markers).flat();
 
 	const allPolygons = Object.values(polygons).flat();
 
@@ -268,9 +303,13 @@ function InteractiveGlobe(
 		}}
 		>
 		<Globe
-		ref={(instance) => {
-			globeRef.current = instance as GlobeRuntime | null;
-		}}
+		// The library types `ref` as an object ref, but it accepts a callback at
+		// runtime, which is how the controller gets the globe instance.
+		ref={
+			((instance: GlobeMethods | null) => {
+				globeRef.current = instance as unknown as GlobeRuntime | null;
+			}) as unknown as MutableRefObject<GlobeMethods | undefined>
+		}
 
 		width={dimensions.width}
 		height={dimensions.height}
@@ -293,11 +332,20 @@ function InteractiveGlobe(
 
 		onPointClick={(point: object) => { onPointSelect?.(point as GlobePoint); }}
 
+		// DOM pins.  three-globe hides them when they fall behind the globe, and
+		// they keep their pixel size instead of growing with the zoom.
+		htmlElementsData={allMarkers}
+		htmlLat="lat"
+		htmlLng="lng"
+		htmlAltitude={(marker: object) => (marker as GlobeMarker).altitude ?? 0.01 }
+		htmlElement={createMarkerElement}
+		htmlTransitionDuration={SELECTED_FLY_MS}
+
 		polygonsData={allPolygons}
 		polygonGeoJsonGeometry={(polygon: object) => ({
 			type: 'Polygon',
 			coordinates: (polygon as GlobePolygon).coordinates,
-		})}
+		}) as GlobePolygonGeometry}
 		polygonCapColor={(polygon: object) => (polygon as GlobePolygon).color ?? '#00aaff' }
 		polygonSideColor={() => 'rgba(0, 100, 255, 0.1)'}
 		polygonStrokeColor={() => '#ffffff'}
