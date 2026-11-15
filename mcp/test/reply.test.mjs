@@ -74,5 +74,9 @@ test('aficionado reply uses the plain voice and the same figures', () => {
   assert.match(reply, /0\.2 m por encima/);
   assert.match(reply, /no figura/);
   assert.match(reply, /basalto/);
-  assert.match(reply, /El frío y El hielo no entran/);
+  assert.match(reply, /Pendiente, objetivo 8°/);
+  assert.match(reply, /Rugosidad, objetivo 20 m/);
+  assert.match(reply, /Roca, objetivo vb/);
+  assert.match(reply, /Temperatura y Hielo no entran/);
+  assert.doesNotMatch(reply, /cuesta|irregular del suelo|El frío/);
 });

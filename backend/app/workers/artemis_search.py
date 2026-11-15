@@ -10,6 +10,10 @@ from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+_BACKEND = Path(__file__).resolve().parents[2]
+if str(_BACKEND) not in sys.path:
+    sys.path.insert(0, str(_BACKEND))
+
 from app.config import get_settings
 from app.services.earth import similarity
 from app.services.earth.activities import VARIABLES, ActivityError, resolve

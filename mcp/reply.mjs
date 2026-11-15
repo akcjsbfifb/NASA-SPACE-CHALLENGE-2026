@@ -26,19 +26,16 @@ const ROCK_PLAIN = {
   it: { vb: 'basalto', py: 'cenere vulcanica', pb: 'roccia profonda', su: 'suolo sciolto' },
 };
 
+const NAMES = {
+  es: { slope: 'Pendiente', roughness: 'Rugosidad', temperature: 'Temperatura', ice: 'Hielo', rock: 'Roca' },
+  en: { slope: 'Slope', roughness: 'Roughness', temperature: 'Temperature', ice: 'Ice', rock: 'Rock' },
+  fr: { slope: 'Pente', roughness: 'Rugosité', temperature: 'Température', ice: 'Glace', rock: 'Roche' },
+  it: { slope: 'Pendenza', roughness: 'Rugosità', temperature: 'Temperatura', ice: 'Ghiaccio', rock: 'Roccia' },
+};
+
 const LABEL = {
-  profesional: {
-    es: { slope: 'Pendiente', roughness: 'Rugosidad', temperature: 'Temperatura', ice: 'Hielo', rock: 'Roca' },
-    en: { slope: 'Slope', roughness: 'Roughness', temperature: 'Temperature', ice: 'Ice', rock: 'Rock' },
-    fr: { slope: 'Pente', roughness: 'Rugosité', temperature: 'Température', ice: 'Glace', rock: 'Roche' },
-    it: { slope: 'Pendenza', roughness: 'Rugosità', temperature: 'Temperatura', ice: 'Ghiaccio', rock: 'Roccia' },
-  },
-  aficionado: {
-    es: { slope: 'La cuesta', roughness: 'Lo irregular del suelo', temperature: 'El frío', ice: 'El hielo', rock: 'La roca' },
-    en: { slope: 'The slope', roughness: 'How rough the ground is', temperature: 'The cold', ice: 'The ice', rock: 'The rock' },
-    fr: { slope: 'La pente', roughness: 'Le relief du sol', temperature: 'Le froid', ice: 'La glace', rock: 'La roche' },
-    it: { slope: 'La pendenza', roughness: 'Quanto è irregolare il suolo', temperature: 'Il freddo', ice: 'Il ghiaccio', rock: 'La roccia' },
-  },
+  profesional: NAMES,
+  aficionado: NAMES,
 };
 
 const AND = { es: 'y', en: 'and', fr: 'et', it: 'e' };

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import socket
 import subprocess
 import sys
@@ -82,6 +83,21 @@ def fake_search_server():
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def test_worker_imports_app_when_launched_from_repo_root():
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    script = json.dumps(str(WORKER))
+    result = subprocess.run(
+        [str(PYTHON), "-c", f"import runpy; runpy.run_path({script}, run_name='probe')"],
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def _run_worker(columns_dir: Path, shortlist_path: Path, extra_env: dict | None = None):
