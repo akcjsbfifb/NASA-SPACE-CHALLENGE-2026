@@ -8,9 +8,12 @@ from __future__ import annotations
 import json
 import math
 import os
+import secrets
 import sys
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from queue import Empty, Queue
 from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
@@ -21,8 +24,48 @@ sys.path.insert(0, str(ROOT / "NASA-Lunar-Studies" / "src"))
 from lunar_data.lola import LolaRaster
 from lunar_data.metadata import MetadataError, load_metadata
 
-INDEX = EarthIndex()
-print(f"earth grid ready: {INDEX.lat.size:,} cells", flush=True)
+_sse_clients: list[Queue[str]] = []
+_sse_lock = threading.Lock()
+
+NOTIFY_TOKEN_PATH = Path("/tmp/gurvich-notify.token")
+MAX_NOTIFY_BODY = 2 * 1024 * 1024
+NOTIFY_TOKEN = ""
+
+_VITE_DEV_ORIGINS = frozenset(
+    {
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    }
+)
+
+
+def init_notify_token() -> str:
+    global NOTIFY_TOKEN
+    token = secrets.token_urlsafe(32)
+    NOTIFY_TOKEN_PATH.write_text(token)
+    NOTIFY_TOKEN_PATH.chmod(0o600)
+    NOTIFY_TOKEN = token
+    return token
+
+
+def _broadcast_search_event(body: dict) -> int:
+    line = f"data: {json.dumps(body, ensure_ascii=False)}\n\n"
+    with _sse_lock:
+        clients = list(_sse_clients)
+    for queue in clients:
+        queue.put(line)
+    return len(clients)
+
+
+_index: EarthIndex | None = None
+
+
+def earth_index() -> EarthIndex:
+    global _index
+    if _index is None:
+        _index = EarthIndex()
+        print(f"earth grid ready: {_index.lat.size:,} cells", flush=True)
+    return _index
 
 
 def maps_key() -> str:
@@ -80,11 +123,18 @@ class MoonSampler:
         }
 
 
-MOON = MoonSampler()
-print(
-    "lola ready" if not MOON.error else f"lola unavailable: {MOON.error}",
-    flush=True,
-)
+_moon: MoonSampler | None = None
+
+
+def moon_sampler() -> MoonSampler:
+    global _moon
+    if _moon is None:
+        _moon = MoonSampler()
+        print(
+            "lola ready" if not _moon.error else f"lola unavailable: {_moon.error}",
+            flush=True,
+        )
+    return _moon
 
 
 def scene_bbox(lat: float, lon: float, half_m: float = 400.0) -> tuple[float, float, float, float]:
@@ -97,6 +147,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
+        if parsed.path == "/events":
+            self._events()
+            return
         if parsed.path == "/cell":
             self._cell(query)
             return
@@ -110,7 +163,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "not found"})
             return
         try:
-            result = INDEX.search(
+            result = earth_index().search(
                 slope=self._optional_float(query, "slope"),
                 roughness=self._optional_float(query, "roughness"),
                 tmin=self._optional_float(query, "tmin"),
@@ -128,7 +181,65 @@ class Handler(BaseHTTPRequestHandler):
             write_shortlist(result)
         except OSError as error:
             result = {**result, "shortlist_error": str(error)}
+        _broadcast_search_event(result)
         self._send(200, result)
+
+    def do_POST(self) -> None:
+        parsed = urlparse(self.path)
+        if parsed.path != "/notify":
+            self._send(404, {"error": "not found"})
+            return
+        length = int(self.headers.get("Content-Length", "0") or "0")
+        if length > MAX_NOTIFY_BODY:
+            self._send(413, {"error": "payload too large"})
+            return
+        token = self.headers.get("X-Gurvich-Notify-Token", "")
+        if not NOTIFY_TOKEN or token != NOTIFY_TOKEN:
+            self._send(401, {"error": "unauthorized"})
+            return
+        try:
+            raw = self.rfile.read(length) if length else b"{}"
+            body = json.loads(raw.decode() or "{}")
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
+            self._send(400, {"error": str(error)})
+            return
+        if not isinstance(body, dict):
+            self._send(400, {"error": "body must be a JSON object"})
+            return
+        listeners = _broadcast_search_event(body)
+        self._send(200, {"listeners": listeners})
+
+    def _events(self) -> None:
+        queue: Queue[str] = Queue()
+        with _sse_lock:
+            _sse_clients.append(queue)
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Connection", "keep-alive")
+            origin = self.headers.get("Origin", "")
+            if origin in _VITE_DEV_ORIGINS:
+                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Vary", "Origin")
+            self.end_headers()
+            self.wfile.write(b": ok\n\n")
+            self.wfile.flush()
+            while True:
+                try:
+                    message = queue.get(timeout=25.0)
+                except Empty:
+                    self.wfile.write(b": ping\n\n")
+                    self.wfile.flush()
+                    continue
+                self.wfile.write(message.encode())
+                self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            pass
+        finally:
+            with _sse_lock:
+                if queue in _sse_clients:
+                    _sse_clients.remove(queue)
 
     def _coordinates(self, query: dict[str, list[str]]) -> tuple[float, float]:
         return float(query["lat"][0]), float(query["lon"][0])
@@ -142,7 +253,7 @@ class Handler(BaseHTTPRequestHandler):
     def _moon(self, query: dict[str, list[str]]) -> None:
         try:
             lat, lon = self._coordinates(query)
-            sample = MOON.sample(lat, lon)
+            sample = moon_sampler().sample(lat, lon)
         except (KeyError, ValueError) as error:
             self._send(400, {"error": str(error)})
             return
@@ -154,7 +265,7 @@ class Handler(BaseHTTPRequestHandler):
     def _cell(self, query: dict[str, list[str]]) -> None:
         try:
             lat, lon = self._coordinates(query)
-            cell = INDEX.nearest(lat, lon)
+            cell = earth_index().nearest(lat, lon)
         except (KeyError, ValueError) as error:
             self._send(400, {"error": str(error)})
             return
@@ -234,6 +345,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    init_notify_token()
+    earth_index()
+    moon_sampler()
     server = ThreadingHTTPServer(("127.0.0.1", 8787), Handler)
     print("search api http://127.0.0.1:8787/search", flush=True)
     server.serve_forever()

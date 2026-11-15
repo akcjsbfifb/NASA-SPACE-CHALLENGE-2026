@@ -43,6 +43,14 @@ type SearchPoint = {
 	rock: string;
 };
 
+type SearchTarget = {
+	slope_deg?: number | null;
+	roughness_m?: number | null;
+	tmin_c?: number | null;
+	ice_thickness_m?: number | null;
+	rock?: string | null;
+};
+
 type SearchResponse = {
 	returned: number;
 	min_closeness: number;
@@ -50,6 +58,9 @@ type SearchResponse = {
 	loosest: number | null;
 	temperature_mode: string;
 	points: SearchPoint[];
+	target?: SearchTarget;
+	variables?: string[];
+	precision?: number;
 };
 
 function colorFor(closeness: number) {
@@ -120,6 +131,70 @@ function App() {
 		const onHash = () => setPage(pageFromHash());
 		window.addEventListener('hashchange', onHash);
 		return () => window.removeEventListener('hashchange', onHash);
+	}, []);
+
+	function applySearchResult(body: SearchResponse, originName: string | null) {
+		setPoints(body.points);
+		setSummary(describe(body, originName));
+		if (body.precision !== undefined) setPrecision(body.precision);
+		const target = body.target;
+		const used = new Set(body.variables ?? []);
+		if (!target) return;
+		const roughnessOnlyQuery =
+			used.size === 1 && used.has('roughness') && target.roughness_m != null;
+		setRoughnessOnly(roughnessOnlyQuery);
+		if (roughnessOnlyQuery) {
+			setLunarLabel(null);
+			setLunarElevation(null);
+			setSlope('');
+			setTmin('');
+			setIce('');
+			setRock('');
+			setRoughness(String(target.roughness_m));
+			return;
+		}
+		setRoughnessOnly(false);
+		setLunarLabel(null);
+		setLunarElevation(null);
+		setSlope(target.slope_deg != null ? String(target.slope_deg) : '');
+		setRoughness(target.roughness_m != null ? String(target.roughness_m) : '');
+		setTmin(target.tmin_c != null ? String(target.tmin_c) : '');
+		setIce(target.ice_thickness_m != null ? String(target.ice_thickness_m) : '');
+		setRock(target.rock ?? '');
+	}
+
+	useEffect(() => {
+		let events: EventSource | null = null;
+		let retry: ReturnType<typeof setTimeout> | undefined;
+		let cancelled = false;
+
+		const connect = () => {
+			if (cancelled) return;
+			events = new EventSource('http://127.0.0.1:8787/events');
+			events.onmessage = (event) => {
+				try {
+					const body = JSON.parse(event.data) as SearchResponse & { error?: string };
+					if (body.error) return;
+					if (!Array.isArray(body.points)) return;
+					applySearchResult(body, null);
+				} catch {
+					// ignore malformed SSE payloads
+				}
+			};
+			events.onerror = () => {
+				if (cancelled || !events) return;
+				if (events.readyState !== EventSource.CLOSED) return;
+				events.close();
+				retry = setTimeout(connect, 1000);
+			};
+		};
+
+		connect();
+		return () => {
+			cancelled = true;
+			if (retry !== undefined) clearTimeout(retry);
+			events?.close();
+		};
 	}, []);
 
 	function selectPlace(lat: number, lng: number, closeness?: number) {
@@ -198,8 +273,7 @@ function App() {
 			const response = await fetch(`http://127.0.0.1:8787/search?${params}`);
 			const body = (await response.json()) as SearchResponse & { error?: string };
 			if (!response.ok) throw new Error(body.error || 'la búsqueda falló');
-			setPoints(body.points);
-			setSummary(describe(body, originName));
+			applySearchResult(body, originName);
 		} catch (error) {
 			const offline = error instanceof TypeError;
 			setSummary(
