@@ -10,7 +10,7 @@ import {
 	type LunarSample,
 } from '../data/lunarLandings';
 import { SEARCH_API } from '../searchApi';
-import { percent } from '../score';
+import type { VariableInfo } from '../score';
 import { SELECTED_COLOR, SELECTED_PIN_SIZE } from '../theme';
 
 const MOON_GLOBE = {
@@ -45,6 +45,7 @@ export type EarthAnalog = {
 	coverage?: number;
 	tmin_c?: number | null;
 	ice_thickness_m?: number | null;
+	measurements?: Record<string, { value: number | null; unit: string; available: boolean; status: string; reason: string | null; source: string | null; method: string | null }>;
 };
 
 export type EarthAnalogSet = {
@@ -53,7 +54,7 @@ export type EarthAnalogSet = {
 	closest: number | null;
 	loosest: number | null;
 	points: EarthAnalog[];
-	variables_used?: { id: string; weight: number }[];
+	variables_used?: VariableInfo[];
 };
 
 type MoonPageProps = {
@@ -67,7 +68,7 @@ type MoonPageProps = {
 
 function percentText(value: number | null) {
 	if (value === null) return '—';
-	return `${percent(value, 1)}%`;
+	return `${(value * 100).toFixed(1)}%`;
 }
 
 export function listPreview<T extends { closeness: number }>(items: T[], count = 6): T[] {
@@ -338,10 +339,10 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 															}}
 														>
 															{percentText(point.closeness)} · {point.roughness_m.toFixed(1)} m · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
-																	<br />Pendiente: Luna {sample.slope ?? 'sin dato'}° · Tierra {point.slope_deg}° · {point.scores?.slope === undefined ? 'sin puntaje' : percentText(point.scores.slope)} · peso {analogs.variables_used?.find(v => v.id === 'slope')?.weight ?? 'no utilizado'}
-																	<br />Rugosidad: Luna {sample.roughness} m · Tierra {point.roughness_m} m · {point.scores?.roughness === undefined ? 'sin puntaje' : percentText(point.scores.roughness)} · peso {analogs.variables_used?.find(v => v.id === 'roughness')?.weight ?? 'no utilizado'}
-																	<br />Tierra: ETOPO; Luna: LOLA. Valores terrestres redondeados por el servicio.
-																	<br />Elevación LOLA: Luna {sample.elevation ?? 'sin dato'} m · Tierra ETOPO: no incluida en esta respuesta · contextual.
+																	<br />Pendiente: Luna {sample.slope ?? 'sin dato'}° · Tierra {point.measurements?.slope?.value ?? 'sin dato'}° · {point.scores?.slope === undefined ? 'sin puntaje' : percentText(point.scores.slope)} · peso {analogs.variables_used?.find(v => v.id === 'slope')?.weight ?? 'no utilizado'}
+																	<br />Rugosidad: Luna {sample.roughness} m · Tierra {point.measurements?.roughness?.value ?? 'sin dato'} m · {point.scores?.roughness === undefined ? 'sin puntaje' : percentText(point.scores.roughness)} · peso {analogs.variables_used?.find(v => v.id === 'roughness')?.weight ?? 'no utilizado'}
+																	<br />Tierra: {point.measurements?.slope?.source ?? 'fuente no disponible'}; Luna: LOLA. Comparaciones aproximadas.
+																	<br />Elevación LOLA: Luna {sample.elevation ?? 'sin dato'} m · Tierra ETOPO: {point.measurements?.elevation?.value ?? 'sin dato'} m · contextual.
 																	<br />Rocas Diviner RA: Luna {sample.measurements.rock_abundance?.value ?? 'sin dato'} fracción · Tierra: sin equivalente medido · contextual.
 																	<br />TBOL Diviner: Luna {sample.measurements.bolometric_temperature?.value ?? 'sin dato'} K · MODIS terrestre: no disponible · aproximada.
 																	<br />TREG Diviner: Luna {sample.measurements.regolith_temperature?.value ?? 'sin dato'} K · suelo ERA5 terrestre: no disponible · contextual.

@@ -9,7 +9,7 @@ shortlist = "data/earth/shortlist.json"
 activities_catalog = "mcp/activities.json"
 moon_sites = "data/moon/apollo_measurements.json"
 lola_raw = "data/raw/lola"
-notify_token = "/tmp/gurvich-notify.token"
+notify_token = "output/gurvich-notify.token"
 raw_data = "data/raw"
 
 [server]

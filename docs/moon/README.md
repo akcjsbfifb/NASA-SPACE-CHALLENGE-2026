@@ -21,9 +21,19 @@ La caché de puntos está limitada a 64 resultados, sin guardar errores de fuent
 El buscador terrestre requiere coordinación: el promedio ponderado limita el
 denominador a uno incluso con suma de pesos inferior a uno; el tratamiento
 polar de pendiente limita la distancia longitudinal; y la rugosidad terrestre
-usa RMS de vecinos, mientras LOLA retira un plano. La respuesta terrestre
-redondea valores y no incluye todas las fuentes ni estados por candidato.
-Se necesitan valores originales y procedencia antes de presentarlos como crudos.
+usa RMS de vecinos, mientras LOLA retira un plano. Los campos históricos de la
+respuesta terrestre redondean valores; los campos aditivos conservan los
+valores originales del índice.
+
+El servicio HTTP admite `GURVICH_COLUMNS_DIR` para usar columnas terrestres
+externas. Sin esa variable mantiene la ubicación configurada por defecto. Cada
+resultado añade `row_index`, `coordinates_original` y `measurements` con los
+valores de las columnas y sus estados. La procedencia procede del `columns.json`
+del directorio padre; si no existe, se informa como desconocida. Los campos
+originales, redondeados para presentación, se mantienen por compatibilidad.
+La asociación entre `columns.json` y los binarios debe verificarse con hashes
+del productor; el manifiesto actual no los contiene. El cambio no corrige el
+promedio ponderado ni modifica la política polar o el método de rugosidad.
 
 ## Consumir los resultados sin datos NASA
 

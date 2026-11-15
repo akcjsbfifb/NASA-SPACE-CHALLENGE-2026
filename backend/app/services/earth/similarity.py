@@ -213,6 +213,11 @@ class EarthIndex:
     ) -> None:
         directory = COLUMNS_DIR if columns_dir is None else Path(columns_dir)
         self.columns_dir = directory
+        metadata_path = directory.parent / "columns.json"
+        try:
+            self.column_metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            self.column_metadata = {}
         if not directory.is_dir():
             raise FileNotFoundError(
                 f"column directory missing: {directory}\n"
@@ -651,6 +656,26 @@ class EarthIndex:
                     deltas[name] = round(float(delta[row]), 4)
             if min_worst is not None and worst < float(min_worst):
                 continue
+            measurements = {}
+            for name, array, unit, source, method_key in (
+                ("elevation", self.elevation, "m", "ETOPO 2022", "grid"),
+                ("slope", self.slope, "deg", "ETOPO 2022", "slope_deg"),
+                ("roughness", self.roughness, "m", "ETOPO 2022", "roughness_m"),
+                ("air_temperature", self.tmin, "C", "WorldClim 2.1", "tmin_coldest_month_c"),
+                ("ice_thickness", self.ice, "m", "ETOPO 2022", "ice_thickness_m"),
+                ("lithology", self.rock, "class", "GLiM", "lithology_code"),
+            ):
+                value = float(array[index]) if name != "lithology" else int(array[index])
+                present = math.isfinite(value) and (name != "lithology" or value not in (0, 15))
+                measurements[name] = {
+                    "value": value if present else None,
+                    "unit": unit,
+                    "available": present,
+                    "status": "valid" if present else "missing",
+                    "reason": None if present else "not_available_in_index",
+                    "source": source if method_key in self.column_metadata else None,
+                    "method": self.column_metadata.get(method_key),
+                }
             points.append(
                 {
                     "lat": round(float(self.lat[index]), 4),
@@ -668,6 +693,9 @@ class EarthIndex:
                     "scores": scores,
                     "grades": grades,
                     "deltas": deltas,
+                    "row_index": int(index),
+                    "coordinates_original": {"lat": float(self.lat[index]), "lon": float(self.lon[index])},
+                    "measurements": measurements,
                 }
             )
 

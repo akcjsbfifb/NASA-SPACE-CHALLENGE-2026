@@ -200,3 +200,18 @@ def test_disabled_variable_is_reported_not_scored(tmp_path, tiny_index: EarthInd
     assert result["ignored"] == ["rock"]
     assert result["variables"] == ["slope"]
     assert "rock" not in result["points"][0]["scores"]
+
+
+def test_returned_measurements_are_original_values_and_preserve_missing(tiny_index):
+    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
+        result = tiny_index.search({"slope": 8.0, "roughness": 25.0}, precision=0.5)
+    assert result["points"]
+    for point in result["points"]:
+        row = point["row_index"]
+        assert point["measurements"]["slope"]["value"] == float(tiny_index.slope[row])
+        assert point["measurements"]["roughness"]["value"] == float(tiny_index.roughness[row])
+        assert point["coordinates_original"]["lat"] == float(tiny_index.lat[row])
+        temperature = point["measurements"]["air_temperature"]
+        if not np.isfinite(tiny_index.tmin[row]):
+            assert temperature["value"] is None
+            assert temperature["available"] is False

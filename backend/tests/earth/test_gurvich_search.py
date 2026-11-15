@@ -23,7 +23,7 @@ from app.cli.extract_earth_columns import extract  # noqa: E402
 from test_earth_columns_mmap import _synthetic_parquet  # noqa: E402
 
 WORKER = BACKEND / "app" / "workers" / "gurvich_search.py"
-PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+PYTHON = Path(sys.executable)
 
 
 @pytest.fixture()

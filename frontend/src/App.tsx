@@ -324,7 +324,7 @@ function App() {
 		chosen?: EarthAnalog,
 	) {
 		if (lunar.sample.roughness === null) return;
-		setSlope('');
+		setSlope(lunar.sample.slope === null ? '' : String(lunar.sample.slope));
 		setTmin('');
 		setIce('');
 		setRock('');
@@ -344,6 +344,7 @@ function App() {
 			roughness: String(lunar.sample.roughness),
 			precision: String(precision),
 		});
+		if (lunar.sample.slope !== null) params.set('slope', String(lunar.sample.slope));
 		setBusy(true);
 		setSummary({ type: 'searching' });
 		void fetch(`${SEARCH_API}/search?${params}`)
