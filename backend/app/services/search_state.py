@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
 from app.services.earth.similarity import EarthIndex
 from app.services.moon.lola_sampler import MoonSampler
 from app.services.moon.moon_sites import MoonSites
@@ -12,7 +15,8 @@ _moon_sites: MoonSites | None = None
 def earth_index() -> EarthIndex:
     global _index
     if _index is None:
-        _index = EarthIndex()
+        external = os.environ.get("GURVICH_COLUMNS_DIR", "").strip()
+        _index = EarthIndex(columns_dir=Path(external) if external else None)
     return _index
 
 

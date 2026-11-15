@@ -3,48 +3,48 @@
     "id": "apollo-11",
     "name": "Apolo 11 · Base de la Tranquilidad",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": 0.67408,
-    "longitude_deg": 23.47297
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": 0.6742,
+    "longitude_deg": 23.4731
   },
   {
     "id": "apollo-12",
     "name": "Apolo 12 · Océano de las Tormentas",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": -3.01239,
-    "longitude_deg": -23.42157
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": -3.0128,
+    "longitude_deg": 336.5781
   },
   {
     "id": "apollo-14",
     "name": "Apolo 14 · Fra Mauro",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": -3.64544,
-    "longitude_deg": -17.47136
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": -3.6459,
+    "longitude_deg": 342.5281
   },
   {
     "id": "apollo-15",
     "name": "Apolo 15 · Hadley-Apeninos",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": 26.13222,
-    "longitude_deg": 3.63386
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": 26.1324,
+    "longitude_deg": 3.6333
   },
   {
     "id": "apollo-16",
     "name": "Apolo 16 · Descartes",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": -8.97301,
-    "longitude_deg": 15.50019
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": -8.9734,
+    "longitude_deg": 15.5011
   },
   {
     "id": "apollo-17",
     "name": "Apolo 17 · Taurus-Littrow",
     "is_example": false,
-    "source": "Coordenadas publicadas del sitio de alunizaje (NASA/USGS), tomadas de frontend/src/data/lunarLandings.ts; sin verificar todavía contra un catálogo primario.",
-    "latitude_deg": 20.1908,
-    "longitude_deg": 30.77168
+    "source": "Coordenadas proporcionadas por el usuario; verificadas por redondeo con NASA NSSDCA DE421: https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_sites.html",
+    "latitude_deg": 20.1911,
+    "longitude_deg": 30.7723
   }
 ]

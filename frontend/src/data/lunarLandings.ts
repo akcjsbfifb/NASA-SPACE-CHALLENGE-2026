@@ -4,6 +4,16 @@ export type LunarSample = {
 	elevation: number | null;
 	roughness: number | null;
 	slope: number | null;
+	measurements: Record<string, LunarMeasurement>;
+};
+
+export type LunarMeasurement = {
+	value: number | null;
+	unit: string | null;
+	available: boolean | null;
+	status: string;
+	reason: string | null;
+	source_ref: string | null;
 };
 
 export type LunarLanding = {
@@ -21,48 +31,48 @@ export const LUNAR_LANDINGS: LunarLanding[] = [
 		id: 'apollo-11',
 		mission: 'Apolo 11',
 		name: 'Base de la Tranquilidad',
-		lat: 0.67408,
-		lng: 23.47297,
+		lat: 0.6742,
+		lng: 23.4731,
 		date: '20 jul 1969',
 	},
 	{
 		id: 'apollo-12',
 		mission: 'Apolo 12',
 		name: 'Océano de las Tormentas',
-		lat: -3.01239,
-		lng: -23.42157,
+		lat: -3.0128,
+		lng: -23.4219,
 		date: '19 nov 1969',
 	},
 	{
 		id: 'apollo-14',
 		mission: 'Apolo 14',
 		name: 'Fra Mauro',
-		lat: -3.64544,
-		lng: -17.47136,
+		lat: -3.6459,
+		lng: -17.4719,
 		date: '5 feb 1971',
 	},
 	{
 		id: 'apollo-15',
 		mission: 'Apolo 15',
 		name: 'Hadley-Apeninos',
-		lat: 26.13222,
-		lng: 3.63386,
+		lat: 26.1324,
+		lng: 3.6333,
 		date: '30 jul 1971',
 	},
 	{
 		id: 'apollo-16',
 		mission: 'Apolo 16',
 		name: 'Descartes',
-		lat: -8.97301,
-		lng: 15.50019,
+		lat: -8.9734,
+		lng: 15.5011,
 		date: '21 abr 1972',
 	},
 	{
 		id: 'apollo-17',
 		mission: 'Apolo 17',
 		name: 'Taurus-Littrow',
-		lat: 20.1908,
-		lng: 30.77168,
+		lat: 20.1911,
+		lng: 30.7723,
 		date: '11 dic 1972',
 	},
 ];
@@ -71,6 +81,7 @@ type MoonResponse = {
 	elevation_m: number | null;
 	roughness_m: number | null;
 	slope_deg?: number | null;
+	measurements?: Record<string, LunarMeasurement>;
 	error?: string;
 };
 
@@ -92,6 +103,7 @@ export async function lookupLunarSample(
 		elevation: body.elevation_m,
 		roughness: body.roughness_m,
 		slope: body.slope_deg ?? null,
+		measurements: body.measurements ?? {},
 	};
 }
 

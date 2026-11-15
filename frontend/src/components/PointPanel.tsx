@@ -7,6 +7,17 @@ import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
 import { formatDelta, formatValue, percent, truncated } from '../score';
 import type { ActivityPreset, Grade, VariableInfo } from '../score';
+import type { LunarSelection } from './MoonPage';
+import { extraCopy, extraValue } from '../data/earthMeasurements';
+import { lunarSearchCopy } from '../data/lunarSearchCopy';
+import type { AdditionalMeasurements } from '../data/earthMeasurements';
+
+/** Backend quality_warning codes (snake_case); not for UI copy. */
+const INTERNAL_QUALITY_WARNING = /^[a-z][a-z0-9_]*$/;
+
+function visibleQualityWarnings(warnings: string[] | undefined): string[] {
+	return (warnings ?? []).filter((warning) => !INTERNAL_QUALITY_WARNING.test(warning));
+}
 
 export type SelectedPlace = {
 	lat: number;
@@ -15,11 +26,17 @@ export type SelectedPlace = {
 	coverage?: number;
 	worst?: number;
 	scores?: Record<string, number>;
+	weighted_shares?: Record<string, number>;
+	effective_weights?: Record<string, number>;
 	grades?: Record<string, Grade>;
 	grade?: Grade;
 	deltas?: Record<string, number>;
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
+	additional_measurements?: AdditionalMeasurements;
+	measurements?: Record<string, { value: number | null; source: string | null; unit: string; status: string; reason: string | null }>;
+	quality_warnings?: string[];
+	coordinates_original?: { lat: number; lon: number };
 };
 
 type EarthCell = {
@@ -40,6 +57,7 @@ type PointPanelProps = {
 	language: Language;
 	variables: VariableInfo[];
 	activities: ActivityPreset[];
+	lunar: LunarSelection | null;
 };
 
 /** Labels come from i18n by id, with the raw id as a fallback for new variables. */
@@ -50,6 +68,8 @@ function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
 		temperature: copy.nightTemperature,
 		ice: copy.ice,
 		rock: copy.rock,
+		tbol_modis: 'TBOL / MODIS',
+		treg_era5: 'TREG / ERA5-Land',
 	};
 	return known[id] ?? id;
 }
@@ -93,6 +113,7 @@ function breakdownSlices(
 	variables: VariableInfo[],
 	scores: Record<string, number>,
 	copy: ReturnType<typeof getCopy>,
+	weightedShares?: Record<string, number>,
 ): BreakdownSlice[] {
 	const active = variables.filter((variable) => typeof scores[variable.id] === 'number');
 	const scoreSum = active.reduce((sum, variable) => sum + scores[variable.id]!, 0);
@@ -100,13 +121,13 @@ function breakdownSlices(
 	let cursor = 0;
 	return active.map((variable) => {
 		const score = scores[variable.id]!;
-		const share = score / scoreSum;
+		const share = weightedShares?.[variable.id] ?? score / scoreSum;
 		const span = share * 360;
 		const startDeg = cursor;
 		const endDeg = cursor + span;
 		cursor = endDeg;
 		const shareLabel = truncated(share * 100, 1);
-		const similarityLabel = percent(score, 1);
+		const similarityLabel = (score * 100).toFixed(1);
 		const name = variableLabel(copy, variable.id);
 		return {
 			id: variable.id,
@@ -145,8 +166,21 @@ function formatMeters(value: number | null, noData: string, digits = 0) {
 	return `${value.toFixed(digits)} m`;
 }
 
-export default function PointPanel({ place, onClose, language, variables, activities }: PointPanelProps) {
+export default function PointPanel(props: PointPanelProps) {
+	const key = props.place ? `${props.place.lat},${props.place.lng}` : 'none';
+	return <PointPanelContent key={key} {...props} />;
+}
+
+function PointPanelContent({ place, lunar, onClose, language, variables, activities }: PointPanelProps) {
 	const copy = getCopy(language);
+	const extra = extraCopy[language];
+	const [extraResult, setExtraResult] = useState<{ key: string; values: AdditionalMeasurements | null; failed: boolean } | null>(null);
+	const extraKey = place ? `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}` : '';
+	const enriched = extraResult?.key === extraKey ? extraResult.values : null;
+	const additional = enriched ? { ...place?.additional_measurements, ...enriched,
+		...Object.fromEntries(Object.entries(place?.additional_measurements ?? {}).filter(([key, value]) => value.available && !enriched[key]?.available)),
+	} : place?.additional_measurements ?? null;
+	const extraStatus = additional ? 'ready' : extraResult?.key === extraKey && extraResult.failed ? 'failed' : 'loading';
 	const [cell, setCell] = useState<EarthCell | null>(null);
 	const [cellError, setCellError] = useState(false);
 	const [sceneUrl, setSceneUrl] = useState('');
@@ -156,14 +190,37 @@ export default function PointPanel({ place, onClose, language, variables, activi
 	const earthRequest = useRef(0);
 	const earthAbort = useRef<AbortController | null>(null);
 
+	useEffect(() => {
+		if (!place || !lunar) return;
+		const existing = place.additional_measurements;
+		if (existing && !Object.values(existing).some(item => item.reason === 'source_not_selected')) return;
+		const controller = new AbortController();
+		const key = `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}`;
+		const load = async () => {
+			for (let attempt = 0; attempt < 8; attempt++) {
+				const response = await fetch(`${SEARCH_API}/enrich`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ candidates: [place.coordinates_original ?? { lat: place.lat, lon: place.lng }] }), signal: controller.signal });
+				if (response.status === 429 && attempt < 7) {
+					await new Promise(resolve => setTimeout(resolve, 8000));
+					if (controller.signal.aborted) throw new Error('aborted');
+					continue;
+				}
+				if (!response.ok) throw new Error('enrichment failed');
+				return response.json() as Promise<{ candidates: { additional_measurements: AdditionalMeasurements }[] }>;
+			}
+			throw new Error('enrichment busy');
+		};
+		void load()
+			.then(data => { setExtraResult({ key, values: data.candidates[0]?.additional_measurements ?? null, failed: false }); })
+			.catch(() => { if (!controller.signal.aborted) setExtraResult({ key, values: null, failed: true }); });
+		return () => controller.abort();
+	}, [place, lunar]);
+
 	// Continent and country come from a bundled Natural Earth extract: no key,
 	// no quota, and it still answers over Antarctica and ice shelves.
 	// GeoJSON → /cell → /scene, one step after the previous finishes (or cache hit).
 	useEffect(() => {
-		if (!place) {
-			setWhere(undefined);
-			return;
-		}
+		if (!place) return;
 		const ticket = ++earthRequest.current;
 		earthAbort.current?.abort();
 		const controller = new AbortController();
@@ -173,15 +230,15 @@ export default function PointPanel({ place, onClose, language, variables, activi
 			lat: String(lat),
 			lon: String(lng),
 		});
-		setWhere(undefined);
-		setCell(null);
-		setCellError(false);
-		setSceneUrl('');
-		setSceneSource('');
-		setImageError(false);
 		let objectUrl = '';
 
 		(async () => {
+			setWhere(undefined);
+			setCell(null);
+			setCellError(false);
+			setSceneUrl('');
+			setSceneSource('');
+			setImageError(false);
 			const stale = () => ticket !== earthRequest.current || controller.signal.aborted;
 			const skipAbort = (error: unknown) =>
 				error instanceof Error && error.name === 'AbortError';
@@ -231,7 +288,6 @@ export default function PointPanel({ place, onClose, language, variables, activi
 			controller.abort();
 			if (objectUrl) URL.revokeObjectURL(objectUrl);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps -- ticket guards stale place; only re-chain on selection change
 	}, [place]);
 
 	const mapsUrl = place
@@ -266,6 +322,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 					<p className="scene-links">
 						<a href={mapsUrl} target="_blank" rel="noreferrer">{copy.viewGoogleMaps}</a>
 					</p>
+					{lunar && <p className="muted">{({ es: 'Datos terrestres complementarios: WorldClim, hielo y litología son contexto y no participan en la comparación lunar.', en: 'Additional Earth data: WorldClim, ice and lithology are context and do not contribute to the lunar comparison.', fr: 'Données terrestres complémentaires : WorldClim, glace et lithologie sont contextuels et ne participent pas à la comparaison lunaire.', it: 'Dati terrestri aggiuntivi: WorldClim, ghiaccio e litologia sono contestuali e non partecipano al confronto lunare.' })[language]}</p>}
 					<dl className="cell-facts">
 						{where !== undefined && (
 							<>
@@ -298,7 +355,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 									<dt>{copy.closeness}</dt>
 									<dd>
 										{place.grade && <span className={`grade grade-${place.grade}`}>{place.grade}</span>}
-										{percent(place.closeness, 2)}%
+										{lunar ? (place.closeness * 100).toFixed(2) : percent(place.closeness, 2)}%
 									</dd>
 								</div>
 								{variables.length > 0 && (
@@ -340,6 +397,14 @@ export default function PointPanel({ place, onClose, language, variables, activi
 							<dd>{cell ? `${copy.rocks[cell.rock] ?? cell.rock} (${cell.rock})` : '…'}</dd>
 						</div>
 					</dl>
+					{lunar && <section className="compare">
+						<h4>{({ es: 'Mediciones adicionales · enero 2025', en: 'Additional measurements · January 2025', fr: 'Mesures supplémentaires · janvier 2025', it: 'Misure aggiuntive · gennaio 2025' })[language]}</h4>
+						<p>{extra.scope} {extraStatus === 'loading' ? extra.loading : extraStatus === 'failed' ? extra.failed : ''}</p>
+						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending, language)} · {extra.approx}, {place.scores?.tbol_modis === undefined ? extra.noScore : `${(place.scores.tbol_modis * 100).toFixed(1)}%`}.</p>
+						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending, language)} · {place.scores?.treg_era5 === undefined ? extra.context : lunarSearchCopy[language].indirect}, {place.scores?.treg_era5 === undefined ? extra.noScore : `${(place.scores.treg_era5 * 100).toFixed(1)}%`}.</p>
+						<p>{extra.soil}: {extra.lunar} RA {lunar.sample.measurements.rock_abundance?.value ?? extra.pending} · {extra.earth} {extraValue(additional?.coarse_fragments_0_to_5cm, extra.pending, language)} · {extra.context}, {extra.noScore}.</p>
+						<p>Lunar Prospector H: {lunar.sample.measurements.hydrogen_abundance_ppm?.value ?? extra.pending} ppm · {extra.noScore}.</p>
+					</section>}
 					{place.scores && Object.keys(place.scores).length > 0 && (
 						<section className="compare">
 							<h4>{copy.compare}</h4>
@@ -350,7 +415,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 								<span>{copy.differsBy}</span>
 							</div>
 							{variables.map((variable) => {
-								const earth = cell ? cellValue(cell, variable.id) : null;
+								const earth = variable.id === 'tbol_modis' ? additional?.surface_temperature_modis?.value ?? null : variable.id === 'treg_era5' ? additional?.soil_temperature_0_to_7cm?.value ?? null : place.measurements?.[variable.id]?.value ?? (cell ? cellValue(cell, variable.id) : null);
 								const delta = place.deltas?.[variable.id];
 								return (
 									<div className="compare-row" key={variable.id}>
@@ -359,9 +424,10 @@ export default function PointPanel({ place, onClose, language, variables, activi
 											{formatValue(place.target?.[variable.id], variable.unit)}
 										</span>
 										<span className="compare-earth">
-											{cell
+											{cell || place.measurements?.[variable.id] || variable.id === 'tbol_modis' || variable.id === 'treg_era5'
 												? formatValue(earth, variable.unit) || copy.noData
 												: '…'}
+										{lunar && typeof earth === 'number' && <small> ({earth} {variable.unit ?? ''})</small>}
 										</span>
 										<span className="compare-differs">
 											{typeof delta === 'number'
@@ -376,10 +442,12 @@ export default function PointPanel({ place, onClose, language, variables, activi
 						</section>
 					)}
 					{place.scores && Object.keys(place.scores).length > 0 && (() => {
-						const slices = breakdownSlices(variables, place.scores, copy);
+						const slices = breakdownSlices(variables, place.scores, copy, place.weighted_shares);
 						return (
 						<section className="breakdown">
 							<h4>{copy.breakdown}</h4>
+							{lunar && <p className="muted">{lunarSearchCopy[language].weight}: {variables.map(v => `${variableLabel(copy, v.id)} ${v.weight ?? '—'}`).join(' · ')}</p>}
+							{place.effective_weights && <p className="muted">{lunarSearchCopy[language].effective}: {Object.entries(place.effective_weights).map(([id, weight]) => `${variableLabel(copy, id)} ${(weight * 100).toFixed(1)}%`).join(' · ')}</p>}
 							{slices.length > 0 && (
 								<div className="breakdown-pie">
 									<svg className="breakdown-pie-chart" viewBox="0 0 100 100" role="img" aria-hidden>
@@ -461,7 +529,12 @@ export default function PointPanel({ place, onClose, language, variables, activi
 					{cell && cell.distance_km > 1.5 && (
 						<p className="muted">{copy.nearestCellDistance(cell.distance_km.toFixed(1))}</p>
 					)}
-					<p className="muted limitations">{copy.limitations}</p>
+					<p className="muted limitations">{lunar ? lunarSearchCopy[language].limitations : copy.limitations}</p>
+					{visibleQualityWarnings(place.quality_warnings).map((warning) => (
+						<p className="muted warn" key={warning}>
+							{warning}
+						</p>
+					))}
 				</>
 			)}
 		</aside>

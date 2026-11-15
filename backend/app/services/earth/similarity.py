@@ -213,6 +213,11 @@ class EarthIndex:
     ) -> None:
         directory = COLUMNS_DIR if columns_dir is None else Path(columns_dir)
         self.columns_dir = directory
+        metadata_path = directory.parent / "columns.json"
+        try:
+            self.column_metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            self.column_metadata = {}
         if not directory.is_dir():
             raise FileNotFoundError(
                 f"column directory missing: {directory}\n"
@@ -606,8 +611,9 @@ class EarthIndex:
         # A cell without a value for a variable is not a bad match for it: the
         # mean runs over what that cell has. Missing never scores zero.
         denominator = weight_sum if weight_sum is not None else counts
-        np.maximum(denominator, 1, out=denominator)
-        np.divide(total, denominator, out=total)
+        # A positive sum below one is still the true weight sum. Empty cells
+        # remain zero only as an internal sentinel and never pass the shortlist.
+        np.divide(total, denominator, out=total, where=denominator > 0)
         closeness = total
 
         # Keep one place per map cell. Strict searches use small cells inside
@@ -634,6 +640,7 @@ class EarthIndex:
         points = []
         for row, index in enumerate(chosen):
             scores = {}
+            score_values = {}
             grades = {}
             deltas = {}
             coverage = 0
@@ -645,12 +652,40 @@ class EarthIndex:
                     continue
                 coverage += 1
                 scores[name] = round(float(score[row]), 3)
+                score_values[name] = float(score[row])
                 grades[name] = grade_for(float(score[row]))
                 worst = min(worst, float(score[row]))
                 if delta is not None:
                     deltas[name] = round(float(delta[row]), 4)
             if min_worst is not None and worst < float(min_worst):
                 continue
+            contributions = {spec['id']: score_values[spec['id']] * weight
+                             for spec, _target, weight in used if spec['id'] in score_values}
+            contribution_sum = sum(contributions.values())
+            shares = {key: value / contribution_sum for key, value in contributions.items()} if contribution_sum > 0 else {}
+            available_weights = {spec['id']: weight for spec, _target, weight in used if spec['id'] in score_values}
+            weight_sum = sum(available_weights.values())
+            effective_weights = {key: weight / weight_sum for key, weight in available_weights.items()} if weight_sum > 0 else {}
+            measurements = {}
+            for name, array, unit, source, method_key in (
+                ("elevation", self.elevation, "m", "ETOPO 2022", "grid"),
+                ("slope", self.slope, "deg", "ETOPO 2022", "slope_deg"),
+                ("roughness", self.roughness, "m", "ETOPO 2022", "roughness_m"),
+                ("air_temperature", self.tmin, "C", "WorldClim 2.1", "tmin_coldest_month_c"),
+                ("ice_thickness", self.ice, "m", "ETOPO 2022", "ice_thickness_m"),
+                ("lithology", self.rock, "class", "GLiM", "lithology_code"),
+            ):
+                value = float(array[index]) if name != "lithology" else int(array[index])
+                present = math.isfinite(value) and (name != "lithology" or value not in (0, 15))
+                measurements[name] = {
+                    "value": value if present else None,
+                    "unit": unit,
+                    "available": present,
+                    "status": "valid" if present else "missing",
+                    "reason": None if present else "not_available_in_index",
+                    "source": source if method_key in self.column_metadata else None,
+                    "method": self.column_metadata.get(method_key),
+                }
             points.append(
                 {
                     "lat": round(float(self.lat[index]), 4),
@@ -666,8 +701,16 @@ class EarthIndex:
                     "coverage": coverage,
                     "worst": round(worst, 4),
                     "scores": scores,
+                    "score_values": score_values,
+                    "weighted_shares": shares,
+                    "effective_weights": effective_weights,
                     "grades": grades,
                     "deltas": deltas,
+                    "row_index": int(index),
+                    "coordinates_original": {"lat": float(self.lat[index]), "lon": float(self.lon[index])},
+                    "measurements": measurements,
+                    "quality_warnings": (["earth_slope_longitude_distance_clamped_above_83_81_deg"]
+                                         if "slope" in scores and abs(float(self.lat[index])) > 83.81164256 else []),
                 }
             )
 

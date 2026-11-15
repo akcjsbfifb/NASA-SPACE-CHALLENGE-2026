@@ -3,12 +3,14 @@
 import hashlib
 import io
 import re
+import time
 from urllib.request import Request, urlopen
 
 
 class TransferBudget:
-    def __init__(self, limit=16 * 1024 * 1024):
+    def __init__(self, limit=16 * 1024 * 1024, deadline=None):
         self.limit = limit
+        self.deadline = deadline
         self.received = 0
         self.requests = []
 
@@ -42,7 +44,12 @@ class RangeSource:
         headers = {"Range": f"bytes={start}-{end}", "Accept-Encoding": "identity"}
         if self.identity and self.identity[0]:
             headers["If-Match"] = self.identity[0]
-        with urlopen(Request(self.url, headers=headers), timeout=30) as response:
+        timeout = 30.0
+        if self.budget.deadline is not None:
+            timeout = min(timeout, self.budget.deadline - time.monotonic())
+            if timeout <= 0:
+                raise TimeoutError("Plazo HTTP agotado")
+        with urlopen(Request(self.url, headers=headers), timeout=timeout) as response:
             if response.status != 206:
                 raise OSError("El servidor ignoró Range; se aborta sin leer el cuerpo")
             match = re.fullmatch(r"bytes (\d+)-(\d+)/(\d+)", response.headers.get("Content-Range", ""))

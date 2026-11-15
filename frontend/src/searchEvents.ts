@@ -3,7 +3,7 @@ import { SEARCH_API } from './searchApi';
 type SearchEventHandler = (body: unknown) => void;
 
 let source: EventSource | null = null;
-let handlers = new Set<SearchEventHandler>();
+const handlers = new Set<SearchEventHandler>();
 let subscriberCount = 0;
 let closeTimer: ReturnType<typeof setTimeout> | null = null;
 let reopenTimer: ReturnType<typeof setTimeout> | null = null;
