@@ -105,6 +105,18 @@ class EarthIndex:
         self.hot_ref = float(np.percentile(finite, 95))
         self.group_ids = _group_ids()
         self.labels = rock_labels()
+        self._search_cache_ready = False
+        self._ice_log1p: np.ndarray | None = None
+        self._rock_group_id: np.ndarray | None = None
+        self._tmin_finite: np.ndarray | None = None
+
+    def _ensure_search_cache(self) -> None:
+        if self._search_cache_ready:
+            return
+        self._ice_log1p = np.log1p(np.asarray(self.ice, dtype=np.float32))
+        self._rock_group_id = self.group_ids[np.asarray(self.rock, dtype=np.intp)]
+        self._tmin_finite = np.isfinite(self.tmin)
+        self._search_cache_ready = True
 
     def nearest(self, lat: float, lon: float) -> dict | None:
         """Land cell closest to a click. Rows are stored north to south."""
@@ -255,6 +267,11 @@ class EarthIndex:
         min_closeness = 0.55 + 0.35 * precision
         limit = int(round(40 + (1.0 - precision) * 460))
 
+        self._ensure_search_cache()
+        assert self._ice_log1p is not None
+        assert self._rock_group_id is not None
+        assert self._tmin_finite is not None
+
         parts: list[np.ndarray] = []
         slope_s = rough_s = temp_s = ice_s = rock_s = None
         temp_mode = "not_used"
@@ -273,21 +290,32 @@ class EarthIndex:
             temp_s, temp_mode = self._temperature(tmin)
             parts.append(temp_s)
         if ice is not None:
-            ice_s = np.exp(-np.abs(np.log1p(self.ice) - np.log1p(ice)) / 1.2)
+            log_ice_target = np.float32(np.log1p(float(ice)))
+            ice_s = np.exp(
+                -np.abs(self._ice_log1p - log_ice_target) / np.float32(1.2)
+            ).astype(np.float32, copy=False)
             parts.append(ice_s)
         if rock is not None:
             codes = rock_names()
             if rock not in codes:
                 raise ValueError(f"unknown rock {rock}")
             rock_code = codes[rock]
+            target_group = int(self.group_ids[rock_code])
             same = self.rock == rock_code
-            related = self.group_ids[self.rock] == self.group_ids[rock_code]
-            rock_s = np.where(same, 1.0, np.where(related, 0.45, 0.0)).astype(np.float32)
+            rock_s = np.zeros(self.rock.shape, dtype=np.float32)
+            rock_s[same] = np.float32(1.0)
+            related = (~same) & (self._rock_group_id == target_group)
+            rock_s[related] = np.float32(0.45)
+            del same, related
             parts.append(rock_s)
         if not parts:
             raise ValueError("falta al menos una medición")
 
-        closeness = (sum(parts) / len(parts)).astype(np.float32)
+        n_parts = len(parts)
+        closeness = np.array(parts[0], dtype=np.float32, copy=True)
+        for part in parts[1:]:
+            closeness += part
+        closeness /= np.float32(n_parts)
         # Keep one place per map cell. Strict searches use small cells inside
         # the best matches. Loose searches use large cells, so the shortlist
         # reaches other regions instead of hundreds of neighboring pixels.
@@ -352,7 +380,10 @@ class EarthIndex:
         }
 
     def _temperature(self, target: float) -> tuple[np.ndarray, str]:
-        known = np.isfinite(self.tmin)
+        if self._tmin_finite is not None:
+            known = self._tmin_finite
+        else:
+            known = np.isfinite(self.tmin)
         if target <= self.cold_ref - 15:
             reference = self.cold_ref
             mode = "relative_cold"
