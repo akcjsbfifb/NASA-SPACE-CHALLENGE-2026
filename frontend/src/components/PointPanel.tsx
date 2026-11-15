@@ -80,7 +80,19 @@ const BREAKDOWN_SLICE_COLORS: Record<string, string> = {
 	temperature: '#9fd4c4',
 	ice: '#c9a86a',
 	rock: '#e07a4a',
+	tbol_modis: '#8ec8ff',
+	treg_era5: '#d7a4ff',
 };
+
+/** Shown in the comparison table even when they are not part of the score. */
+const THERMAL_COMPARE_ROWS = [
+	{ id: 'tbol_modis', lunarId: 'bolometric_temperature', earthId: 'surface_temperature_modis' },
+	{ id: 'treg_era5', lunarId: 'regolith_temperature', earthId: 'soil_temperature_0_to_7cm' },
+] as const;
+
+function formatKelvin(value: number): string {
+	return `${value.toFixed(2)} K`;
+}
 
 function polarToCartesian(cx: number, cy: number, radius: number, angleDeg: number) {
 	const angleRad = ((angleDeg - 90) * Math.PI) / 180;
@@ -436,6 +448,25 @@ function PointPanelContent({ place, lunar, onClose, language, variables, activit
 													? '—'
 													: '…'}
 										</span>
+									</div>
+								);
+							})}
+							{lunar && THERMAL_COMPARE_ROWS.filter((row) => !variables.some((variable) => variable.id === row.id)).map((row) => {
+								const lunarMeasurement = lunar.sample.measurements[row.lunarId];
+								const lunarValue = lunarMeasurement?.available && lunarMeasurement.value !== null ? lunarMeasurement.value : null;
+								const earthMeasurement = additional?.[row.earthId];
+								const earthValue = earthMeasurement?.available && earthMeasurement.value !== null ? earthMeasurement.value : null;
+								const delta = lunarValue !== null && earthValue !== null ? Math.abs(lunarValue - earthValue) : null;
+								const earthPending = !earthMeasurement && extraStatus === 'loading';
+								return (
+									<div className="compare-row" key={row.id}>
+										<span className="compare-name">
+											{variableLabel(copy, row.id)}
+											<small> · {extra.noScore}</small>
+										</span>
+										<span className="compare-reference">{lunarValue !== null ? formatKelvin(lunarValue) : copy.noData}</span>
+										<span className="compare-earth">{earthPending ? '…' : earthValue !== null ? formatKelvin(earthValue) : copy.noData}</span>
+										<span className="compare-differs">{delta !== null ? formatKelvin(delta) : '—'}</span>
 									</div>
 								);
 							})}
