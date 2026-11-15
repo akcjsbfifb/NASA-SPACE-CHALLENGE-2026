@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { SEARCH_API } from '../searchApi';
 import { getCopy } from '../i18n';
@@ -153,80 +153,85 @@ export default function PointPanel({ place, onClose, language, variables, activi
 	const [sceneSource, setSceneSource] = useState('');
 	const [imageError, setImageError] = useState(false);
 	const [where, setWhere] = useState<PlaceInfo | null | undefined>(undefined);
+	const earthRequest = useRef(0);
+	const earthAbort = useRef<AbortController | null>(null);
 
 	// Continent and country come from a bundled Natural Earth extract: no key,
 	// no quota, and it still answers over Antarctica and ice shelves.
+	// GeoJSON → /cell → /scene, one step after the previous finishes (or cache hit).
 	useEffect(() => {
 		if (!place) {
 			setWhere(undefined);
 			return;
 		}
-		let alive = true;
-		setWhere(undefined);
-		loadCountries()
-			.then((features) => {
-				if (alive) setWhere(locate(features, place.lat, place.lng));
-			})
-			.catch(() => {
-				if (alive) setWhere(null);
-			});
-		return () => {
-			alive = false;
-		};
-	}, [place]);
-
-	useEffect(() => {
-		if (!place) return;
+		const ticket = ++earthRequest.current;
+		earthAbort.current?.abort();
 		const controller = new AbortController();
+		earthAbort.current = controller;
+		const { lat, lng } = place;
+		const params = new URLSearchParams({
+			lat: String(lat),
+			lon: String(lng),
+		});
+		setWhere(undefined);
 		setCell(null);
 		setCellError(false);
-		setImageError(false);
-		const params = new URLSearchParams({
-			lat: String(place.lat),
-			lon: String(place.lng),
-		});
-		fetch(`${SEARCH_API}/cell?${params}`, { signal: controller.signal })
-			.then(async (response) => {
-				const body = (await response.json()) as EarthCell & { error?: string };
-				if (!response.ok) throw new Error(body.error || 'Cell data request failed');
-				setCell(body);
-			})
-			.catch(() => {
-				if (controller.signal.aborted) return;
-				setCellError(true);
-			});
-		return () => controller.abort();
-	}, [place]);
-
-	useEffect(() => {
-		if (!place) return;
-		const controller = new AbortController();
-		let objectUrl = '';
 		setSceneUrl('');
 		setSceneSource('');
 		setImageError(false);
-		const params = new URLSearchParams({
-			lat: String(place.lat),
-			lon: String(place.lng),
-		});
-		fetch(`${SEARCH_API}/scene?${params}`, { signal: controller.signal })
-			.then(async (response) => {
-				if (!response.ok) throw new Error('sin imagen');
-				const blob = await response.blob();
+		let objectUrl = '';
+
+		(async () => {
+			const stale = () => ticket !== earthRequest.current || controller.signal.aborted;
+			const skipAbort = (error: unknown) =>
+				error instanceof Error && error.name === 'AbortError';
+
+			try {
+				const features = await loadCountries();
+				if (stale()) return;
+				setWhere(locate(features, lat, lng));
+			} catch (error: unknown) {
+				if (stale() || skipAbort(error)) return;
+				setWhere(null);
+				return;
+			}
+
+			try {
+				const cellResponse = await fetch(`${SEARCH_API}/cell?${params}`, {
+					signal: controller.signal,
+				});
+				const cellBody = (await cellResponse.json()) as EarthCell & { error?: string };
+				if (!cellResponse.ok) throw new Error(cellBody.error || 'Cell data request failed');
+				if (stale()) return;
+				setCell(cellBody);
+			} catch (error: unknown) {
+				if (stale() || skipAbort(error)) return;
+				setCellError(true);
+				return;
+			}
+
+			try {
+				const sceneResponse = await fetch(`${SEARCH_API}/scene?${params}`, {
+					signal: controller.signal,
+				});
+				if (!sceneResponse.ok) throw new Error('sin imagen');
+				const blob = await sceneResponse.blob();
 				if (!blob.type.startsWith('image/')) throw new Error('sin imagen');
+				if (stale()) return;
 				objectUrl = URL.createObjectURL(blob);
 				setSceneUrl(objectUrl);
-				setSceneSource(response.headers.get('X-Image-Source') || 'esri');
-			})
-			.catch((error: unknown) => {
-				if (controller.signal.aborted) return;
+				setSceneSource(sceneResponse.headers.get('X-Image-Source') || 'esri');
+			} catch (error: unknown) {
+				if (stale() || skipAbort(error)) return;
 				setImageError(true);
-				if (error instanceof Error && error.name !== 'AbortError') return;
-			});
+			}
+		})();
+
 		return () => {
 			controller.abort();
 			if (objectUrl) URL.revokeObjectURL(objectUrl);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- ticket guards stale place; only re-chain on selection change
 	}, [place]);
 
 	const mapsUrl = place

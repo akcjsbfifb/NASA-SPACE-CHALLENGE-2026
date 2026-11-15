@@ -78,13 +78,14 @@ export async function lookupLunarSample(
 	siteId: string | undefined,
 	lat: number,
 	lng: number,
+	signal?: AbortSignal,
 ): Promise<LunarSample> {
 	// A known landing site is answered from the published JSON by id; a free
 	// click still samples the LOLA rasters by coordinate.
 	const params = siteId
 		? new URLSearchParams({ site: siteId })
 		: new URLSearchParams({ lat: String(lat), lon: String(lng) });
-	const response = await fetch(`${SEARCH_API}/moon?${params}`);
+	const response = await fetch(`${SEARCH_API}/moon?${params}`, { signal });
 	const body = (await response.json()) as MoonResponse;
 	if (!response.ok) throw new Error(body.error || 'sin mediciones de este punto');
 	return {

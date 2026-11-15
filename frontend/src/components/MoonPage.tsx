@@ -115,6 +115,9 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 	const globe = useRef<GlobeController>(null);
 	const request = useRef(0);
 	const analogRequest = useRef(0);
+	const missionAbort = useRef<AbortController | null>(null);
+	const analogAbort = useRef<AbortController | null>(null);
+	const searchDelayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const ignoreGlobeClick = useRef(false);
 	const [picked, setPicked] = useState<PickedPoint | null>(null);
 	const [sample, setSample] = useState<LunarSample | null>(null);
@@ -144,17 +147,36 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 		);
 	}, [picked]);
 
-	useEffect(() => {
-		if (!picked || sampleState !== 'ready' || !sample || sample.roughness === null) {
-			return;
+	function clearSearchDelay() {
+		if (searchDelayTimer.current !== null) {
+			clearTimeout(searchDelayTimer.current);
+			searchDelayTimer.current = null;
 		}
+	}
+
+	function scheduleAnalogSearchAfterMission(
+		roughness: number,
+		missionTicket: number,
+		missionSignal: AbortSignal,
+	) {
+		clearSearchDelay();
+		searchDelayTimer.current = setTimeout(() => {
+			searchDelayTimer.current = null;
+			if (missionTicket !== request.current || missionSignal.aborted) return;
+			runAnalogSearch(roughness, missionTicket);
+		}, 1000);
+	}
+
+	function runAnalogSearch(roughness: number, missionTicket: number) {
+		analogAbort.current?.abort();
 		const ticket = ++analogRequest.current;
 		const controller = new AbortController();
+		analogAbort.current = controller;
 		setAnalogs(null);
 		setAnalogError('');
 		setAnalogState('loading');
 		const params = new URLSearchParams({
-			roughness: String(sample.roughness),
+			roughness: String(roughness),
 			precision: String(precision),
 		});
 		fetch(`${SEARCH_API}/search?${params}`, { signal: controller.signal })
@@ -164,12 +186,18 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 				return body;
 			})
 			.then((body) => {
-				if (ticket !== analogRequest.current) return;
+				if (ticket !== analogRequest.current || missionTicket !== request.current) return;
 				setAnalogs(body);
 				setAnalogState('ready');
 			})
 			.catch((error: unknown) => {
-				if (ticket !== analogRequest.current || controller.signal.aborted) return;
+				if (
+					ticket !== analogRequest.current
+					|| missionTicket !== request.current
+					|| controller.signal.aborted
+				) {
+					return;
+				}
 				setAnalogs(null);
 				setAnalogError(
 					error instanceof TypeError
@@ -180,12 +208,25 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 				);
 				setAnalogState('ready');
 			});
-		return () => controller.abort();
-	}, [picked, sample, sampleState, precision]);
+	}
+
+	useEffect(() => {
+		if (sampleState !== 'ready' || !sample || sample.roughness === null) {
+			return;
+		}
+		runAnalogSearch(sample.roughness, request.current);
+		// Only re-query analogs when precision changes after mission data is ready.
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- mission fetch chains the initial search
+	}, [precision]);
 
 	function choose(next: PickedPoint) {
 		const ticket = ++request.current;
 		analogRequest.current += 1;
+		clearSearchDelay();
+		missionAbort.current?.abort();
+		analogAbort.current?.abort();
+		const controller = new AbortController();
+		missionAbort.current = controller;
 		setPicked(next);
 		setSample(null);
 		setSampleError('');
@@ -194,14 +235,19 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 		setAnalogError('');
 		setAnalogState('idle');
 		globe.current?.flyTo({ lat: next.lat, lng: next.lng, altitude: 1.05 }, 900);
-		lookupLunarSample(next.siteId, next.lat, next.lng)
+		lookupLunarSample(next.siteId, next.lat, next.lng, controller.signal)
 			.then((found) => {
-				if (ticket !== request.current) return;
+				if (ticket !== request.current || controller.signal.aborted) return;
 				setSample(found);
-				setSampleState(found.roughness === null ? 'missing' : 'ready');
+				if (found.roughness === null) {
+					setSampleState('missing');
+					return;
+				}
+				setSampleState('ready');
+				scheduleAnalogSearchAfterMission(found.roughness, ticket, controller.signal);
 			})
 			.catch((error: unknown) => {
-				if (ticket !== request.current) return;
+				if (ticket !== request.current || controller.signal.aborted) return;
 				setSample(null);
 				setSampleError(error instanceof Error ? error.message : 'sin mediciones de este punto');
 				setSampleState('missing');
@@ -291,7 +337,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 								</p>
 								{sample.roughness !== null && (
 									<>
-										<h4>Análogos en la Tierra</h4>
+										<h3>Análogos en la Tierra</h3>
 										{analogState === 'loading' && (
 											<p className="muted">Buscando lugares con esta rugosidad…</p>
 										)}
