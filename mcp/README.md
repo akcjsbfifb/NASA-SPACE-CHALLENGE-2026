@@ -71,7 +71,11 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
 
 ### `buscar` (misma consulta que la UI)
 
-Parámetros opcionales: `slope`, `roughness`, `tmin`, `ice`, `rock`, `precision` (default `0.7`).
+Parámetros opcionales: `slope`, `roughness`, `tmin`, `ice`, `rock`, `precision` (default `0.7`), `activity` y `weights`.
+
+`activity` es uno de los 12 ids de `activities.json`. La lista completa y qué significa cada uno está en `docs/moon/activity-presets.md`; los más usados son `viper_ice_prospect`, `artemis_polar_landing`, `rover_wheels` y `floor_sample`. Trae pesos y valores de búsqueda propios; un `slope`, `rock` o `weights` explícito pisa al preset solo en esa clave.
+
+`weights` es un objeto opcional con `slope`, `roughness`, `temperature`, `ice`, `rock`, cada uno de 0 a 1. No hace falta mandarlo si la frase no pide una importancia distinta.
 
 Ejemplo de prompt:
 

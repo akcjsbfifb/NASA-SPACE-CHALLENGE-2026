@@ -15,10 +15,33 @@ import {
 const FILTER_RULES_TEXT = buildFilterRulesText();
 const BUSCAR_INSTRUCTIONS =
   'buscar ejecuta la misma consulta que la UI de búsqueda y escribe data/earth/shortlist.json; no recalcula vía aplicar_filtros. La primera llamada de la sesión puntúa toda la grilla terrestre en memoria; las siguientes reutilizan el proceso persistente. aplicar_filtros no recalcula closeness: solo filtra la shortlist ya escrita.';
-const SERVER_INSTRUCTIONS = `${FILTER_RULES_TEXT} ${BUSCAR_INSTRUCTIONS}`;
+const ACTIVITY_RULES_TEXT = `Pesos: weights es un extra. Si la frase no pide una importancia distinta y no cae en una actividad, no mandes weights. Si cae en una actividad, manda solo activity: todo preset trae valores de búsqueda. Si además nombra un código o un valor, manda ese argumento explícito; pisa al preset solo en esa clave. No inventes números. rock es un código USGS, nunca la palabra basalto. vb es basalto, py es piroclástico, pb es plutónico básico (norita/gabro en este catálogo), su es sedimento suelto.
+
+Primera regla que coincida:
+- VIPER o prospectar hielo con un rover: activity viper_ice_prospect.
+- Artemis o aterrizaje polar: activity artemis_polar_landing.
+- rille o Hadley: activity hadley_rille.
+- piroclástico, Shorty o suelo naranja: activity sample_pyroclastic.
+- norita, SPA o Chang'e 4: activity spa_norite.
+- light mantle, manto claro o avalancha de regolito: activity light_mantle.
+- Surveyor o regolito suelto: activity surveyor_regolith.
+- rueda o durabilidad de ruedas de un rover: activity rover_wheels.
+- hielo polar, trampa de hielo o LCROSS: activity polar_ice.
+- basalto de mare o muestrear basalto: activity sample_basalt.
+- extraer y analizar el piso, o tipo de piso: activity floor_sample.
+- alunizaje, aterrizaje o sitio de aterrizaje: activity landing_site.
+Si la frase pide importancia y no coincidió ninguna regla, manda solo las claves de weights que nombró, más los targets que nombró. No rellenes el resto.`;
+
+const SERVER_INSTRUCTIONS = `${FILTER_RULES_TEXT} ${BUSCAR_INSTRUCTIONS} ${ACTIVITY_RULES_TEXT}`;
 
 const shortlistPath = new URL('../data/earth/shortlist.json', import.meta.url);
 const filteredPath = new URL('../data/earth/filtered.json', import.meta.url);
+const activitiesPath = new URL('./activities.json', import.meta.url);
+
+// The enum comes from the catalog itself; a hand-written list would drift from activities.json.
+const ACTIVITY_IDS = JSON.parse(readFileSync(toFsPath(activitiesPath), 'utf8')).map(
+  (entry) => entry.id,
+);
 
 const SOURCE = 'data/earth/shortlist.json';
 
@@ -42,6 +65,44 @@ const aplicarInputSchema = z.object({
 
 const emptyInputSchema = z.object({});
 
+const weightsInputSchema = z
+  .strictObject({
+    slope: z
+      .number()
+      .min(0)
+      .max(1)
+      .optional()
+      .describe('Relative importance of slope, 0–1. Omit to keep the preset value.'),
+    roughness: z
+      .number()
+      .min(0)
+      .max(1)
+      .optional()
+      .describe('Relative importance of roughness, 0–1. Omit to keep the preset value.'),
+    temperature: z
+      .number()
+      .min(0)
+      .max(1)
+      .optional()
+      .describe('Relative importance of coldest-month temperature, 0–1. Omit to keep it.'),
+    ice: z
+      .number()
+      .min(0)
+      .max(1)
+      .optional()
+      .describe('Relative importance of ice thickness, 0–1. Omit to keep the preset value.'),
+    rock: z
+      .number()
+      .min(0)
+      .max(1)
+      .optional()
+      .describe('Relative importance of rock type, 0–1. Omit to keep the preset value.'),
+  })
+  .optional()
+  .describe(
+    'Per-request importance overrides. Send only the keys the phrase named; the preset fills the rest. Python decides, this schema only validates.',
+  );
+
 const buscarInputSchema = z.object({
   slope: z.number().optional().describe('Target slope in degrees.'),
   roughness: z.number().optional().describe('Target roughness in metres.'),
@@ -52,6 +113,13 @@ const buscarInputSchema = z.object({
     .number()
     .optional()
     .describe('Shortlist tightness 0–1; default 0.7 like the UI.'),
+  activity: z
+    .enum(ACTIVITY_IDS)
+    .optional()
+    .describe(
+      'Activity preset id from mcp/activities.json. The preset supplies the search values; send no numbers with it unless the phrase named one.',
+    ),
+  weights: weightsInputSchema,
 });
 
 function toFsPath(fileUrl) {
@@ -86,7 +154,7 @@ function wireRows(rows) {
 function buildBody(shortlist, filters, result) {
   const hidden = wireRows(result.hidden);
   const missing = wireRows(result.missing);
-  return {
+  const body = {
     version: 1,
     source: SOURCE,
     target: shortlist.target,
@@ -100,6 +168,10 @@ function buildBody(shortlist, filters, result) {
     hidden,
     missing,
   };
+  // Carry the search inputs the shortlist already holds so listar does not lose them.
+  if (shortlist.activity !== undefined) body.activity = shortlist.activity;
+  if (shortlist.weights !== undefined) body.weights = shortlist.weights;
+  return body;
 }
 
 export function writeFiltered(body, fileUrl = filteredPath) {
@@ -139,7 +211,16 @@ export function listarFiltros(fileUrl = filteredPath) {
 
 function buildBuscarPayload(args) {
   const payload = {};
-  for (const key of ['slope', 'roughness', 'tmin', 'ice', 'rock', 'precision']) {
+  for (const key of [
+    'slope',
+    'roughness',
+    'tmin',
+    'ice',
+    'rock',
+    'precision',
+    'activity',
+    'weights',
+  ]) {
     const value = args[key];
     if (value !== undefined && value !== null) payload[key] = value;
   }
@@ -259,7 +340,13 @@ export function createServer(options = {}) {
   return server;
 }
 
-export { buildBuscarPayload, buscarWithWorker, GurvichSearchWorker };
+export {
+  ACTIVITY_IDS,
+  buildBuscarPayload,
+  buscarInputSchema,
+  buscarWithWorker,
+  GurvichSearchWorker,
+};
 
 async function main() {
   const server = createServer();
