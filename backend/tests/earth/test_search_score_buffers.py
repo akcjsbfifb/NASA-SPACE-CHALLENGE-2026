@@ -1,4 +1,8 @@
-"""EarthIndex.search: masked mean, per-variable scores, and the contract."""
+"""EarthIndex.search: masked mean, per-variable scores, and the contract.
+
+The `tiny_index` fixture and its five-row parquet live in conftest.py, so the
+weight tests run on the same grid.
+"""
 
 from __future__ import annotations
 
@@ -8,32 +12,13 @@ from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
-import pyarrow as pa
-import pyarrow.parquet as pq
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS = REPO_ROOT / "backend" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from extract_earth_columns import extract  # noqa: E402
 from similarity import EarthIndex, rock_names  # noqa: E402
-
-
-def _synthetic_parquet(path: Path) -> dict[str, np.ndarray]:
-    data = {
-        "lat": np.array([45.0, 45.0, 45.0, 30.0, 10.0], dtype=np.float32),
-        "lon": np.array([-120.0, -119.5, -119.0, 10.0, 20.0], dtype=np.float32),
-        "elevation_m": np.array([100.0, 110.0, 90.0, 50.0, 0.0], dtype=np.float32),
-        "slope_deg": np.array([5.0, 8.0, 12.0, 3.0, 1.0], dtype=np.float32),
-        "roughness_m": np.array([20.0, 25.0, 30.0, 10.0, 5.0], dtype=np.float32),
-        "tmin_coldest_month_c": np.array([-15.0, np.nan, -12.0, -5.0, 5.0], dtype=np.float32),
-        "ice_thickness_m": np.array([0.0, 0.0, 50.0, 0.0, 0.0], dtype=np.float32),
-        "lithology_code": np.array([2, 2, 7, 1, 16], dtype=np.uint8),
-    }
-    table = pa.table({name: pa.array(values) for name, values in data.items()})
-    pq.write_table(table, path)
-    return data
 
 
 def _reference_scores(
@@ -111,16 +96,6 @@ def _reference_scores(
     np.divide(total, weight, out=closeness, where=weight > 0)
     worst[~np.isfinite(worst)] = 0.0
     return scores, present, closeness, coverage, worst
-
-
-@pytest.fixture()
-def tiny_index(tmp_path_factory):
-    base = tmp_path_factory.mktemp("search_score_buffers")
-    parquet_path = base / "tiny.parquet"
-    columns_dir = base / "columns"
-    _synthetic_parquet(parquet_path)
-    extract(parquet_path, columns_dir)
-    return EarthIndex(columns_dir=columns_dir)
 
 
 def _shortlist_all_indices(

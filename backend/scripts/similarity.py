@@ -1,9 +1,10 @@
 """Closeness between one lunar target and the Earth land grid.
 
 The general closeness is the mean of one score per variable, each from 0 to 1.
-Which variables exist, how each one is scored, and how much it weighs come from
-`data/earth/analogs.json`. Adding a variable means adding a column and one entry
-in that file; this module does not name any variable.
+Which variables exist and how each one is scored come from
+`data/earth/analogs.json`, and so does how much each one weighs unless the
+caller passes its own weights. Adding a variable means adding a column and one
+entry in that file; this module does not name any variable.
 
 A cell with no value for a variable is not a bad match for it: the mean runs
 over the variables that cell actually has, and each point reports its coverage.
@@ -155,6 +156,40 @@ def parse_criteria(contract: dict, values) -> dict:
         else:
             criteria[spec["id"]] = float(raw)
     return criteria
+
+
+def match_for(closeness: float) -> str:
+    """The label the list, the globe and the panel show. The cuts live here only."""
+    if closeness >= 0.85:
+        return "very"
+    if closeness >= 0.70:
+        return "close"
+    return "barely"
+
+
+GRADE_FLOORS = ((90.0, "A"), (80.0, "B"), (70.0, "C"), (60.0, "D"))
+
+
+def grade_for(closeness: float) -> str:
+    """Letter grade for a 0..1 closeness, on the percentage the panel prints.
+
+    The percentage is truncated to one decimal before the cut, so a cell that
+    reads 89.9% never gets the grade for 90.
+    """
+    percent = math.floor(float(closeness) * 1000) / 10
+    for floor, grade in GRADE_FLOORS:
+        if percent >= floor:
+            return grade
+    return "F"
+
+
+def _effective_weight(spec: dict, weights: dict[str, float | None] | None) -> float:
+    """A request weight if it is a number, else the contract weight, else 1."""
+    override = None if weights is None else weights.get(spec["id"])
+    if isinstance(override, (int, float)) and not isinstance(override, bool):
+        return float(override)
+    contract_weight = spec.get("weight")
+    return 1.0 if contract_weight is None else float(contract_weight)
 
 
 class EarthIndex:
@@ -507,36 +542,46 @@ class EarthIndex:
         *,
         precision: float = 0.7,
         min_worst: float | None = None,
+        weights: dict[str, float | None] | None = None,
+        activity: dict | None = None,
     ) -> dict:
         criteria = {} if criteria is None else criteria
         precision = float(np.clip(precision, 0.0, 1.0))
         min_closeness = 0.55 + 0.35 * precision
         limit = int(round(40 + (1.0 - precision) * 460))
 
-        used, ignored = resolve_variables(self.contract, criteria)
+        resolved, ignored = resolve_variables(self.contract, criteria)
+        # Weight 0 means the variable does not take part at all, so it never
+        # reaches `variables` or `scores`. The filter lives here, not in the
+        # resolver, so a caller that skips the resolver gets it too.
+        used: list[tuple[dict, object, float]] = []
+        for spec, target in resolved:
+            weight = _effective_weight(spec, weights)
+            if weight == 0.0:
+                continue
+            used.append((spec, target, weight))
         if not used:
             raise ValueError("falta al menos una medición")
 
         shape = self.lat.shape
-        weighted = any(spec.get("weight") not in (None, 1.0) for spec, _target in used)
+        weighted = any(weight != 1.0 for _spec, _target, weight in used)
         total = np.zeros(shape, dtype=np.float32)
         buffer = np.empty(shape, dtype=np.float32)
         counts = np.zeros(shape, dtype=np.int8)
-        weights = np.zeros(shape, dtype=np.float32) if weighted else None
+        weight_sum = np.zeros(shape, dtype=np.float32) if weighted else None
         temperature_mode = "not_used"
 
-        for spec, target in used:
+        for spec, target, weight in used:
             score, present, _delta, mode = self._score_arrays(
                 spec, target, self._space(spec), self._raw(spec), out=buffer
             )
-            weight = 1.0 if spec.get("weight") is None else float(spec["weight"])
             if weight != 1.0:
                 np.multiply(score, np.float32(weight), out=score)
             # Missing cells already score zero, so a plain add is correct and
             # avoids the slow masked-ufunc path.
             np.add(total, score, out=total)
-            if weights is not None:
-                np.add(weights, np.float32(weight), out=weights, where=present)
+            if weight_sum is not None:
+                np.add(weight_sum, np.float32(weight), out=weight_sum, where=present)
             np.add(counts, present, out=counts)
             if mode is not None:
                 temperature_mode = mode
@@ -545,7 +590,7 @@ class EarthIndex:
 
         # A cell without a value for a variable is not a bad match for it: the
         # mean runs over what that cell has. Missing never scores zero.
-        denominator = weights if weights is not None else counts
+        denominator = weight_sum if weight_sum is not None else counts
         np.maximum(denominator, 1, out=denominator)
         np.divide(total, denominator, out=total)
         closeness = total
@@ -561,7 +606,7 @@ class EarthIndex:
         # Only the chosen rows need per-variable values, so the full-grid score
         # arrays are dropped before this second pass.
         detail: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] = {}
-        for spec, target in used:
+        for spec, target, _weight in used:
             prepared = self._space(spec)[chosen]
             raw = self._raw(spec)[chosen]
             score, present, delta, mode = self._score_arrays(
@@ -574,16 +619,18 @@ class EarthIndex:
         points = []
         for row, index in enumerate(chosen):
             scores = {}
+            grades = {}
             deltas = {}
             coverage = 0
             worst = 1.0
-            for spec, _target in used:
+            for spec, _target, _weight in used:
                 name = spec["id"]
                 score, present, delta = detail[name]
                 if not present[row]:
                     continue
                 coverage += 1
                 scores[name] = round(float(score[row]), 3)
+                grades[name] = grade_for(float(score[row]))
                 worst = min(worst, float(score[row]))
                 if delta is not None:
                     deltas[name] = round(float(delta[row]), 4)
@@ -594,6 +641,8 @@ class EarthIndex:
                     "lat": round(float(self.lat[index]), 4),
                     "lon": round(float(self.lon[index]), 4),
                     "closeness": round(float(closeness[index]), 4),
+                    "match": match_for(float(closeness[index])),
+                    "grade": grade_for(float(closeness[index])),
                     "slope_deg": round(float(self.slope[index]), 2),
                     "roughness_m": round(float(self.roughness[index]), 1),
                     "tmin_c": None if not np.isfinite(self.tmin[index]) else round(float(self.tmin[index]), 1),
@@ -602,23 +651,42 @@ class EarthIndex:
                     "coverage": coverage,
                     "worst": round(worst, 4),
                     "scores": scores,
+                    "grades": grades,
                     "deltas": deltas,
                 }
             )
 
+        # The response always shows the weights that were used, so no caller
+        # has to reshape it. Without a request weight, a variable that the
+        # request asks for weighed 1, and the others weighed nothing.
+        if weights is None:
+            asked = {
+                ALIASES.get(name, name)
+                for name, value in criteria.items()
+                if value is not None and value != ""
+            }
+            reported_weights: dict[str, float | None] = {
+                spec["id"]: 1.0 if spec["id"] in asked else None
+                for spec in self.contract["variables"]
+            }
+        else:
+            reported_weights = weights
+
         return {
-            "target": {spec["id"]: target for spec, target in used},
-            "variables": [spec["id"] for spec, _target in used],
+            "target": {spec["id"]: target for spec, target, _weight in used},
+            "variables": [spec["id"] for spec, _target, _weight in used],
             "variables_used": [
                 {
                     "id": spec["id"],
                     "tier": spec.get("tier"),
-                    "weight": spec.get("weight"),
+                    "weight": weight,
                     "unit": spec.get("unit"),
                 }
-                for spec, _target in used
+                for spec, _target, weight in used
             ],
             "ignored": ignored,
+            "weights": reported_weights,
+            "activity": activity,
             "weights_version": self.contract.get("weights_version"),
             "precision": round(precision, 3),
             "min_closeness": round(min_closeness, 3),
