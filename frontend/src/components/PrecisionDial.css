@@ -1,0 +1,56 @@
+.precision-dial {
+	display: block;
+	width: 172px;
+	height: 172px;
+	max-width: 100%;
+	overflow: visible;
+	touch-action: none;
+	cursor: grab;
+	outline: none;
+	user-select: none;
+}
+
+.precision-dial:focus-visible {
+	filter: drop-shadow(0 0 5px #7dffe180);
+}
+
+.precision-dial[data-dragging] {
+	cursor: grabbing;
+}
+
+.precision-dial__track,
+.precision-dial__value-arc,
+.precision-dial__comet path {
+	fill: none;
+	stroke-linecap: round;
+}
+
+.precision-dial__track {
+	stroke: #e5eaf3;
+	stroke-width: 5;
+	opacity: 0.2;
+}
+
+.precision-dial__value-arc {
+	stroke: #7dffe1;
+	stroke-width: 5;
+	transition: opacity 120ms linear, filter 120ms linear;
+}
+
+.precision-dial__comet path {
+	stroke: #7dffe1;
+	stroke-width: 7;
+}
+
+.precision-dial__head {
+	transition: fill 120ms linear, opacity 120ms linear, filter 120ms linear;
+}
+
+.precision-dial__readout {
+	fill: #e5eaf3;
+	font-family: "DM Sans", sans-serif;
+	font-size: 30px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	pointer-events: none;
+}
