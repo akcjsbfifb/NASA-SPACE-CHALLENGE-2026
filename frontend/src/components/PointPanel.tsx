@@ -140,14 +140,6 @@ function cellValue(cell: EarthCell, id: string): number | string | null {
 	}
 }
 
-/** The sentence next to the percentage, cut where the score says it hurts. */
-function scorePhrase(copy: ReturnType<typeof getCopy>, score: number | undefined, name: string): string {
-	if (typeof score !== 'number') return '';
-	if (score >= 0.75) return copy.scoreHigh(name);
-	if (score < 0.4) return copy.scoreLow(name);
-	return copy.scoreMid(name);
-}
-
 function formatMeters(value: number | null, noData: string, digits = 0) {
 	if (value === null) return noData;
 	return `${value.toFixed(digits)} m`;
@@ -432,30 +424,21 @@ export default function PointPanel({ place, onClose, language, variables, activi
 									</ul>
 								</div>
 							)}
-							<ul>
-								{variables.map((variable) => {
-									const name = variableLabel(copy, variable.id);
-									const score = place.scores?.[variable.id];
-									const grade = place.grades?.[variable.id];
-									const delta = place.deltas?.[variable.id];
-									const change = typeof delta === 'number' && variable.unit && variable.unit !== 'class'
-										? ` · ${formatDelta(delta, variable.unit)}`
-										: '';
-									const phrase = scorePhrase(copy, score, name);
-									return (
-										<li key={variable.id}>
-											<span className="breakdown-name">
-												{name}
-												{grade && <span className={`grade grade-${grade}`}>{grade}</span>}
-											</span>
-											<span>
-												{score === undefined ? copy.noData : `${percent(score, 1)}%${change}`}
-												{phrase ? ` · ${phrase}` : ''}
-											</span>
-										</li>
-									);
-								})}
-							</ul>
+							{variables.some((variable) => place.scores?.[variable.id] === undefined) && (
+								<ul>
+									{variables
+										.filter((variable) => place.scores?.[variable.id] === undefined)
+										.map((variable) => {
+											const name = variableLabel(copy, variable.id);
+											return (
+												<li key={variable.id}>
+													<span className="breakdown-name">{name}</span>
+													<span>{copy.noData}</span>
+												</li>
+											);
+										})}
+								</ul>
+							)}
 							{variables.some((variable) => variable.tier === 'C') && (
 								<p className="muted warn">{copy.unalikeWarning}</p>
 							)}
