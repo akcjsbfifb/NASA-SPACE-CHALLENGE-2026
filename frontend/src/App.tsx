@@ -44,6 +44,22 @@ type Weights = Record<WeightKey, number>;
 
 const NEUTRAL_WEIGHTS: Weights = { slope: 1, roughness: 1, temperature: 1, ice: 1, rock: 1 };
 
+type Included = Record<WeightKey, boolean>;
+
+const ALL_INCLUDED: Included = { slope: true, roughness: true, temperature: true, ice: true, rock: true };
+
+const ROUGHNESS_ONLY_INCLUDED: Included = {
+	slope: false,
+	roughness: true,
+	temperature: false,
+	ice: false,
+	rock: false,
+};
+
+function anyIncluded(included: Included): boolean {
+	return WEIGHT_KEYS.some((key) => included[key]);
+}
+
 type SearchSummary =
 	| { type: 'initial' }
 	| { type: 'searching' }
@@ -73,6 +89,7 @@ type SearchResponse = {
 	points: SearchPoint[];
 	target?: Record<string, number | string | null>;
 	variables_used?: VariableInfo[];
+	variables?: VariableInfo[];
 	ignored?: string[];
 	weights?: Record<string, number | null>;
 	activity?: { id: string } | null;
@@ -129,6 +146,7 @@ function App() {
 	const [rock, setRock] = useState('vb');
 	const [precision, setPrecision] = useState(0.75);
 	const [weights, setWeights] = useState<Weights>(NEUTRAL_WEIGHTS);
+	const [included, setIncluded] = useState<Included>(ALL_INCLUDED);
 	const [activities, setActivities] = useState<ActivityPreset[]>([]);
 	const [points, setPoints] = useState<SearchPoint[]>([]);
 	const [variables, setVariables] = useState<VariableInfo[]>([]);
@@ -267,7 +285,18 @@ function App() {
 		// shows the target of that search and not the inputs of a later one.
 		const activity = body.activity?.id ?? null;
 		setPoints(body.points.map((point) => ({ ...point, target: body.target, activity })));
-		setVariables(body.variables_used ?? []);
+		const usedList = body.variables_used ?? body.variables;
+		setVariables(usedList ?? []);
+		if (usedList && usedList.length > 0) {
+			const usedIds = new Set(usedList.map((variable) => variable.id));
+			setIncluded({
+				slope: usedIds.has('slope'),
+				roughness: usedIds.has('roughness'),
+				temperature: usedIds.has('temperature'),
+				ice: usedIds.has('ice'),
+				rock: usedIds.has('rock'),
+			});
+		}
 		if (body.precision !== undefined) setPrecision(body.precision);
 		// A null weight means the variable had no target: the slider stays where
 		// the user left it. A number, 0 included, is the weight the server used.
@@ -284,11 +313,11 @@ function App() {
 		}
 		const target = body.target;
 		if (target) {
-			setSlope(text(target.slope));
-			setRoughness(text(target.roughness));
-			setTmin(text(target.temperature));
-			setIce(text(target.ice));
-			setRock(target.rock != null ? String(target.rock) : '');
+			if (target.slope != null) setSlope(text(target.slope));
+			if (target.roughness != null) setRoughness(text(target.roughness));
+			if (target.temperature != null) setTmin(text(target.temperature));
+			if (target.ice != null) setIce(text(target.ice));
+			if (target.rock != null) setRock(String(target.rock));
 		}
 		setSummary(body.returned === 0
 			? { type: 'no-results', closeness: body.min_closeness }
@@ -311,19 +340,29 @@ function App() {
 	}, []);
 
 	async function search() {
+		if (!anyIncluded(included)) return;
 		setBusy(true);
 		setSummary({ type: 'searching' });
-		const params = new URLSearchParams({
-			slope,
-			roughness,
-			tmin,
-			ice,
-			rock,
-			precision: String(precision),
-		});
-		// Only a weight that differs from the neutral one is sent.
-		for (const key of WEIGHT_KEYS) {
-			if (weights[key] !== 1) params.set(`w_${key}`, String(weights[key]));
+		const params = new URLSearchParams({ precision: String(precision) });
+		if (included.slope) {
+			params.set('slope', slope);
+			if (weights.slope !== 1) params.set('w_slope', String(weights.slope));
+		}
+		if (included.roughness) {
+			params.set('roughness', roughness);
+			if (weights.roughness !== 1) params.set('w_roughness', String(weights.roughness));
+		}
+		if (included.temperature) {
+			params.set('tmin', tmin);
+			if (weights.temperature !== 1) params.set('w_temperature', String(weights.temperature));
+		}
+		if (included.ice) {
+			params.set('ice', ice);
+			if (weights.ice !== 1) params.set('w_ice', String(weights.ice));
+		}
+		if (included.rock) {
+			params.set('rock', rock);
+			if (weights.rock !== 1) params.set('w_rock', String(weights.rock));
 		}
 		try {
 			const response = await fetch(`${SEARCH_API}/search?${params}`);
@@ -348,6 +387,7 @@ function App() {
 		setIce('');
 		setRock('');
 		setRoughness(String(lunar.sample.roughness));
+		setIncluded(ROUGHNESS_ONLY_INCLUDED);
 		// The analog the user clicked in the Moon panel keeps its red marker on
 		// Earth. The footer button has no specific row, so it falls back to the
 		// closest point of the set.
@@ -384,6 +424,18 @@ function App() {
 		ice: copy.ice,
 		rock: copy.rock,
 	};
+
+	const includeLabels: Record<WeightKey, string> = {
+		slope: copy.includeSlope,
+		roughness: copy.includeRoughness,
+		temperature: copy.includeTemperature,
+		ice: copy.includeIce,
+		rock: copy.includeRock,
+	};
+
+	function toggleIncluded(key: WeightKey, on: boolean) {
+		setIncluded((current) => ({ ...current, [key]: on }));
+	}
 
 	const matchLabels: Record<MatchLevel, string> = {
 		very: copy.matchVery,
@@ -445,24 +497,94 @@ function App() {
 		<p className="muted">{copy.objectiveDescription}</p>
 
 		<label className="field">
-			{copy.slope} (°)
-			<input value={slope} onChange={(event) => setSlope(event.target.value)} inputMode="decimal" />
+			<span className="field-header">
+				<span>{copy.slope} (°)</span>
+				<input
+					type="checkbox"
+					role="switch"
+					className="var-switch"
+					checked={included.slope}
+					aria-label={includeLabels.slope}
+					onChange={(event) => toggleIncluded('slope', event.target.checked)}
+				/>
+			</span>
+			<input
+				value={slope}
+				disabled={!included.slope}
+				onChange={(event) => setSlope(event.target.value)}
+				inputMode="decimal"
+			/>
 		</label>
 		<label className="field">
-			{copy.roughness} (m)
-			<input value={roughness} onChange={(event) => setRoughness(event.target.value)} inputMode="decimal" />
+			<span className="field-header">
+				<span>{copy.roughness} (m)</span>
+				<input
+					type="checkbox"
+					role="switch"
+					className="var-switch"
+					checked={included.roughness}
+					aria-label={includeLabels.roughness}
+					onChange={(event) => toggleIncluded('roughness', event.target.checked)}
+				/>
+			</span>
+			<input
+				value={roughness}
+				disabled={!included.roughness}
+				onChange={(event) => setRoughness(event.target.value)}
+				inputMode="decimal"
+			/>
 		</label>
 		<label className="field">
-			{copy.nightTemperature} (°C)
-			<input value={tmin} onChange={(event) => setTmin(event.target.value)} inputMode="decimal" />
+			<span className="field-header">
+				<span>{copy.nightTemperature} (°C)</span>
+				<input
+					type="checkbox"
+					role="switch"
+					className="var-switch"
+					checked={included.temperature}
+					aria-label={includeLabels.temperature}
+					onChange={(event) => toggleIncluded('temperature', event.target.checked)}
+				/>
+			</span>
+			<input
+				value={tmin}
+				disabled={!included.temperature}
+				onChange={(event) => setTmin(event.target.value)}
+				inputMode="decimal"
+			/>
 		</label>
 		<label className="field">
-			{copy.ice} (m)
-			<input value={ice} onChange={(event) => setIce(event.target.value)} inputMode="decimal" />
+			<span className="field-header">
+				<span>{copy.ice} (m)</span>
+				<input
+					type="checkbox"
+					role="switch"
+					className="var-switch"
+					checked={included.ice}
+					aria-label={includeLabels.ice}
+					onChange={(event) => toggleIncluded('ice', event.target.checked)}
+				/>
+			</span>
+			<input
+				value={ice}
+				disabled={!included.ice}
+				onChange={(event) => setIce(event.target.value)}
+				inputMode="decimal"
+			/>
 		</label>
-			<label className="field">
-			{copy.rock}
-			<select value={rock} onChange={(event) => setRock(event.target.value)}>
+		<label className="field">
+			<span className="field-header">
+				<span>{copy.rock}</span>
+				<input
+					type="checkbox"
+					role="switch"
+					className="var-switch"
+					checked={included.rock}
+					aria-label={includeLabels.rock}
+					onChange={(event) => toggleIncluded('rock', event.target.checked)}
+				/>
+			</span>
+			<select value={rock} disabled={!included.rock} onChange={(event) => setRock(event.target.value)}>
 			{ROCKS.map((code) => (
 				<option key={code} value={code}>{copy.rocks[code]}</option>
 			))}
@@ -478,6 +600,7 @@ function App() {
 						min={0}
 						max={1}
 						step={0.1}
+						disabled={!included[key]}
 						value={weights[key]}
 						onChange={(event) => {
 							const value = Number(event.target.value);
@@ -499,7 +622,7 @@ function App() {
 				<span>{copy.morePrecise}</span>
 			</div>
 		</div>
-			<button type="button" onClick={search} disabled={busy}>
+			<button type="button" onClick={search} disabled={busy || !anyIncluded(included)}>
 			{busy ? copy.searching : copy.searchAnalogs}
 			</button>
 			<p className="muted search-summary">{summaryText}</p>

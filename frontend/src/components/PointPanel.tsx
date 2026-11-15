@@ -54,6 +54,74 @@ function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
 	return known[id] ?? id;
 }
 
+const BREAKDOWN_SLICE_COLORS: Record<string, string> = {
+	slope: '#7dffe1',
+	roughness: '#f0c14a',
+	temperature: '#9fd4c4',
+	ice: '#c9a86a',
+	rock: '#e07a4a',
+};
+
+function sliceWeight(variable: VariableInfo): number {
+	if (typeof variable.weight === 'number' && variable.weight > 0) return variable.weight;
+	return 1;
+}
+
+function polarToCartesian(cx: number, cy: number, radius: number, angleDeg: number) {
+	const angleRad = ((angleDeg - 90) * Math.PI) / 180;
+	return { x: cx + radius * Math.cos(angleRad), y: cy + radius * Math.sin(angleRad) };
+}
+
+function pieWedgePath(cx: number, cy: number, radius: number, startDeg: number, endDeg: number) {
+	if (endDeg - startDeg >= 359.99) {
+		return `M ${cx} ${cy - radius} A ${radius} ${radius} 0 1 1 ${cx - 0.001} ${cy - radius} Z`;
+	}
+	const start = polarToCartesian(cx, cy, radius, endDeg);
+	const end = polarToCartesian(cx, cy, radius, startDeg);
+	const largeArc = endDeg - startDeg > 180 ? 1 : 0;
+	return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y} Z`;
+}
+
+type BreakdownSlice = {
+	id: string;
+	name: string;
+	color: string;
+	share: number;
+	shareLabel: string;
+	startDeg: number;
+	endDeg: number;
+};
+
+function breakdownSlices(
+	variables: VariableInfo[],
+	scores: Record<string, number>,
+	copy: ReturnType<typeof getCopy>,
+): BreakdownSlice[] {
+	const active = variables.filter((variable) => typeof scores[variable.id] === 'number');
+	const total = active.reduce((sum, variable) => sum + sliceWeight(variable), 0);
+	if (total <= 0 || active.length === 0) return [];
+	let cursor = 0;
+	return active.map((variable) => {
+		const weight = sliceWeight(variable);
+		const share = weight / total;
+		const span = share * 360;
+		const startDeg = cursor;
+		const endDeg = cursor + span;
+		cursor = endDeg;
+		const shareLabel = (share * 100).toFixed(share >= 0.1 ? 0 : 1);
+		const name = variableLabel(copy, variable.id);
+		return {
+			id: variable.id,
+			name,
+			color: BREAKDOWN_SLICE_COLORS[variable.id] ?? '#8fa2b8',
+			share,
+			shareLabel,
+			startDeg,
+			endDeg,
+		};
+	});
+}
+
 /** What the Earth cell holds for a variable, in the panel's own column names. */
 function cellValue(cell: EarthCell, id: string): number | string | null {
 	switch (id) {
@@ -310,9 +378,38 @@ export default function PointPanel({ place, onClose, language, variables, activi
 							})}
 						</section>
 					)}
-					{place.scores && Object.keys(place.scores).length > 0 && (
+					{place.scores && Object.keys(place.scores).length > 0 && (() => {
+						const slices = breakdownSlices(variables, place.scores, copy);
+						return (
 						<section className="breakdown">
 							<h4>{copy.breakdown}</h4>
+							{slices.length > 0 && (
+								<div className="breakdown-pie">
+									<svg className="breakdown-pie-chart" viewBox="0 0 100 100" role="img" aria-hidden>
+										{slices.map((slice) => (
+											<path
+												key={slice.id}
+												d={pieWedgePath(50, 50, 42, slice.startDeg, slice.endDeg)}
+												fill={slice.color}
+												aria-label={copy.breakdownPieSlice(slice.name, slice.shareLabel)}
+											/>
+										))}
+									</svg>
+									<ul className="breakdown-pie-legend">
+										{slices.map((slice) => (
+											<li key={slice.id}>
+												<span
+													className="breakdown-pie-swatch"
+													style={{ backgroundColor: slice.color }}
+													aria-hidden
+												/>
+												<span className="breakdown-pie-label">{slice.name}</span>
+												<span className="breakdown-pie-share">{slice.shareLabel}%</span>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
 							<ul>
 								{variables.map((variable) => {
 									const name = variableLabel(copy, variable.id);
@@ -341,7 +438,8 @@ export default function PointPanel({ place, onClose, language, variables, activi
 								<p className="muted warn">{copy.unalikeWarning}</p>
 							)}
 						</section>
-					)}
+						);
+					})()}
 					{place.activity && (
 						<p className="muted activity-line">
 							{copy.activityLabel}:{' '}

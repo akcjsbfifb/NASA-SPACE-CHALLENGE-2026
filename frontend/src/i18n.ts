@@ -13,6 +13,12 @@ type TranslationStrings = {
 	nightTemperature: string;
 	ice: string;
 	rock: string;
+	includeSlope: string;
+	includeRoughness: string;
+	includeTemperature: string;
+	includeIce: string;
+	includeRock: string;
+	breakdownPieSlice: (name: string, share: string) => string;
 	weight: string;
 	activityLabel: string;
 	differsBy: string;
@@ -89,6 +95,12 @@ const translations = {
 		nightTemperature: 'Temperatura nocturna',
 		ice: 'Hielo',
 		rock: 'Roca',
+		includeSlope: 'Incluir pendiente en la búsqueda',
+		includeRoughness: 'Incluir rugosidad en la búsqueda',
+		includeTemperature: 'Incluir temperatura en la búsqueda',
+		includeIce: 'Incluir hielo en la búsqueda',
+		includeRock: 'Incluir roca en la búsqueda',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del promedio`,
 		weight: 'Peso',
 		activityLabel: 'Actividad',
 		differsBy: 'Difiere en',
@@ -188,6 +200,12 @@ const translations = {
 		nightTemperature: 'Nighttime temperature',
 		ice: 'Ice',
 		rock: 'Rock',
+		includeSlope: 'Include slope in the search',
+		includeRoughness: 'Include roughness in the search',
+		includeTemperature: 'Include temperature in the search',
+		includeIce: 'Include ice in the search',
+		includeRock: 'Include rock in the search',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% of the average`,
 		weight: 'Weight',
 		activityLabel: 'Activity',
 		differsBy: 'Differs by',
@@ -287,6 +305,12 @@ const translations = {
 		nightTemperature: 'Température nocturne',
 		ice: 'Glace',
 		rock: 'Roche',
+		includeSlope: 'Inclure la pente dans la recherche',
+		includeRoughness: 'Inclure la rugosité dans la recherche',
+		includeTemperature: 'Inclure la température dans la recherche',
+		includeIce: 'Inclure la glace dans la recherche',
+		includeRock: 'Inclure la roche dans la recherche',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share} % de la moyenne`,
 		weight: 'Poids',
 		activityLabel: 'Activité',
 		differsBy: 'Diffère de',
@@ -386,6 +410,12 @@ const translations = {
 		nightTemperature: 'Temperatura notturna',
 		ice: 'Ghiaccio',
 		rock: 'Roccia',
+		includeSlope: 'Includi la pendenza nella ricerca',
+		includeRoughness: 'Includi la rugosità nella ricerca',
+		includeTemperature: 'Includi la temperatura nella ricerca',
+		includeIce: 'Includi il ghiaccio nella ricerca',
+		includeRock: 'Includi la roccia nella ricerca',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% della media`,
 		weight: 'Peso',
 		activityLabel: 'Attività',
 		differsBy: 'Differisce di',
