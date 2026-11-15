@@ -40,6 +40,12 @@ type TranslationStrings = {
 	esriSatellite: string;
 	viewGoogleMaps: string;
 	closeness: string;
+	coverage: string;
+	coverageOf: (available: string, total: string) => string;
+	worstVariable: string;
+	breakdown: string;
+	tierNote: string;
+	unalikeWarning: string;
 	elevation: string;
 	coldNight: string;
 	noData: string;
@@ -53,7 +59,7 @@ const translations = {
 		language: 'Idioma',
 		pageTitle: 'ORBITAL',
 		objective: 'Objetivo',
-		objectiveDescription: 'Ingresar los valores de las 5 medidas del sitio lunar. La cercanía es el promedio de las cinco.',
+		objectiveDescription: 'El promedio usa las variables del contrato de análogos. Cada una declara cuánto se puede comparar.',
 		slope: 'Pendiente',
 		roughness: 'Rugosidad',
 		nightTemperature: 'Temperatura nocturna',
@@ -89,7 +95,13 @@ const translations = {
 		googleSatellite: 'Google Maps · satelital',
 		esriSatellite: 'Esri World Imagery · recorte de 800 m',
 		viewGoogleMaps: 'Ver en Google Maps',
-		closeness: 'Cercanía',
+		closeness: 'Orden de similitud',
+		coverage: 'Cobertura',
+		coverageOf: (available: string, total: string) => `${available} de ${total} variables`,
+		worstVariable: 'Peor variable',
+		breakdown: 'Desglose',
+		tierNote: 'A comparable · B proxy · C sin equivalencia validada',
+		unalikeWarning: 'Este promedio incluye variables sin equivalencia terrestre validada.',
 		elevation: 'Elevación',
 		coldNight: 'Noche fría',
 		noData: 'sin dato',
@@ -116,7 +128,7 @@ const translations = {
 		language: 'Language',
 		pageTitle: 'ORBITAL',
 		objective: 'Target',
-		objectiveDescription: 'Five measurements for the lunar site. Closeness is the average of all five.',
+		objectiveDescription: 'The average uses the variables in the analog contract. Each one declares how comparable it is.',
 		slope: 'Slope',
 		roughness: 'Roughness',
 		nightTemperature: 'Nighttime temperature',
@@ -152,7 +164,13 @@ const translations = {
 		googleSatellite: 'Google Maps · satellite',
 		esriSatellite: 'Esri World Imagery · 800 m crop',
 		viewGoogleMaps: 'View on Google Maps',
-		closeness: 'Closeness',
+		closeness: 'Similarity rank',
+		coverage: 'Coverage',
+		coverageOf: (available: string, total: string) => `${available} of ${total} variables`,
+		worstVariable: 'Worst variable',
+		breakdown: 'Breakdown',
+		tierNote: 'A comparable · B proxy · C no validated equivalent',
+		unalikeWarning: 'This average includes variables without a validated terrestrial equivalent.',
 		elevation: 'Elevation',
 		coldNight: 'Nighttime low',
 		noData: 'no data',
@@ -179,7 +197,7 @@ const translations = {
 		language: 'Langue',
 		pageTitle: 'ORBITAL',
 		objective: 'Objectif',
-		objectiveDescription: 'Cinq mesures du site lunaire. La proximité est la moyenne des cinq.',
+		objectiveDescription: 'La moyenne utilise les variables du contrat d’analogues. Chacune indique son niveau de comparabilité.',
 		slope: 'Pente',
 		roughness: 'Rugosité',
 		nightTemperature: 'Température nocturne',
@@ -215,7 +233,13 @@ const translations = {
 		googleSatellite: 'Google Maps · satellite',
 		esriSatellite: 'Esri World Imagery · extrait de 800 m',
 		viewGoogleMaps: 'Voir sur Google Maps',
-		closeness: 'Proximité',
+		closeness: 'Rang de similitude',
+		coverage: 'Couverture',
+		coverageOf: (available: string, total: string) => `${available} sur ${total} variables`,
+		worstVariable: 'Pire variable',
+		breakdown: 'Détail',
+		tierNote: 'A comparable · B proxy · C sans équivalent validé',
+		unalikeWarning: 'Cette moyenne inclut des variables sans équivalent terrestre validé.',
 		elevation: 'Altitude',
 		coldNight: 'Minimum nocturne',
 		noData: 'aucune donnée',
@@ -242,7 +266,7 @@ const translations = {
 		language: 'Lingua',
 		pageTitle: 'ORBITAL',
 		objective: 'Obiettivo',
-		objectiveDescription: 'Cinque misure del sito lunare. La somiglianza è la media delle cinque.',
+		objectiveDescription: 'La media usa le variabili del contratto degli analoghi. Ognuna dichiara quanto è comparabile.',
 		slope: 'Pendenza',
 		roughness: 'Rugosità',
 		nightTemperature: 'Temperatura notturna',
@@ -278,7 +302,13 @@ const translations = {
 		googleSatellite: 'Google Maps · satellite',
 		esriSatellite: 'Esri World Imagery · ritaglio di 800 m',
 		viewGoogleMaps: 'Apri in Google Maps',
-		closeness: 'Somiglianza',
+		closeness: 'Ordine di somiglianza',
+		coverage: 'Copertura',
+		coverageOf: (available: string, total: string) => `${available} di ${total} variabili`,
+		worstVariable: 'Variabile peggiore',
+		breakdown: 'Dettaglio',
+		tierNote: 'A comparabile · B proxy · C senza equivalente validato',
+		unalikeWarning: 'Questa media include variabili senza equivalente terrestre validato.',
 		elevation: 'Elevazione',
 		coldNight: 'Minima notturna',
 		noData: 'nessun dato',

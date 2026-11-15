@@ -2,11 +2,17 @@ import { useEffect, useState } from 'react';
 
 import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
+import { formatDelta, truncated } from '../score';
+import type { VariableInfo } from '../score';
 
 export type SelectedPlace = {
 	lat: number;
 	lng: number;
 	closeness?: number;
+	coverage?: number;
+	worst?: number;
+	scores?: Record<string, number>;
+	deltas?: Record<string, number>;
 };
 
 type EarthCell = {
@@ -25,14 +31,27 @@ type PointPanelProps = {
 	place: SelectedPlace | null;
 	onClose: () => void;
 	language: Language;
+	variables: VariableInfo[];
 };
+
+/** Labels come from i18n by id, with the raw id as a fallback for new variables. */
+function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
+	const known: Record<string, string> = {
+		slope: copy.slope,
+		roughness: copy.roughness,
+		temperature: copy.nightTemperature,
+		ice: copy.ice,
+		rock: copy.rock,
+	};
+	return known[id] ?? id;
+}
 
 function formatMeters(value: number | null, noData: string, digits = 0) {
 	if (value === null) return noData;
 	return `${value.toFixed(digits)} m`;
 }
 
-export default function PointPanel({ place, onClose, language }: PointPanelProps) {
+export default function PointPanel({ place, onClose, language, variables }: PointPanelProps) {
 	const copy = getCopy(language);
 	const [cell, setCell] = useState<EarthCell | null>(null);
 	const [cellError, setCellError] = useState(false);
@@ -136,10 +155,24 @@ export default function PointPanel({ place, onClose, language }: PointPanelProps
 							<dd>{(cell?.lon ?? place.lng).toFixed(4)}</dd>
 						</div>
 						{place.closeness !== undefined && (
-							<div>
-								<dt>{copy.closeness}</dt>
-								<dd>{(place.closeness * 100).toFixed(0)}%</dd>
-							</div>
+							<>
+								<div>
+									<dt>{copy.closeness}</dt>
+									<dd>{truncated(place.closeness, 2)}%</dd>
+								</div>
+								{variables.length > 0 && (
+									<div>
+										<dt>{copy.coverage}</dt>
+										<dd>{copy.coverageOf(String(place.coverage ?? 0), String(variables.length))}</dd>
+									</div>
+								)}
+								{place.worst !== undefined && variables.length > 1 && (
+									<div>
+										<dt>{copy.worstVariable}</dt>
+										<dd>{truncated(place.worst, 1)}%</dd>
+									</div>
+								)}
+							</>
 						)}
 						<div>
 							<dt>{copy.elevation}</dt>
@@ -166,6 +199,35 @@ export default function PointPanel({ place, onClose, language }: PointPanelProps
 							<dd>{cell ? `${copy.rocks[cell.rock] ?? cell.rock} (${cell.rock})` : '…'}</dd>
 						</div>
 					</dl>
+					{place.scores && Object.keys(place.scores).length > 0 && (
+						<section className="breakdown">
+							<h4>{copy.breakdown}</h4>
+							<ul>
+								{variables.map((variable) => {
+									const score = place.scores?.[variable.id];
+									const delta = place.deltas?.[variable.id];
+									const change = typeof delta === 'number' && variable.unit && variable.unit !== 'class'
+										? ` · ${formatDelta(delta, variable.unit)}`
+										: '';
+									return (
+										<li key={variable.id}>
+											<span className="breakdown-name">
+												{variableLabel(copy, variable.id)}
+												<span className={`tier tier-${variable.tier ?? 'C'}`}>{variable.tier ?? '?'}</span>
+											</span>
+											<span>
+												{score === undefined ? copy.noData : `${truncated(score, 1)}%${change}`}
+											</span>
+										</li>
+									);
+								})}
+							</ul>
+							<p className="muted">{copy.tierNote}</p>
+							{variables.some((variable) => variable.tier === 'C') && (
+								<p className="muted warn">{copy.unalikeWarning}</p>
+							)}
+						</section>
+					)}
 					{cellError && <p className="muted">{copy.cellError}</p>}
 					{cell && cell.distance_km > 1.5 && (
 						<p className="muted">{copy.nearestCellDistance(cell.distance_km.toFixed(1))}</p>

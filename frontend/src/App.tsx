@@ -19,6 +19,9 @@ import type {
 import { getCopy, isLanguage } from './i18n';
 import type { Language } from './i18n';
 
+import { primaryDelta, truncated } from './score';
+import type { ScoreDetail, VariableInfo } from './score';
+
 import {
 	SELECTED_ALTITUDE,
 	SELECTED_COLOR,
@@ -39,10 +42,9 @@ type SearchSummary =
 	| { type: 'offline' }
 	| { type: 'failed' };
 
-type SearchPoint = {
+type SearchPoint = ScoreDetail & {
 	lat: number;
 	lon: number;
-	closeness: number;
 	rock: string;
 };
 
@@ -54,14 +56,14 @@ type SearchResponse = {
 	temperature_mode?: string;
 	precision?: number;
 	points: SearchPoint[];
-	target?: {
-		slope_deg?: number | null;
-		roughness_m?: number | null;
-		tmin_c?: number | null;
-		ice_thickness_m?: number | null;
-		rock?: string | null;
-	};
+	target?: Record<string, number | string | null>;
+	variables_used?: VariableInfo[];
+	ignored?: string[];
 };
+
+function text(value: unknown): string {
+	return typeof value === 'number' ? String(value) : '';
+}
 
 function pageFromHash(): 'moon' | 'earth' {
 	return window.location.hash === '#luna' ? 'moon' : 'earth';
@@ -93,7 +95,7 @@ function App() {
 	const copy = getCopy(language);
 	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
 
-	const [visibleLayers, setVisibleLayers] = useState({
+	const [visibleLayers] = useState({
 		points: true,
 		heatmaps: false,
 		polygons: false,
@@ -107,6 +109,7 @@ function App() {
 	const [rock, setRock] = useState('vb');
 	const [precision, setPrecision] = useState(0.75);
 	const [points, setPoints] = useState<SearchPoint[]>([]);
+	const [variables, setVariables] = useState<VariableInfo[]>([]);
 	const [summary, setSummary] = useState<SearchSummary>({ type: 'initial' });
 	const [busy, setBusy] = useState(false);
 	const [selection, setSelection] = useState<SelectedPlace | null>(null);
@@ -134,12 +137,12 @@ function App() {
 			case 'searching':
 				return copy.searchingSummary;
 			case 'no-results':
-				return copy.noResults((summary.closeness * 100).toFixed(0));
+				return copy.noResults(truncated(summary.closeness, 1));
 			case 'results':
 				return copy.resultSummary(
 					summary.count,
-					(summary.lowest * 100).toFixed(0),
-					(summary.highest * 100).toFixed(0),
+					truncated(summary.lowest, 1),
+					truncated(summary.highest, 1),
 				) + (summary.relativeCold ? copy.relativeColdNote : '');
 			case 'offline':
 				return copy.serverOffline;
@@ -148,16 +151,21 @@ function App() {
 		}
 	})();
 
-	function selectPlace(lat: number, lng: number, closeness?: number) {
+	function selectPlace(lat: number, lng: number, point?: SearchPoint) {
 		setLocation({ lat, lng, altitude: 0 });
-		setSelection({ lat, lng, closeness });
-	}
-
-	function toggleLayer(layer: keyof typeof visibleLayers) {
-		setVisibleLayers(previous => ({
-			...previous,
-			[layer]: !previous[layer],
-		}));
+		setSelection(
+			point
+				? {
+					lat: point.lat,
+					lng: point.lon,
+					closeness: point.closeness,
+					coverage: point.coverage,
+					worst: point.worst,
+					scores: point.scores,
+					deltas: point.deltas,
+				}
+				: { lat, lng },
+		);
 	}
 
 	useEffect(() => {
@@ -196,14 +204,15 @@ function App() {
 
 	function applySearchResult(body: SearchResponse) {
 		setPoints(body.points);
+		setVariables(body.variables_used ?? []);
 		if (body.precision !== undefined) setPrecision(body.precision);
 		const target = body.target;
 		if (target) {
-			setSlope(target.slope_deg != null ? String(target.slope_deg) : '');
-			setRoughness(target.roughness_m != null ? String(target.roughness_m) : '');
-			setTmin(target.tmin_c != null ? String(target.tmin_c) : '');
-			setIce(target.ice_thickness_m != null ? String(target.ice_thickness_m) : '');
-			setRock(target.rock ?? '');
+			setSlope(text(target.slope));
+			setRoughness(text(target.roughness));
+			setTmin(text(target.temperature));
+			setIce(text(target.ice));
+			setRock(target.rock != null ? String(target.rock) : '');
 		}
 		setSummary(body.returned === 0
 			? { type: 'no-results', closeness: body.min_closeness }
@@ -380,15 +389,19 @@ function App() {
 			</button>
 			<p className="muted search-summary">{summaryText}</p>
 			<div className="result-list">
-				{points.slice(0, 6).map((point) => (
+				{points.slice(0, 6).map((point) => {
+					const delta = primaryDelta(point, variables);
+					return (
 					<button
 					key={`${point.lat},${point.lon}`}
 					type="button"
-					onClick={() => selectPlace(point.lat, point.lon, point.closeness)}
+					onClick={() => selectPlace(point.lat, point.lon, point)}
 					>
-					{(point.closeness * 100).toFixed(0)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)} · {copy.rocks[point.rock] ?? point.rock}
+					{truncated(point.closeness, 1)}% · {point.lat.toFixed(2)}, {point.lon.toFixed(2)}
+					{delta ? ` · ${delta}` : ''}
 					</button>
-				))}
+					);
+				})}
 			</div>
 		</section>
 
@@ -430,8 +443,8 @@ function App() {
 				const hit = points.find(
 					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
 				);
-				selectPlace(point.lat, point.lng, hit?.closeness); }} />
-			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} />
+				selectPlace(point.lat, point.lng, hit); }} />
+			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} variables={variables} />
 		</section>
 
 		</>

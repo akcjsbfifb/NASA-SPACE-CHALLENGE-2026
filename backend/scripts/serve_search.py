@@ -17,7 +17,7 @@ from queue import Empty, Queue
 from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
-from similarity import EarthIndex, write_shortlist
+from similarity import EarthIndex, parse_criteria, write_shortlist
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend" / "processing"))
@@ -163,13 +163,16 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "not found"})
             return
         try:
-            result = earth_index().search(
-                slope=self._optional_float(query, "slope"),
-                roughness=self._optional_float(query, "roughness"),
-                tmin=self._optional_float(query, "tmin"),
-                ice=self._optional_float(query, "ice"),
-                rock=query["rock"][0] if query.get("rock") and query["rock"][0] else None,
-                precision=float(query.get("precision", ["0.7"])[0]),
+            index = earth_index()
+            values = {
+                name: query[name][0]
+                for name in query
+                if query[name] and query[name][0] != ""
+            }
+            result = index.search(
+                parse_criteria(index.contract, values),
+                precision=float(values.get("precision", 0.7)),
+                min_worst=self._optional_float(query, "min_worst"),
             )
         except (KeyError, ValueError) as error:
             self._send(400, {"error": str(error)})

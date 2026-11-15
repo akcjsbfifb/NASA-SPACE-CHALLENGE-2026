@@ -79,9 +79,11 @@ def test_earth_columns_mmap_load_and_query(mmap_index):
     assert {"lat", "lon", "distance_km", "slope_deg", "roughness_m", "rock"} <= set(nearest)
     assert nearest["lat"] == 45.0
 
-    result = index.search(slope=8.0, rock="vb", precision=0.5)
+    result = index.search({"slope": 8.0, "rock": "vb"}, precision=0.5)
     assert "points" in result
     assert result["returned"] >= 1
     point = result["points"][0]
     assert "closeness" in point and "scores" in point
-    assert "slope" in point["scores"] and "rock" in point["scores"]
+    assert {"slope", "rock"} <= set(point["scores"])
+    assert point["coverage"] >= 1
+    assert "worst" in point and "deltas" in point

@@ -16,9 +16,11 @@ if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
 import similarity
-from similarity import EarthIndex, write_shortlist
+from similarity import EarthIndex, parse_criteria, write_shortlist
 
-_FLOAT_KEYS = ("slope", "roughness", "tmin", "ice")
+# Payload keys that are not variables. Everything else in the payload is a
+# target value and the contract decides how to read it.
+CONTROL_KEYS = ("precision", "min_worst")
 NOTIFY_TOKEN_HEADER = "X-Gurvich-Notify-Token"
 DEFAULT_NOTIFY_TOKEN_PATH = Path("/tmp/gurvich-notify.token")
 
@@ -44,34 +46,20 @@ def _search_base_url() -> str:
     return raw.rstrip("/")
 
 
-def _search_kwargs(payload: dict) -> dict:
-    kwargs: dict = {}
-    for key in _FLOAT_KEYS:
-        if key not in payload or payload[key] is None:
-            continue
-        kwargs[key] = float(payload[key])
-    rock = payload.get("rock")
-    if rock is not None:
-        kwargs["rock"] = str(rock)
-    precision = payload.get("precision")
-    kwargs["precision"] = 0.7 if precision is None else float(precision)
-    return kwargs
+def _targets(payload: dict) -> dict[str, str]:
+    return {
+        key: str(value)
+        for key, value in payload.items()
+        if key not in CONTROL_KEYS and value is not None and value != ""
+    }
 
 
 def _search_query_params(payload: dict) -> list[tuple[str, str]]:
-    params: list[tuple[str, str]] = []
-    for key in _FLOAT_KEYS:
-        if key not in payload or payload[key] is None:
-            continue
-        params.append((key, str(payload[key])))
-    rock = payload.get("rock")
-    if rock is not None and str(rock) != "":
-        params.append(("rock", str(rock)))
+    params = list(_targets(payload).items())
     precision = payload.get("precision")
-    if precision is None:
-        params.append(("precision", "0.7"))
-    else:
-        params.append(("precision", str(precision)))
+    params.append(("precision", "0.7" if precision is None else str(precision)))
+    if payload.get("min_worst") is not None:
+        params.append(("min_worst", str(payload["min_worst"])))
     return params
 
 
@@ -160,7 +148,12 @@ def _handle_line(line: str) -> dict:
         return remote
 
     try:
-        result = _lazy_index().search(**_search_kwargs(payload))
+        index = _lazy_index()
+        result = index.search(
+            parse_criteria(index.contract, _targets(payload)),
+            precision=0.7 if payload.get("precision") is None else float(payload["precision"]),
+            min_worst=None if payload.get("min_worst") is None else float(payload["min_worst"]),
+        )
     except (FileNotFoundError, ValueError) as error:
         return {"error": str(error)}
     return _notify_frontend(_write_shortlist(result))

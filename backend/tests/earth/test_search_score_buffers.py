@@ -1,4 +1,4 @@
-"""EarthIndex.search score buffers and session cache vs naive reference."""
+"""EarthIndex.search: masked mean, per-variable scores, and the contract."""
 
 from __future__ import annotations
 
@@ -37,72 +37,80 @@ def _synthetic_parquet(path: Path) -> dict[str, np.ndarray]:
 
 
 def _reference_scores(
-    index: EarthIndex,
-    *,
-    slope: float,
-    roughness: float,
-    tmin: float,
-    ice: float,
-    rock: str,
-) -> tuple[dict[str, np.ndarray], np.ndarray, str]:
-    """Naive per-formula scores on all rows (float32 where ice uses cached-style ops)."""
+    index: EarthIndex, criteria: dict[str, float | str]
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], np.ndarray, np.ndarray, np.ndarray]:
+    """Naive per-formula scores, presence masks, masked mean, coverage and worst."""
     n = int(index.lat.size)
-    parts: list[np.ndarray] = []
     scores: dict[str, np.ndarray] = {}
+    present: dict[str, np.ndarray] = {}
+    mode = "not_used"
 
-    slope_s = np.exp(-np.abs(np.asarray(index.slope, dtype=np.float32) - slope) / 8.0).astype(
-        np.float32
-    )
-    scores["slope"] = slope_s
-    parts.append(slope_s)
+    for spec in index.contract["variables"]:
+        name = spec["id"]
+        if name not in criteria:
+            continue
+        target = criteria[name]
+        kind = spec["score"]["type"]
+        if kind == "categorical":
+            codes = rock_names()
+            code = codes[str(target)]
+            group = index.group_ids[np.asarray(index.rock).astype(np.intp)]
+            same = np.asarray(index.rock) == code
+            related = (~same) & (group == int(index.group_ids[code]))
+            series = np.zeros(n, dtype=np.float32)
+            series[same] = np.float32(1.0)
+            series[related] = np.float32(0.45)
+            scores[name] = series
+            present[name] = (np.asarray(index.rock) != 0) & (np.asarray(index.rock) != 15)
+            continue
 
-    rough_scale = max(0.25, abs(roughness) * (50.0 / 30.0))
-    rough_s = np.exp(
-        -np.abs(np.asarray(index.roughness, dtype=np.float32) - roughness) / rough_scale
-    ).astype(np.float32)
-    scores["roughness"] = rough_s
-    parts.append(rough_s)
+        grid = np.asarray(getattr(index, name)).astype(np.float32, copy=False) if False else None
+        del grid
+        column = {"slope": index.slope, "roughness": index.roughness,
+                  "temperature": index.tmin, "ice": index.ice}[name]
+        grid = np.asarray(column).astype(np.float32, copy=False)
+        known = np.isfinite(grid)
+        value = float(target)
+        if kind == "gaussian":
+            series = np.exp(-np.abs(grid - value) / np.float32(spec["score"]["scale"]))
+        elif kind == "gaussian_relative":
+            scale = max(float(spec["score"]["min_scale"]), abs(value) * float(spec["score"]["ratio"]))
+            series = np.exp(-np.abs(grid - value) / np.float32(scale))
+        elif kind == "gaussian_log1p":
+            series = np.exp(
+                -np.abs(np.log1p(grid) - np.float32(np.log1p(value)))
+                / np.float32(spec["score"]["scale"])
+            )
+        elif kind == "gaussian_temperature":
+            extreme = float(spec["score"]["extreme_delta"])
+            if value <= index.cold_ref - extreme:
+                reference, mode = index.cold_ref, "relative_cold"
+            elif value >= index.hot_ref + extreme:
+                reference, mode = index.hot_ref, "relative_hot"
+            else:
+                reference, mode = value, "absolute"
+            series = np.exp(-np.abs(grid - np.float32(reference)) / np.float32(spec["score"]["scale"]))
+        else:  # pragma: no cover - contract already validates the type
+            raise AssertionError(kind)
+        series = series.astype(np.float32)
+        series[~known] = np.float32(0.0)
+        scores[name] = series
+        present[name] = known
 
-    grid_tmin = np.asarray(index.tmin, dtype=np.float32)
-    known = np.isfinite(grid_tmin)
-    if tmin <= index.cold_ref - 15:
-        reference = index.cold_ref
-        mode = "relative_cold"
-    elif tmin >= index.hot_ref + 15:
-        reference = index.hot_ref
-        mode = "relative_hot"
-    else:
-        reference = tmin
-        mode = "absolute"
-    temp_s = np.zeros(n, dtype=np.float32)
-    temp_s[known] = np.exp(-np.abs(grid_tmin[known] - reference) / 12.0).astype(np.float32)
-    scores["temperature"] = temp_s
-    parts.append(temp_s)
-
-    log_ice_grid = np.log1p(np.asarray(index.ice, dtype=np.float32))
-    log_ice_target = np.float32(np.log1p(float(ice)))
-    ice_s = np.exp(-np.abs(log_ice_grid - log_ice_target) / np.float32(1.2)).astype(np.float32)
-    scores["ice"] = ice_s
-    parts.append(ice_s)
-
-    codes = rock_names()
-    rock_code = codes[rock]
-    group_ids = index.group_ids
-    target_group = int(group_ids[rock_code])
-    rock_grid = np.asarray(index.rock)
-    cell_group = group_ids[rock_grid.astype(np.intp)]
-    same = rock_grid == rock_code
-    rock_s = np.zeros(n, dtype=np.float32)
-    rock_s[same] = np.float32(1.0)
-    rock_s[(~same) & (cell_group == target_group)] = np.float32(0.45)
-    scores["rock"] = rock_s
-    parts.append(rock_s)
-
-    closeness = np.array(parts[0], dtype=np.float32, copy=True)
-    for part in parts[1:]:
-        closeness += part
-    closeness /= np.float32(len(parts))
-    return scores, closeness, mode
+    total = np.zeros(n, dtype=np.float32)
+    weight = np.zeros(n, dtype=np.float32)
+    worst = np.full(n, np.inf, dtype=np.float32)
+    coverage = np.zeros(n, dtype=np.int8)
+    for name, series in scores.items():
+        mask = present[name]
+        total += np.where(mask, series, np.float32(0.0))
+        weight += mask.astype(np.float32)
+        worst = np.where(mask, np.minimum(worst, series), worst)
+        coverage += mask.astype(np.int8)
+    closeness = np.zeros(n, dtype=np.float32)
+    np.divide(total, weight, out=closeness, where=weight > 0)
+    worst[~np.isfinite(worst)] = 0.0
+    return scores, present, closeness, coverage, worst
 
 
 @pytest.fixture()
@@ -125,42 +133,95 @@ def _shortlist_all_indices(
     return list(range(int(closeness.size)))
 
 
-def test_search_matches_reference_and_reuses_cache(tiny_index: EarthIndex):
-    params = dict(
-        slope=8.0,
-        roughness=25.0,
-        tmin=-12.0,
-        ice=0.0,
-        rock="vb",
-        precision=0.5,
-    )
-    score_params = {k: params[k] for k in ("slope", "roughness", "tmin", "ice", "rock")}
-    ref_scores, ref_closeness, ref_mode = _reference_scores(tiny_index, **score_params)
+def test_search_matches_reference(tiny_index: EarthIndex):
+    criteria = {
+        "slope": 8.0,
+        "roughness": 25.0,
+        "temperature": -12.0,
+        "ice": 0.0,
+        "rock": "vb",
+    }
+    scores, present, closeness, coverage, worst = _reference_scores(tiny_index, criteria)
 
     with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
-        first = tiny_index.search(**params)
-    ice_cache = tiny_index._ice_log1p
-    rock_cache = tiny_index._rock_group_id
-    tmin_cache = tiny_index._tmin_finite
-    assert ice_cache is not None and rock_cache is not None and tmin_cache is not None
-    assert tiny_index._search_cache_ready
+        result = tiny_index.search(criteria, precision=0.5)
 
-    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
-        second = tiny_index.search(**params)
-    assert tiny_index._ice_log1p is ice_cache
-    assert tiny_index._rock_group_id is rock_cache
-    assert tiny_index._tmin_finite is tmin_cache
+    assert result["variables"] == list(criteria)
+    assert result["ignored"] == []
+    assert result["weights_version"] is None
+    assert [item["id"] for item in result["variables_used"]] == list(criteria)
 
-    assert first["temperature_mode"] == ref_mode
-    assert second["temperature_mode"] == ref_mode
-
-    by_index_first = {i: first["points"][i] for i in range(len(first["points"]))}
     for row in range(int(tiny_index.lat.size)):
-        point = by_index_first[row]
-        assert point["closeness"] == round(float(ref_closeness[row]), 4)
-        for name, ref_series in ref_scores.items():
-            assert point["scores"][name] == round(float(ref_series[row]), 3)
+        point = result["points"][row]
+        assert point["closeness"] == round(float(closeness[row]), 4)
+        assert point["coverage"] == int(coverage[row])
+        assert point["worst"] == round(float(worst[row]), 4)
+        for name, series in scores.items():
+            if not present[name][row]:
+                assert name not in point["scores"]
+                assert name not in point["deltas"]
+                continue
+            assert point["scores"][name] == round(float(series[row]), 3)
 
-    assert ice_cache.dtype == np.float32
-    assert rock_cache.dtype == np.int8
-    assert tmin_cache.dtype == bool
+
+def test_missing_value_is_not_a_zero_score(tiny_index: EarthIndex):
+    """Row 1 has no tmin. It must average over the variables it has, not be penalised."""
+    criteria = {"slope": 8.0, "temperature": -12.0}
+    scores, _present, closeness, coverage, _worst = _reference_scores(tiny_index, criteria)
+
+    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
+        result = tiny_index.search(criteria, precision=0.3)
+
+    point = result["points"][1]
+    assert point["coverage"] == 1
+    assert point["closeness"] == round(float(scores["slope"][1]), 4)
+    assert point["closeness"] == round(float(closeness[1]), 4)
+    assert coverage[1] == 1
+
+
+def test_new_variable_needs_only_a_contract_entry(tmp_path, tiny_index: EarthIndex):
+    """A column plus one contract entry is the whole job of adding a variable."""
+    contract = json.loads((REPO_ROOT / "data" / "earth" / "analogs.json").read_text())
+    contract["variables"].append(
+        {
+            "id": "relief",
+            "earth_column": "elevation_m",
+            "unit": "m",
+            "tier": "A",
+            "enabled": True,
+            "weight": None,
+            "score": {"type": "gaussian", "scale": 10.0},
+        }
+    )
+    path = tmp_path / "analogs.json"
+    path.write_text(json.dumps(contract))
+    index = EarthIndex(columns_dir=Path(tiny_index.columns_dir), analogs_path=path)
+
+    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
+        result = index.search({"relief": 100.0}, precision=0.5)
+
+    assert result["variables"] == ["relief"]
+    assert result["points"][0]["deltas"]["relief"] == 0.0
+    assert result["points"][0]["scores"]["relief"] == 1.0
+
+
+def test_unknown_variable_is_rejected(tiny_index: EarthIndex):
+    with pytest.raises(ValueError):
+        tiny_index.search({"elevation_banana": 3.0})
+
+
+def test_disabled_variable_is_reported_not_scored(tmp_path, tiny_index: EarthIndex):
+    contract = json.loads((REPO_ROOT / "data" / "earth" / "analogs.json").read_text())
+    for spec in contract["variables"]:
+        if spec["id"] == "rock":
+            spec["enabled"] = False
+    path = tmp_path / "analogs.json"
+    path.write_text(json.dumps(contract))
+    index = EarthIndex(columns_dir=Path(tiny_index.columns_dir), analogs_path=path)
+
+    with patch.object(EarthIndex, "_shortlist", staticmethod(_shortlist_all_indices)):
+        result = index.search({"slope": 8.0, "rock": "vb"}, precision=0.5)
+
+    assert result["ignored"] == ["rock"]
+    assert result["variables"] == ["slope"]
+    assert "rock" not in result["points"][0]["scores"]

@@ -128,7 +128,9 @@ def test_worker_two_searches_one_process(tiny_columns, tmp_path):
         assert second.get("error") is None
         assert second["returned"] >= 1
         data = json.loads(shortlist.read_text())
-        assert data["target"]["roughness_m"] == 25.0
+        # Shortlist target uses contract ids, not column names.
+        assert data["target"]["roughness"] == 25.0
+        assert data["variables"] == ["roughness"]
     finally:
         proc.stdin.close()
         proc.terminate()

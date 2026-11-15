@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "weights_version": null,
+  "nature": "terrain_morphometry",
+  "note": "Drives EarthIndex.search. Add a variable by adding one column to data/earth/columns and one entry here; no code change. weight null means equal weights. tier A = metrologically comparable, B = proxy with a different definition, C = no validated equivalent.",
+  "variables": [
+    {
+      "id": "slope",
+      "earth_column": "slope_deg",
+      "unit": "deg",
+      "tier": "A",
+      "enabled": true,
+      "weight": null,
+      "score": { "type": "gaussian", "scale": 8.0 }
+    },
+    {
+      "id": "roughness",
+      "earth_column": "roughness_m",
+      "unit": "m",
+      "tier": "B",
+      "enabled": true,
+      "weight": null,
+      "score": { "type": "gaussian_relative", "min_scale": 0.25, "ratio": 1.6666666666666667 }
+    },
+    {
+      "id": "temperature",
+      "earth_column": "tmin_coldest_month_c",
+      "unit": "C",
+      "tier": "C",
+      "enabled": true,
+      "weight": null,
+      "score": { "type": "gaussian_temperature", "scale": 12.0, "extreme_delta": 15.0 }
+    },
+    {
+      "id": "ice",
+      "earth_column": "ice_thickness_m",
+      "unit": "m",
+      "tier": "C",
+      "enabled": true,
+      "weight": null,
+      "score": { "type": "gaussian_log1p", "scale": 1.2 }
+    },
+    {
+      "id": "rock",
+      "earth_column": "lithology_code",
+      "unit": "class",
+      "tier": "C",
+      "enabled": true,
+      "weight": null,
+      "score": { "type": "categorical", "same": 1.0, "related": 0.45 }
+    }
+  ]
+}

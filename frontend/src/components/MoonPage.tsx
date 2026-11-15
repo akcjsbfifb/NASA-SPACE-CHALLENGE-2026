@@ -10,6 +10,7 @@ import {
 	type LunarLanding,
 	type LunarSample,
 } from '../data/lunarLandings';
+import { truncated } from '../score';
 import { SELECTED_COLOR } from '../theme';
 
 const MOON_GLOBE = {
@@ -60,7 +61,7 @@ type MoonPageProps = {
 
 function percent(value: number | null) {
 	if (value === null) return '—';
-	return `${(value * 100).toFixed(0)}%`;
+	return `${truncated(value, 1)}%`;
 }
 
 export function listPreview<T extends { closeness: number }>(items: T[], count = 6): T[] {
