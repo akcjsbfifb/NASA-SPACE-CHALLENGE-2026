@@ -5,7 +5,7 @@ import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
 import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
-import { formatDelta, formatValue, percent } from '../score';
+import { formatDelta, formatValue, percent, truncated } from '../score';
 import type { ActivityPreset, Grade, VariableInfo } from '../score';
 
 export type SelectedPlace = {
@@ -62,11 +62,6 @@ const BREAKDOWN_SLICE_COLORS: Record<string, string> = {
 	rock: '#e07a4a',
 };
 
-function sliceWeight(variable: VariableInfo): number {
-	if (typeof variable.weight === 'number' && variable.weight > 0) return variable.weight;
-	return 1;
-}
-
 function polarToCartesian(cx: number, cy: number, radius: number, angleDeg: number) {
 	const angleRad = ((angleDeg - 90) * Math.PI) / 180;
 	return { x: cx + radius * Math.cos(angleRad), y: cy + radius * Math.sin(angleRad) };
@@ -88,6 +83,8 @@ type BreakdownSlice = {
 	color: string;
 	share: number;
 	shareLabel: string;
+	score: number;
+	similarityLabel: string;
 	startDeg: number;
 	endDeg: number;
 };
@@ -98,17 +95,18 @@ function breakdownSlices(
 	copy: ReturnType<typeof getCopy>,
 ): BreakdownSlice[] {
 	const active = variables.filter((variable) => typeof scores[variable.id] === 'number');
-	const total = active.reduce((sum, variable) => sum + sliceWeight(variable), 0);
-	if (total <= 0 || active.length === 0) return [];
+	const scoreSum = active.reduce((sum, variable) => sum + scores[variable.id]!, 0);
+	if (scoreSum <= 0 || active.length === 0) return [];
 	let cursor = 0;
 	return active.map((variable) => {
-		const weight = sliceWeight(variable);
-		const share = weight / total;
+		const score = scores[variable.id]!;
+		const share = score / scoreSum;
 		const span = share * 360;
 		const startDeg = cursor;
 		const endDeg = cursor + span;
 		cursor = endDeg;
-		const shareLabel = (share * 100).toFixed(share >= 0.1 ? 0 : 1);
+		const shareLabel = truncated(share * 100, 1);
+		const similarityLabel = percent(score, 1);
 		const name = variableLabel(copy, variable.id);
 		return {
 			id: variable.id,
@@ -116,6 +114,8 @@ function breakdownSlices(
 			color: BREAKDOWN_SLICE_COLORS[variable.id] ?? '#8fa2b8',
 			share,
 			shareLabel,
+			score,
+			similarityLabel,
 			startDeg,
 			endDeg,
 		};
@@ -396,17 +396,39 @@ export default function PointPanel({ place, onClose, language, variables, activi
 										))}
 									</svg>
 									<ul className="breakdown-pie-legend">
-										{slices.map((slice) => (
-											<li key={slice.id}>
-												<span
-													className="breakdown-pie-swatch"
-													style={{ backgroundColor: slice.color }}
-													aria-hidden
-												/>
-												<span className="breakdown-pie-label">{slice.name}</span>
-												<span className="breakdown-pie-share">{slice.shareLabel}%</span>
-											</li>
-										))}
+										{slices.map((slice) => {
+											const variable = variables.find((v) => v.id === slice.id);
+											const delta = place.deltas?.[slice.id];
+											const showDelta =
+												typeof delta === 'number' &&
+												variable?.unit &&
+												variable.unit !== 'class';
+											return (
+												<li key={slice.id}>
+													<span
+														className="breakdown-pie-swatch"
+														style={{ backgroundColor: slice.color }}
+														aria-hidden
+													/>
+													<div className="breakdown-pie-item">
+														<div className="breakdown-pie-item-row">
+															<span className="breakdown-pie-label">{slice.name}</span>
+															<span className="breakdown-pie-share">{slice.shareLabel}%</span>
+														</div>
+														<div className="breakdown-pie-meta">
+															<span className="breakdown-pie-similarity">
+																{copy.similarity}: {slice.similarityLabel}%
+															</span>
+															{showDelta && (
+																<span className="breakdown-pie-delta">
+																	{copy.differsBy} {formatDelta(delta, variable.unit)}
+																</span>
+															)}
+														</div>
+													</div>
+												</li>
+											);
+										})}
 									</ul>
 								</div>
 							)}

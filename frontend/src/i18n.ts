@@ -19,6 +19,7 @@ type TranslationStrings = {
 	includeIce: string;
 	includeRock: string;
 	breakdownPieSlice: (name: string, share: string) => string;
+	similarity: string;
 	weight: string;
 	activityLabel: string;
 	differsBy: string;
@@ -100,7 +101,8 @@ const translations = {
 		includeTemperature: 'Incluir temperatura en la búsqueda',
 		includeIce: 'Incluir hielo en la búsqueda',
 		includeRock: 'Incluir roca en la búsqueda',
-		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del promedio`,
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del gráfico`,
+		similarity: 'Similitud',
 		weight: 'Peso',
 		activityLabel: 'Actividad',
 		differsBy: 'Difiere en',
@@ -205,7 +207,8 @@ const translations = {
 		includeTemperature: 'Include temperature in the search',
 		includeIce: 'Include ice in the search',
 		includeRock: 'Include rock in the search',
-		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% of the average`,
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% of chart`,
+		similarity: 'Similarity',
 		weight: 'Weight',
 		activityLabel: 'Activity',
 		differsBy: 'Differs by',
@@ -310,7 +313,8 @@ const translations = {
 		includeTemperature: 'Inclure la température dans la recherche',
 		includeIce: 'Inclure la glace dans la recherche',
 		includeRock: 'Inclure la roche dans la recherche',
-		breakdownPieSlice: (name: string, share: string) => `${name}, ${share} % de la moyenne`,
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share} % du graphique`,
+		similarity: 'Similarité',
 		weight: 'Poids',
 		activityLabel: 'Activité',
 		differsBy: 'Diffère de',
@@ -415,7 +419,8 @@ const translations = {
 		includeTemperature: 'Includi la temperatura nella ricerca',
 		includeIce: 'Includi il ghiaccio nella ricerca',
 		includeRock: 'Includi la roccia nella ricerca',
-		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% della media`,
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del grafico`,
+		similarity: 'Somiglianza',
 		weight: 'Peso',
 		activityLabel: 'Attività',
 		differsBy: 'Differisce di',
