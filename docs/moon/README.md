@@ -44,17 +44,17 @@ Para generar nuevas mediciones Diviner, instalar también el entorno opcional:
 
 Las salidas deben ser nuevas: no se sobrescriben entradas ni resultados.
 Sin `--sources` no hay acceso de red; las fuentes adicionales aparecen como
-`processor_not_configured`. El script `scripts/extract_moon.py` delega al mismo CLI.
+`processor_not_configured`. El script `backend/scripts/extract_moon.py` delega al mismo CLI.
 Las rutas de configuración se resuelven contra la raíz del checkout editable.
 
 Los originales permanecen ignorados, sin modificar:
 
 ```text
-NASA-Lunar-Studies/data/raw/lola/ldem/ldem_16_float.{img,xml,lbl.txt}
-NASA-Lunar-Studies/data/raw/lola/ldrm/ldrm_32_50_float.{img,xml,lbl.txt}
-NASA-Lunar-Studies/data/raw/lola/diviner/<variable>/*.xml
-NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.dat
-NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.txt
+data/raw/lola/ldem/ldem_16_float.{img,xml,lbl.txt}
+data/raw/lola/ldrm/ldrm_32_50_float.{img,xml,lbl.txt}
+data/raw/lola/diviner/<variable>/*.xml
+data/raw/lunar_prospector/hydrogen/hydrogenhd.dat
+data/raw/lunar_prospector/hydrogen/hydrogenhd.txt
 ```
 
 `sources.example.json` selecciona Diviner y Lunar Prospector. Cada fuente Diviner

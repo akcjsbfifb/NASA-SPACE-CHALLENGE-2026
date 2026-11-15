@@ -1,6 +1,6 @@
 """Keep the Earth grid in memory and answer closeness searches.
 
-  .venv/bin/python scripts/serve_search.py
+  .venv/bin/python backend/scripts/serve_search.py
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ from urllib.request import Request, urlopen
 
 from similarity import EarthIndex, write_shortlist
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "NASA-Lunar-Studies" / "src"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "backend" / "processing"))
 from lunar_data.lola import LolaRaster
 from lunar_data.metadata import MetadataError, load_metadata
 
@@ -72,7 +72,7 @@ def maps_key() -> str:
     key = os.environ.get("GOOGLE_MAPS_API_KEY", "").strip()
     if key:
         return key
-    env_path = Path(__file__).resolve().parents[1] / ".env"
+    env_path = ROOT / ".env"
     if not env_path.is_file():
         return ""
     for line in env_path.read_text().splitlines():
@@ -99,7 +99,7 @@ class MoonSampler:
         self.error = ""
         self.elevation: LolaRaster | None = None
         self.roughness: LolaRaster | None = None
-        root = ROOT / "NASA-Lunar-Studies" / "data" / "raw" / "lola"
+        root = ROOT / "data" / "raw" / "lola"
         try:
             self.elevation = LolaRaster(load_metadata(root / "ldem" / "ldem_16_float.xml")).__enter__()
             self.roughness = LolaRaster(load_metadata(root / "ldrm" / "ldrm_32_50_float.xml")).__enter__()

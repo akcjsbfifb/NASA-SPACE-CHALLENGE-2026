@@ -1,6 +1,6 @@
 """Search Earth for places close to a five-parameter lunar target.
 
-  .venv/bin/python scripts/search_earth.py --precision 0.85 --slope 8 --roughness 30 --tmin -20 --ice 0 --rock vb
+  .venv/bin/python backend/scripts/search_earth.py --precision 0.85 --slope 8 --roughness 30 --tmin -20 --ice 0 --rock vb
 
 Precision near 1 returns a few very close places.
 Precision near 0 returns more places that match less tightly.

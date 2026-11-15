@@ -13,7 +13,7 @@ ETOPO is read in horizontal strips, so the process stays near a few
 hundred MB instead of holding several full-Earth copies in RAM.
 
 Run:
-  .venv/bin/python scripts/build_earth.py
+  .venv/bin/python backend/scripts/build_earth.py
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import rasterio
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "data" / "earth" / "land_60s.parquet"
 

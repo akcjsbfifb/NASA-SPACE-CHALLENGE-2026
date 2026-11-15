@@ -62,7 +62,7 @@ def test_cli_real_batch(data_root, registry_path, sites_path, repo_root, tmp_pat
     # mismo paquete; no se mantiene una implementación en la ruta anterior.
     default_output = tmp_path / "default_paths.json"
     repeated = subprocess.run([
-        sys.executable, str(repo_root / "scripts/extract_moon.py"),
+        sys.executable, str(repo_root / "backend/scripts/extract_moon.py"),
         "--sites", str(sites_path), "--output", str(default_output),
     ], cwd=tmp_path, capture_output=True, text=True)
     assert repeated.returncode == 0, repeated.stderr

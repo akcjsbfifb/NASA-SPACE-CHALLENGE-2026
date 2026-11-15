@@ -26,12 +26,9 @@ output/
 .env.*
 !.env.example
 
-# Lunar inputs and derived data (the module is nested below the repo root)
-/NASA-Lunar-Studies/data/raw/
-/NASA-Lunar-Studies/data/processed/
-
-# Original planning documents stay local; publish only the maintained lunar docs.
-/NASA-Lunar-Studies/docs/
+# Lunar inputs and derived data (local rasters; not committed)
+/data/raw/lola/
+/data/raw/lunar_prospector/
 !/docs/
 /docs/*
 !/docs/moon/

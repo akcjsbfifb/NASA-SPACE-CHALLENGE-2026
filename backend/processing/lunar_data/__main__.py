@@ -20,7 +20,7 @@ def _repository_root():
 def main(argv=None):
     root = _repository_root()
     parser = argparse.ArgumentParser(description="Extraer elevación, rugosidad LOLA y pendiente derivada; no calcula similitud.")
-    parser.add_argument("--data-root", type=Path, default=root / "NASA-Lunar-Studies/data/raw/lola")
+    parser.add_argument("--data-root", type=Path, default=root / "data/raw/lola")
     parser.add_argument("--registry", type=Path, default=root / "data/moon/variables.json")
     parser.add_argument("--sources", type=Path, help="Configuración opt-in de fuentes adicionales; no hay red por defecto")
     parser.add_argument("--output", required=True, type=Path)

@@ -13,9 +13,9 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-TESTS = ROOT / "tests"
-SCRIPTS = ROOT / "scripts"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+TESTS = REPO_ROOT / "backend" / "tests" / "earth"
+SCRIPTS = REPO_ROOT / "backend" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(TESTS))
 
@@ -23,7 +23,7 @@ from extract_earth_columns import extract  # noqa: E402
 from test_earth_columns_mmap import _synthetic_parquet  # noqa: E402
 
 WORKER = SCRIPTS / "gurvich_search.py"
-PYTHON = ROOT / ".venv" / "bin" / "python"
+PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 
 
 @pytest.fixture()
@@ -96,7 +96,7 @@ def _run_worker(columns_dir: Path, shortlist_path: Path, extra_env: dict | None 
         env.update(extra_env)
     return subprocess.Popen(
         [str(PYTHON), str(WORKER)],
-        cwd=ROOT,
+        cwd=REPO_ROOT,
         env=env,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,

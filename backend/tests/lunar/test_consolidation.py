@@ -39,7 +39,7 @@ def rebuild_from_local_references(repo_root):
         xml = root / config["diviner"][entry["variable"]]["xml"]
         assert hashlib.sha256(xml.read_bytes()).hexdigest() == entry["source"]["files"][0]["sha256"]
         processors[entry["variable"]] = VerifiedReference(entry)
-    raw = root / "NASA-Lunar-Studies/data/raw/lola"
+    raw = root / "data/raw/lola"
     metadata = [load_metadata(raw / folder / (name + ".xml")) for folder, name in
                 [("ldem", "ldem_16_float"), ("ldrm", "ldrm_32_50_float")]]
     with ExitStack() as stack:
@@ -56,9 +56,9 @@ def rebuild_from_local_references(repo_root):
 @pytest.mark.local_data
 def test_complete_json_reproducible_from_local_verified_references(repo_root, tmp_path, monkeypatch):
     if not all((repo_root / p).exists() for p in [
-        "NASA-Lunar-Studies/data/raw/lola/ldem/ldem_16_float.img",
-        "NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.dat",
-        "NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.txt"]):
+        "data/raw/lola/ldem/ldem_16_float.img",
+        "data/raw/lunar_prospector/hydrogen/hydrogenhd.dat",
+        "data/raw/lunar_prospector/hydrogen/hydrogenhd.txt"]):
         pytest.skip("Originales locales no incluidos en Git")
     monkeypatch.setattr("lunar_data.http_range.urlopen", lambda *a, **k: pytest.fail("HTTP prohibido en regeneración local"))
     first = rebuild_from_local_references(repo_root)
@@ -106,7 +106,7 @@ def test_polar_illumination_is_optional_and_never_darkness_by_default(repo_root)
 @pytest.mark.local_data
 def test_no_dependency_on_retired_neutron_files(repo_root, monkeypatch):
     import importlib.util
-    if not (repo_root / "NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen/hydrogenhd.dat").exists():
+    if not (repo_root / "data/raw/lunar_prospector/hydrogen/hydrogenhd.dat").exists():
         pytest.skip("Originales locales no incluidos en Git")
     assert importlib.util.find_spec("lunar_data.lend") is None
     from pathlib import Path

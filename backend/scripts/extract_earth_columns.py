@@ -1,7 +1,7 @@
 """Stream land-grid parquet columns into raw mmap-friendly files.
 
 Run once before serve_search / search_earth:
-  .venv/bin/python scripts/extract_earth_columns.py
+  .venv/bin/python backend/scripts/extract_earth_columns.py
 """
 
 from __future__ import annotations

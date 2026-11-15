@@ -12,8 +12,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "scripts"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SCRIPTS = REPO_ROOT / "backend" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from extract_earth_columns import extract  # noqa: E402

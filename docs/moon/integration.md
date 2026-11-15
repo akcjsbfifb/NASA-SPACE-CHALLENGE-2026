@@ -12,7 +12,7 @@ el `sys.path` físico antiguo que aún aparece en la rama de comparación.
 ```
 
 `LolaRaster`, `sample()`, `sample_slope()`, `load_metadata`, `MetadataError`,
-`python -m lunar_data` y `scripts/extract_moon.py` siguen disponibles. La clase
+`python -m lunar_data` y `backend/scripts/extract_moon.py` siguen disponibles. La clase
 nueva es `lunar_data.lunar_prospector.LunarProspectorHydrogen`. Los originales
 permanecen locales e ignorados. No se cambian frontend, endpoints ni buscador.
 
@@ -74,7 +74,7 @@ review, o PyArrow para la versión de main. El entorno lunar no instala el stack
 web/terrestre. No se afirmó una prueba HTTP o frontend extremo a extremo.
 
 El frontend llama 127.0.0.1:8787 para `/search`, `/cell` y `/scene`.
-`serve_search.py` ocupa ese puerto; el Makefile FastAPI propone el mismo, pero
+`backend/scripts/serve_search.py` ocupa ese puerto; el Makefile FastAPI propone el mismo, pero
 su router sólo registra health/network. Coordinar un responsable del puerto y
 el servicio correcto; este módulo offline no necesita ninguno.
 

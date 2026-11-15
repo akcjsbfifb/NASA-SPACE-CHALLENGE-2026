@@ -93,7 +93,7 @@ def test_incorrect_ascii_geometry_fails_and_releases_files(hydrogen_files):
 
 @pytest.mark.local_data
 def test_all_original_cells_binary_vs_ascii(repo_root):
-    folder=repo_root/'NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen'
+    folder=repo_root/'data/raw/lunar_prospector/hydrogen'
     if not (folder/'hydrogenhd.dat').exists():pytest.skip('Originales NASA locales no incluidos en Git')
     result=validate_binary_against_ascii(folder/'hydrogenhd.dat',folder/'hydrogenhd.txt')
     assert result['cells_compared']==259200
@@ -111,7 +111,7 @@ def test_all_original_cells_binary_vs_ascii(repo_root):
 @pytest.mark.parametrize('lat,lon',[(0,0),(-85,-10),(45,90),(-45,-90),(0,180),
     (0,-180),(89.999,0),(-89.999,0),(.25,.25),(43.25,153.75)])
 def test_real_coordinate_selection_against_ascii_intervals(repo_root,lat,lon):
-    folder=repo_root/'NASA-Lunar-Studies/data/raw/lunar_prospector/hydrogen'
+    folder=repo_root/'data/raw/lunar_prospector/hydrogen'
     if not (folder/'hydrogenhd.dat').exists():pytest.skip('Originales NASA locales no incluidos en Git')
     signed_lon=(lon+180)%360-180
     found=None

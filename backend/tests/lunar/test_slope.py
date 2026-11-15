@@ -225,7 +225,7 @@ def test_real_slope_independent_five_binary_reads(data_root, repo_root, lat, lon
     gx = (height["east"] - height["west"]) / ew_span
     gy = (height["south"] - height["north"]) / ns_span
     expected = math.atan(math.sqrt(gx * gx + gy * gy)) * 180 / math.pi
-    historical = read_json(repo_root / "NASA-Lunar-Studies/examples/lola_measurements.example.json")
+    historical = read_json(repo_root / "data/moon/lola_measurements.example.json")
     site_index = 0 if lat == 0 else 1
     with LolaRaster(meta) as raster:
         result = raster.sample_slope(lat, lon)

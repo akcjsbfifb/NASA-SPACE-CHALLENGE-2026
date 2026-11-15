@@ -15,7 +15,7 @@ def repo_root():
 
 @pytest.fixture
 def data_root(repo_root):
-    return repo_root / "NASA-Lunar-Studies/data/raw/lola"
+    return repo_root / "data/raw/lola"
 
 
 @pytest.fixture

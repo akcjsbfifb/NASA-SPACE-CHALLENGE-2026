@@ -17,12 +17,12 @@ import math
 from pathlib import Path
 
 import numpy as np
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data" / "earth" / "land_60s.parquet"
 COLUMNS_DIR = DATA.parent / "columns"
 COLUMNS = ROOT / "data" / "earth" / "columns.json"
 SHORTLIST = ROOT / "data" / "earth" / "shortlist.json"
-EXTRACT_CMD = ".venv/bin/python scripts/extract_earth_columns.py"
+EXTRACT_CMD = ".venv/bin/python backend/scripts/extract_earth_columns.py"
 
 _COLUMN_ATTR: dict[str, str] = {
     "lat": "lat",
