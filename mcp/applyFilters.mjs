@@ -227,4 +227,41 @@ export function applyFilters(points, filters) {
   return evaluate(points, filters);
 }
 
+function catalogFilterIdLines() {
+  const ids = Object.keys(FILTERS).sort();
+  const rocks = ROCK_CODES.join(', ');
+  const famousNames = FAMOUS_BOXES.map((b) => b.name).join(', ');
+  const rangeIds = ids.filter((id) => FILTERS[id].kind === 'range');
+  const minMaxNumeric = ids.filter(
+    (id) => FILTERS[id].kind === 'min' || FILTERS[id].kind === 'max',
+  );
+  const minMaxUnit = ids.filter(
+    (id) => FILTERS[id].kind === 'minUnit' || FILTERS[id].kind === 'maxUnit',
+  );
+  return [
+    `Ids de catálogo: ${ids.join(', ')}.`,
+    `País: nombre en inglés o español como id, o in_country con value; in_argentina sin value.`,
+    `Bandas ${rangeIds.join(', ')}: value [min, max].`,
+    `Límites numéricos ${minMaxNumeric.join(', ')}: value número.`,
+    `Scores y closeness ${minMaxUnit.join(', ')}: value en [0, 1]. min_score_temperature usa tmin_c si falta el score.`,
+    `rock_is: código USGS (${rocks}).`,
+    `outside_famous (sin value): fuera de Antártida (lat <= ${ANTARCTICA_LAT_MAX}) y fuera de cajas ${famousNames}.`,
+  ];
+}
+
+export function buildFilterRulesText() {
+  const catalog = catalogFilterIdLines().join(' ');
+  return [
+    'Filtrado de la shortlist terrestre ya buscada; no recalcula closeness, no inventa celdas, no mueve lat/lon.',
+    'aplicar_filtros lee data/earth/shortlist.json y escribe solo data/earth/filtered.json; no borra la shortlist.',
+    'Filtros vacíos o ausentes: error empty_filters; no escribe filtered.json.',
+    'Por punto se evalúan los filtros en orden; gana la primera decisión.',
+    'Campo null o ausente: missing con reason missing:<campo> (min_score_temperature mira tmin_c).',
+    'Predicado falso: hidden con reason fail:<campo>. El punto sale de points y queda en hidden o missing.',
+    'limpiar_filtros reescribe data/earth/filtered.json con filters: [] y todos los puntos visibles; no borra data/earth/shortlist.json.',
+    'listar solo lee data/earth/filtered.json; si no existe el archivo devuelve no_filter.',
+    catalog,
+  ].join(' ');
+}
+
 export { ROCK_CODES, ARGENTINA_BOX, FAMOUS_BOXES, FILTERS, lookupSpec, resolveCountry };

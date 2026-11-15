@@ -4,10 +4,18 @@ import { fileURLToPath } from 'node:url';
 import { McpServer } from '@modelcontextprotocol/server';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import * as z from 'zod/v4';
-import { applyFilters, validateFilters } from './applyFilters.mjs';
+import { applyFilters, buildFilterRulesText, validateFilters } from './applyFilters.mjs';
+import {
+  GurvichSearchWorker,
+  buscarWithWorker,
+  DEFAULT_PYTHON,
+  DEFAULT_WORKER_SCRIPT,
+} from './gurvichWorker.mjs';
 
-const SERVER_INSTRUCTIONS =
-  'Filtrás la shortlist ya buscada. No recalculás closeness. No inventás celdas. No movés el mapa. Si tmin_c es null, lo decís como dato faltante.';
+const FILTER_RULES_TEXT = buildFilterRulesText();
+const BUSCAR_INSTRUCTIONS =
+  'buscar ejecuta la misma consulta que la UI de búsqueda y escribe data/earth/shortlist.json; no recalcula vía aplicar_filtros. La primera llamada de la sesión puntúa toda la grilla terrestre en memoria; las siguientes reutilizan el proceso persistente. aplicar_filtros no recalcula closeness: solo filtra la shortlist ya escrita.';
+const SERVER_INSTRUCTIONS = `${FILTER_RULES_TEXT} ${BUSCAR_INSTRUCTIONS}`;
 
 const shortlistPath = new URL('../data/earth/shortlist.json', import.meta.url);
 const filteredPath = new URL('../data/earth/filtered.json', import.meta.url);
@@ -33,6 +41,18 @@ const aplicarInputSchema = z.object({
 });
 
 const emptyInputSchema = z.object({});
+
+const buscarInputSchema = z.object({
+  slope: z.number().optional().describe('Target slope in degrees.'),
+  roughness: z.number().optional().describe('Target roughness in metres.'),
+  tmin: z.number().optional().describe('Target coldest-month temperature in °C.'),
+  ice: z.number().optional().describe('Target ice thickness in metres.'),
+  rock: z.string().optional().describe('USGS lithology abbrev (e.g. vb, su).'),
+  precision: z
+    .number()
+    .optional()
+    .describe('Shortlist tightness 0–1; default 0.7 like the UI.'),
+});
 
 function toFsPath(fileUrl) {
   return fileURLToPath(fileUrl);
@@ -117,9 +137,51 @@ export function listarFiltros(fileUrl = filteredPath) {
   return { body };
 }
 
-export function createServer() {
+function buildBuscarPayload(args) {
+  const payload = {};
+  for (const key of ['slope', 'roughness', 'tmin', 'ice', 'rock', 'precision']) {
+    const value = args[key];
+    if (value !== undefined && value !== null) payload[key] = value;
+  }
+  return payload;
+}
+
+const BUSCAR_SUMMARY_KEYS = [
+  'target',
+  'precision',
+  'returned',
+  'closest',
+  'loosest',
+  'temperature_mode',
+  'variables',
+  'frontend_error',
+  'shortlist_error',
+];
+
+export function summarizeBuscarResult(body) {
+  if (!body || typeof body !== 'object') return body;
+  if (body.error) return { error: body.error };
+  const summary = {};
+  for (const key of BUSCAR_SUMMARY_KEYS) {
+    if (body[key] !== undefined) summary[key] = body[key];
+  }
+  if (Array.isArray(body.points)) {
+    summary.points = body.points.slice(0, 8);
+  }
+  return summary;
+}
+
+export function createServer(options = {}) {
+  const worker =
+    options.worker ??
+    new GurvichSearchWorker({
+      python: options.python ?? DEFAULT_PYTHON,
+      script: options.workerScript ?? DEFAULT_WORKER_SCRIPT,
+      env: options.workerEnv ?? process.env,
+    });
+
   const server = new McpServer(
-    { name: 'analog-filter', version: '0.1.0' },
+    { name: 'gurvich', version: '0.1.0' },
     {
       instructions: SERVER_INSTRUCTIONS,
       maxToolInputElements: 1024,
@@ -130,9 +192,9 @@ export function createServer() {
     'aplicar_filtros',
     {
       title: 'Apply shortlist filters',
-      description:
-        'Apply one or more catalog filters to data/earth/shortlist.json and write data/earth/filtered.json. Does not recalculate closeness. To keep only one country, use { "id": "in_country", "value": "<country name>" } or { "id": "<country name>" }. Names: English or Spanish (Argentina, Chile, Norway, Islandia). Unknown names return {"error":"unknown_id"}. in_argentina remains valid (Argentina box, no value). Other catalog ids: lat_band, lon_band, max_slope_deg, min_slope_deg, max_roughness_m, min_roughness_m, max_tmin_c, min_tmin_c, max_ice_m, min_ice_m, rock_is, min_closeness, max_closeness, min_score_slope, min_score_roughness, min_score_temperature, min_score_ice, min_score_rock, outside_famous.',
+      description: `${FILTER_RULES_TEXT} Esta herramienta lee data/earth/shortlist.json, escribe data/earth/filtered.json y no borra data/earth/shortlist.json.`,
       inputSchema: aplicarInputSchema,
+      annotations: { destructiveHint: true },
     },
     async ({ filters }) => {
       const outcome = aplicarFiltros(filters);
@@ -145,9 +207,9 @@ export function createServer() {
     'limpiar_filtros',
     {
       title: 'Clear shortlist filters',
-      description:
-        'Write data/earth/filtered.json with an empty filters array and every shortlist point visible.',
+      description: `${FILTER_RULES_TEXT} Esta herramienta reescribe data/earth/filtered.json con filters: [] y todos los puntos visibles; no escribe data/earth/shortlist.json ni lo borra.`,
       inputSchema: emptyInputSchema,
+      annotations: { destructiveHint: true },
     },
     async () => {
       const outcome = limpiarFiltros();
@@ -160,9 +222,9 @@ export function createServer() {
     'listar',
     {
       title: 'List current filter result',
-      description:
-        'Read data/earth/filtered.json without writing. Returns no_filter when that file does not exist.',
+      description: `${FILTER_RULES_TEXT} Esta herramienta solo lee data/earth/filtered.json; no escribe archivos ni borra data/earth/shortlist.json.`,
       inputSchema: emptyInputSchema,
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const outcome = listarFiltros();
@@ -171,8 +233,33 @@ export function createServer() {
     },
   );
 
+  const buscarDescription = `${BUSCAR_INSTRUCTIONS} Escribe data/earth/shortlist.json. No recalcula closeness con aplicar_filtros.`;
+
+  server.registerTool(
+    'buscar',
+    {
+      title: 'Search Earth analogs (UI query)',
+      description: buscarDescription,
+      inputSchema: buscarInputSchema,
+      annotations: { destructiveHint: true },
+    },
+    async (args) => {
+      const payload = buildBuscarPayload(args);
+      let body;
+      try {
+        body = await buscarWithWorker(worker, payload);
+      } catch (error) {
+        return errorResult(error?.message ?? String(error));
+      }
+      if (body && typeof body === 'object' && body.error) return errorResult(body.error);
+      return jsonResult(summarizeBuscarResult(body));
+    },
+  );
+
   return server;
 }
+
+export { buildBuscarPayload, buscarWithWorker, GurvichSearchWorker };
 
 async function main() {
   const server = createServer();

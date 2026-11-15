@@ -7,6 +7,7 @@ import {
   InMemoryTransport,
   LATEST_PROTOCOL_VERSION,
 } from '@modelcontextprotocol/server';
+import { buildFilterRulesText } from '../applyFilters.mjs';
 import { getCountryBox } from '../countries.mjs';
 import {
   aplicarFiltros,
@@ -162,8 +163,7 @@ test('aplicar_filtros description tells the client that any country name is a fi
     const listed = await rpc(2, 'tools/list', {});
     const aplicar = listed.result.tools.find((tool) => tool.name === 'aplicar_filtros');
     assert.match(aplicar.description, /in_country/);
-    assert.match(aplicar.description, /English or Spanish/);
-    assert.match(aplicar.description, /unknown_id/);
+    assert.match(aplicar.description, /inglés o español/);
   });
 });
 
@@ -180,17 +180,39 @@ test('MCP tools/call aplicar_filtros unknown country is unknown_id isError', asy
   });
 });
 
-test('MCP initialize and tools/list expose the three catalog tools', async () => {
+test('MCP initialize and tools/list expose catalog and buscar tools', async () => {
+  const rules = buildFilterRulesText();
   await withClient(async ({ rpc, init }) => {
-    assert.equal(init.result.serverInfo.name, 'analog-filter');
+    assert.equal(init.result.serverInfo.name, 'gurvich');
     assert.equal(init.result.serverInfo.version, '0.1.0');
-    assert.equal(
-      init.result.instructions,
-      'Filtrás la shortlist ya buscada. No recalculás closeness. No inventás celdas. No movés el mapa. Si tmin_c es null, lo decís como dato faltante.',
-    );
+    assert.match(init.result.instructions, new RegExp(rules.slice(0, 40)));
+    assert.match(init.result.instructions, /buscar ejecuta la misma consulta que la UI/i);
+    assert.match(init.result.instructions, /primera llamada de la sesión puntúa/i);
+    assert.match(init.result.instructions, /reutilizan el proceso persistente/i);
+    assert.match(init.result.instructions, /missing.*missing:<campo>/);
+    assert.match(init.result.instructions, /hidden.*fail:<campo>/);
+    assert.match(init.result.instructions, /no recalcula closeness/i);
+    assert.match(init.result.instructions, /no borra.*shortlist/i);
     const listed = await rpc(2, 'tools/list', {});
     const names = listed.result.tools.map((tool) => tool.name).sort();
-    assert.deepEqual(names, ['aplicar_filtros', 'limpiar_filtros', 'listar']);
+    assert.deepEqual(names, ['aplicar_filtros', 'buscar', 'limpiar_filtros', 'listar']);
+    const aplicar = listed.result.tools.find((tool) => tool.name === 'aplicar_filtros');
+    const limpiar = listed.result.tools.find((tool) => tool.name === 'limpiar_filtros');
+    const listar = listed.result.tools.find((tool) => tool.name === 'listar');
+    const buscar = listed.result.tools.find((tool) => tool.name === 'buscar');
+    assert.match(aplicar.description, /escribe data\/earth\/filtered\.json/);
+    assert.match(aplicar.description, /no borra data\/earth\/shortlist\.json/);
+    assert.match(limpiar.description, /filtered\.json/);
+    assert.match(limpiar.description, /no borra data\/earth\/shortlist\.json/);
+    assert.match(listar.description, /solo lee/);
+    assert.match(listar.description, /no escribe archivos/);
+    assert.match(listar.description, /no borra data\/earth\/shortlist\.json/);
+    assert.match(buscar.description, /shortlist\.json/i);
+    assert.match(buscar.description, /no recalcula closeness/i);
+    assert.equal(listar.annotations?.readOnlyHint, true);
+    assert.equal(buscar.annotations?.destructiveHint, true);
+    assert.equal(aplicar.annotations?.destructiveHint, true);
+    assert.equal(limpiar.annotations?.destructiveHint, true);
   });
 });
 
@@ -268,7 +290,7 @@ test('stdio server starts and answers initialize plus tools/list', async () => {
       })}\n`,
     );
     const init = await waitFor(1);
-    assert.equal(init.result.serverInfo.name, 'analog-filter');
+    assert.equal(init.result.serverInfo.name, 'gurvich');
     child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`);
     child.stdin.write(
       `${JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })}\n`,
@@ -276,7 +298,7 @@ test('stdio server starts and answers initialize plus tools/list', async () => {
     const listed = await waitFor(2);
     assert.deepEqual(
       listed.result.tools.map((tool) => tool.name).sort(),
-      ['aplicar_filtros', 'limpiar_filtros', 'listar'],
+      ['aplicar_filtros', 'buscar', 'limpiar_filtros', 'listar'],
     );
   } finally {
     child.stdin.end();
