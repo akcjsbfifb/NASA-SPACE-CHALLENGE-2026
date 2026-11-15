@@ -304,6 +304,7 @@ function PointPanelContent({ place, lunar, onClose, language, variables, activit
 					<p className="scene-links">
 						<a href={mapsUrl} target="_blank" rel="noreferrer">{copy.viewGoogleMaps}</a>
 					</p>
+					{lunar && <p className="muted">{({ es: 'Datos terrestres complementarios: WorldClim, hielo y litología son contexto y no participan en la comparación lunar.', en: 'Additional Earth data: WorldClim, ice and lithology are context and do not contribute to the lunar comparison.', fr: 'Données terrestres complémentaires : WorldClim, glace et lithologie sont contextuels et ne participent pas à la comparaison lunaire.', it: 'Dati terrestri aggiuntivi: WorldClim, ghiaccio e litologia sono contestuali e non partecipano al confronto lunare.' })[language]}</p>}
 					<dl className="cell-facts">
 						{where !== undefined && (
 							<>
