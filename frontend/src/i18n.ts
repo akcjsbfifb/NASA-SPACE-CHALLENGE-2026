@@ -2,6 +2,9 @@ export type Language = 'es' | 'en' | 'fr' | 'it';
 
 type TranslationStrings = {
 	language: string;
+	audience: string;
+	audienceProfesional: string;
+	audienceAficionado: string;
 	pageTitle: string;
 	objective: string;
 	objectiveDescription: string;
@@ -10,6 +13,13 @@ type TranslationStrings = {
 	nightTemperature: string;
 	ice: string;
 	rock: string;
+	includeSlope: string;
+	includeRoughness: string;
+	includeTemperature: string;
+	includeIce: string;
+	includeRock: string;
+	breakdownPieSlice: (name: string, share: string) => string;
+	similarity: string;
 	weight: string;
 	activityLabel: string;
 	differsBy: string;
@@ -75,7 +85,10 @@ type TranslationStrings = {
 const translations = {
 	es: {
 		language: 'Idioma',
-		pageTitle: 'ORBITAL',
+		audience: 'Público',
+		audienceProfesional: 'Profesional',
+		audienceAficionado: 'Aficionado',
+		pageTitle: 'ARTEMIS',
 		objective: 'Objetivo',
 		objectiveDescription: 'El promedio usa las variables del contrato de análogos. Cada una declara cuánto se puede comparar.',
 		slope: 'Pendiente',
@@ -83,6 +96,13 @@ const translations = {
 		nightTemperature: 'Temperatura mínima del aire del mes más frío · WorldClim',
 		ice: 'Hielo',
 		rock: 'Roca',
+		includeSlope: 'Incluir pendiente en la búsqueda',
+		includeRoughness: 'Incluir rugosidad en la búsqueda',
+		includeTemperature: 'Incluir temperatura en la búsqueda',
+		includeIce: 'Incluir hielo en la búsqueda',
+		includeRock: 'Incluir roca en la búsqueda',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del gráfico`,
+		similarity: 'Similitud',
 		weight: 'Peso',
 		activityLabel: 'Actividad',
 		differsBy: 'Difiere en',
@@ -171,7 +191,10 @@ const translations = {
 	},
 	en: {
 		language: 'Language',
-		pageTitle: 'ORBITAL',
+		audience: 'Audience',
+		audienceProfesional: 'Professional',
+		audienceAficionado: 'Enthusiast',
+		pageTitle: 'ARTEMIS',
 		objective: 'Target',
 		objectiveDescription: 'The average uses the variables in the analog contract. Each one declares how comparable it is.',
 		slope: 'Slope',
@@ -179,6 +202,13 @@ const translations = {
 		nightTemperature: 'Coldest-month minimum air temperature · WorldClim',
 		ice: 'Ice',
 		rock: 'Rock',
+		includeSlope: 'Include slope in the search',
+		includeRoughness: 'Include roughness in the search',
+		includeTemperature: 'Include temperature in the search',
+		includeIce: 'Include ice in the search',
+		includeRock: 'Include rock in the search',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% of chart`,
+		similarity: 'Similarity',
 		weight: 'Weight',
 		activityLabel: 'Activity',
 		differsBy: 'Differs by',
@@ -267,7 +297,10 @@ const translations = {
 	},
 	fr: {
 		language: 'Langue',
-		pageTitle: 'ORBITAL',
+		audience: 'Public',
+		audienceProfesional: 'Professionnel',
+		audienceAficionado: 'Passionné',
+		pageTitle: 'ARTEMIS',
 		objective: 'Objectif',
 		objectiveDescription: 'La moyenne utilise les variables du contrat d’analogues. Chacune indique son niveau de comparabilité.',
 		slope: 'Pente',
@@ -275,6 +308,13 @@ const translations = {
 		nightTemperature: 'Température minimale de l’air du mois le plus froid · WorldClim',
 		ice: 'Glace',
 		rock: 'Roche',
+		includeSlope: 'Inclure la pente dans la recherche',
+		includeRoughness: 'Inclure la rugosité dans la recherche',
+		includeTemperature: 'Inclure la température dans la recherche',
+		includeIce: 'Inclure la glace dans la recherche',
+		includeRock: 'Inclure la roche dans la recherche',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share} % du graphique`,
+		similarity: 'Similarité',
 		weight: 'Poids',
 		activityLabel: 'Activité',
 		differsBy: 'Diffère de',
@@ -363,7 +403,10 @@ const translations = {
 	},
 	it: {
 		language: 'Lingua',
-		pageTitle: 'ORBITAL',
+		audience: 'Pubblico',
+		audienceProfesional: 'Professionista',
+		audienceAficionado: 'Appassionato',
+		pageTitle: 'ARTEMIS',
 		objective: 'Obiettivo',
 		objectiveDescription: 'La media usa le variabili del contratto degli analoghi. Ognuna dichiara quanto è comparabile.',
 		slope: 'Pendenza',
@@ -371,6 +414,13 @@ const translations = {
 		nightTemperature: 'Temperatura minima dell’aria del mese più freddo · WorldClim',
 		ice: 'Ghiaccio',
 		rock: 'Roccia',
+		includeSlope: 'Includi la pendenza nella ricerca',
+		includeRoughness: 'Includi la rugosità nella ricerca',
+		includeTemperature: 'Includi la temperatura nella ricerca',
+		includeIce: 'Includi il ghiaccio nella ricerca',
+		includeRock: 'Includi la roccia nella ricerca',
+		breakdownPieSlice: (name: string, share: string) => `${name}, ${share}% del grafico`,
+		similarity: 'Somiglianza',
 		weight: 'Peso',
 		activityLabel: 'Attività',
 		differsBy: 'Differisce di',
@@ -465,4 +515,10 @@ export function getCopy(language: Language): TranslationStrings {
 
 export function isLanguage(value: string): value is Language {
 	return value === 'es' || value === 'en' || value === 'fr' || value === 'it';
+}
+
+export type Audience = 'profesional' | 'aficionado';
+
+export function isAudience(value: string): value is Audience {
+	return value === 'profesional' || value === 'aficionado';
 }

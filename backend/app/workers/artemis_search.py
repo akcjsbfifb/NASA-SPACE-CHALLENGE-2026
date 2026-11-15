@@ -10,33 +10,37 @@ from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+_BACKEND = Path(__file__).resolve().parents[2]
+if str(_BACKEND) not in sys.path:
+    sys.path.insert(0, str(_BACKEND))
+
 from app.config import get_settings
 from app.services.earth import similarity
 from app.services.earth.activities import VARIABLES, ActivityError, resolve
 from app.services.earth.similarity import EarthIndex, parse_criteria, write_shortlist
 
 CONTROL_KEYS = ("precision", "min_worst", "activity", "weights")
-NOTIFY_TOKEN_HEADER = "X-Gurvich-Notify-Token"
+NOTIFY_TOKEN_HEADER = "X-Artemis-Notify-Token"
 
 _index: EarthIndex | None = None
 
 
 def _columns_dir() -> Path:
-    env = os.environ.get("GURVICH_COLUMNS_DIR")
+    env = os.environ.get("ARTEMIS_COLUMNS_DIR")
     if env:
         return Path(env)
     return similarity.COLUMNS_DIR
 
 
 def _shortlist_path() -> Path:
-    env = os.environ.get("GURVICH_SHORTLIST")
+    env = os.environ.get("ARTEMIS_SHORTLIST")
     if env:
         return Path(env)
     return similarity.SHORTLIST
 
 
 def _search_base_url() -> str:
-    raw = os.environ.get("GURVICH_SEARCH_BASE")
+    raw = os.environ.get("ARTEMIS_SEARCH_BASE")
     if raw:
         return raw.strip().rstrip("/")
     return get_settings().server.search_base.rstrip("/")
@@ -69,8 +73,8 @@ def _search_query_params(payload: dict) -> list[tuple[str, str]]:
 
 
 def _notify_url() -> str | None:
-    if "GURVICH_NOTIFY_URL" in os.environ:
-        raw = os.environ["GURVICH_NOTIFY_URL"].strip()
+    if "ARTEMIS_NOTIFY_URL" in os.environ:
+        raw = os.environ["ARTEMIS_NOTIFY_URL"].strip()
         return raw or None
     return f"{_search_base_url()}/notify"
 
@@ -78,7 +82,7 @@ def _notify_url() -> str | None:
 def _notify_token() -> str | None:
     path = Path(
         os.environ.get(
-            "GURVICH_NOTIFY_TOKEN_PATH",
+            "ARTEMIS_NOTIFY_TOKEN_PATH",
             str(get_settings().paths.notify_token),
         )
     )

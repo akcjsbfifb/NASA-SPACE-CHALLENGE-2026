@@ -1,4 +1,4 @@
-# Gurvich MCP
+# Artemis MCP
 
 Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de resultados. Comparte archivos con la UI en `data/earth/`.
 
@@ -19,7 +19,7 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
    ```json
    {
      "mcpServers": {
-       "gurvich": {
+       "artemis": {
          "command": "node",
          "args": ["/home/nicolas/Documentos/NASA-SPACE-CHALLENGE-2026/mcp/index.mjs"],
          "cwd": "/home/nicolas/Documentos/NASA-SPACE-CHALLENGE-2026/mcp"
@@ -33,7 +33,7 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
    ```json
    {
      "mcpServers": {
-       "gurvich": {
+       "artemis": {
          "type": "stdio",
          "command": "node",
          "args": ["mcp/index.mjs"]
@@ -47,7 +47,7 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
    ```json
    {
      "mcp": {
-       "gurvich": {
+       "artemis": {
          "type": "local",
          "command": ["node", "mcp/index.mjs"],
          "enabled": true
@@ -125,6 +125,6 @@ Como máximo 8 puntos en `points`. Si `serve_search` está activo y responde en 
 ## Seguridad
 
 - Transporte **stdio**: no abre puerto de red para MCP.
-- `POST /notify` exige header `X-Gurvich-Notify-Token` (token en `/tmp/gurvich-notify.token`, mode `0600`, regenerado al arrancar `serve_search`).
+- `POST /notify` exige header `X-Artemis-Notify-Token` (token en `/tmp/artemis-notify.token`, mode `0600`, regenerado al arrancar `serve_search`).
 - `GET /events` (SSE) no usa `Access-Control-Allow-Origin: *`; solo orígenes Vite dev (`localhost` / `127.0.0.1:5173`).
 - `buscar` no envía la shortlist entera al modelo: resumen con hasta 8 puntos; el payload completo va al frontend por SSE.

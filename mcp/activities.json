@@ -1,14 +1,476 @@
 [
-  {"id":"rover_wheels","weights":{"slope":0.5,"roughness":1,"temperature":0,"ice":0,"rock":1},"search":{"slope":8,"roughness":20,"temperature":null,"ice":null,"rock":"vb"},"measured":[],"serves":{"es":"Probar la durabilidad de las ruedas de un rover en basalto de mare.","en":"Test rover wheel durability on mare basalt.","fr":"Tester la durabilité des roues d'un rover sur du basalte de mare.","it":"Provare la durabilità delle ruote di un rover su basalto di mare."},"source":"preset"},
-  {"id":"landing_site","weights":{"slope":1,"roughness":1,"temperature":0,"ice":0,"rock":0},"search":{"slope":10,"roughness":15,"temperature":null,"ice":null,"rock":null},"measured":[],"serves":{"es":"Elegir un sitio de alunizaje por pendiente y rugosidad.","en":"Pick a landing site by slope and roughness.","fr":"Choisir un site d'alunissage selon la pente et la rugosité.","it":"Scegliere un sito di allunaggio per pendenza e rugosità."},"source":"preset"},
-  {"id":"polar_ice","weights":{"slope":0,"roughness":0,"temperature":1,"ice":1,"rock":0},"search":{"slope":null,"roughness":null,"temperature":-140,"ice":1,"rock":null},"measured":[],"serves":{"es":"Buscar un análogo de trampa de hielo polar.","en":"Find an analog of a polar ice trap.","fr":"Chercher un analogue de piège à glace polaire.","it":"Cercare un analogo di trappola di ghiaccio polare."},"source":"preset"},
-  {"id":"sample_basalt","weights":{"slope":0.3,"roughness":0.2,"temperature":0,"ice":0,"rock":1},"search":{"slope":5,"roughness":10,"temperature":null,"ice":null,"rock":"vb"},"measured":[],"serves":{"es":"Muestrear basalto de mare.","en":"Sample mare basalt.","fr":"Échantillonner du basalte de mare.","it":"Campionare basalto di mare."},"source":"preset"},
-  {"id":"floor_sample","weights":{"slope":0.3,"roughness":1,"temperature":0,"ice":0,"rock":1},"search":{"slope":3,"roughness":5,"temperature":null,"ice":null,"rock":null},"measured":[],"serves":{"es":"Extraer y analizar el piso: importan más la roca y la rugosidad que la pendiente.","en":"Sample and analyze the ground: rock and roughness matter more than slope.","fr":"Extraire et analyser le sol : la roche et la rugosité comptent plus que la pente.","it":"Estrarre e analizzare il suolo: roccia e rugosità contano più della pendenza."},"source":"preset"},
-  {"id":"viper_ice_prospect","weights":{"slope":0.6,"roughness":0.5,"temperature":0.8,"ice":1,"rock":0},"search":{"slope":15,"roughness":20,"temperature":-140,"ice":1,"rock":null},"measured":["slope"],"serves":{"es":"Prospectar hielo polar con un rover.","en":"Prospect for polar ice with a rover.","fr":"Prospecter la glace polaire avec un rover.","it":"Prospectare ghiaccio polare con un rover."},"source":"https://ntrs.nasa.gov/api/citations/20220000441/downloads/viper-mobility-2022-01-27.pdf"},
-  {"id":"artemis_polar_landing","weights":{"slope":1,"roughness":0.8,"temperature":0,"ice":0.5,"rock":0},"search":{"slope":10,"roughness":15,"temperature":null,"ice":1,"rock":null},"measured":["slope"],"serves":{"es":"Elegir un aterrizaje polar seguro con acceso a volátiles.","en":"Pick a safe polar landing with access to volatiles.","fr":"Choisir un atterrissage polaire sûr avec accès aux volatils.","it":"Scegliere un atterraggio polare sicuro con accesso ai volatili."},"source":"https://ntrs.nasa.gov/api/citations/20240009596/downloads/ArtemisHLSUpdate_2024.pdf"},
-  {"id":"sample_pyroclastic","weights":{"slope":0,"roughness":0.2,"temperature":0,"ice":0,"rock":1},"search":{"slope":null,"roughness":8,"temperature":null,"ice":null,"rock":"py"},"measured":[],"serves":{"es":"Buscar un análogo de depósito piroclástico.","en":"Find an analog of a pyroclastic deposit.","fr":"Chercher un analogue de dépôt pyroclastique.","it":"Cercare un analogo di deposito piroclastico."},"source":"https://curator.jsc.nasa.gov/lunar/lsc/74220.pdf"},
-  {"id":"spa_norite","weights":{"slope":0.3,"roughness":0.5,"temperature":0,"ice":0,"rock":1},"search":{"slope":4,"roughness":8,"temperature":null,"ice":null,"rock":"pb"},"measured":[],"serves":{"es":"Buscar un análogo de norita del Polo Sur-Aitken, no basalto de mare.","en":"Find a South Pole-Aitken norite analog, not mare basalt.","fr":"Chercher un analogue de norite du bassin Pôle Sud-Aitken, pas du basalte de mare.","it":"Cercare un analogo di norite del Polo Sud-Aitken, non basalto di mare."},"source":"https://doi.org/10.1093/nsr/nwz183"},
-  {"id":"hadley_rille","weights":{"slope":1,"roughness":0.6,"temperature":0,"ice":0,"rock":0.8},"search":{"slope":25,"roughness":12,"temperature":null,"ice":null,"rock":"vb"},"measured":["slope"],"serves":{"es":"Buscar un análogo de pared de rille.","en":"Find a rille-wall analog.","fr":"Chercher un analogue de paroi de rille.","it":"Cercare un analogo di parete di rille."},"source":"https://www.apollojournals.org/alsj/a15/a15lsp.pdf"},
-  {"id":"surveyor_regolith","weights":{"slope":0.4,"roughness":0.5,"temperature":0,"ice":0,"rock":1},"search":{"slope":3,"roughness":6,"temperature":null,"ice":null,"rock":"su"},"measured":[],"serves":{"es":"Buscar un análogo de regolito suelto.","en":"Find a loose-regolith analog.","fr":"Chercher un analogue de régolithe meuble.","it":"Cercare un analogo di regolite sciolta."},"source":"https://doi.org/10.1029/JB076i032p07833"},
-  {"id":"light_mantle","weights":{"slope":0.9,"roughness":0.4,"temperature":0,"ice":0,"rock":0.8},"search":{"slope":15,"roughness":10,"temperature":null,"ice":null,"rock":"su"},"measured":[],"serves":{"es":"Buscar un análogo de avalancha de regolito.","en":"Find a regolith-avalanche analog.","fr":"Chercher un analogue d'avalanche de régolithe.","it":"Cercare un analogo di valanga di regolite."},"source":"https://doi.org/10.1029/2024je008556"}
+  {
+    "id": "rover_wheels",
+    "weights": {
+      "slope": 0.5,
+      "roughness": 1,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": 8,
+      "roughness": 20,
+      "temperature": null,
+      "ice": null,
+      "rock": "vb"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Probar la durabilidad de las ruedas de un rover en basalto de mare.",
+      "en": "Test rover wheel durability on mare basalt.",
+      "fr": "Tester la durabilité des roues d'un rover sur du basalte de mare.",
+      "it": "Provare la durabilità delle ruote di un rover su basalto di mare."
+    },
+    "source": "preset",
+    "voice": {
+      "profesional": {
+        "es": "Probar la durabilidad de las ruedas de un rover en basalto de mare.",
+        "en": "Test rover wheel durability on mare basalt.",
+        "fr": "Tester la durabilité des roues d'un rover sur du basalte de mare.",
+        "it": "Provare la durabilità delle ruote di un rover su basalto di mare."
+      },
+      "aficionado": {
+        "es": "Ver si las ruedas de un rover aguantan un suelo de roca volcánica como el de los mares de la Luna.",
+        "en": "See if a rover's wheels hold up on volcanic rock like the Moon's dark plains.",
+        "fr": "Voir si les roues d'un rover tiennent sur une roche volcanique comme celle des mers de la Lune.",
+        "it": "Vedere se le ruote di un rover reggono una roccia vulcanica come quella dei mari della Luna."
+      }
+    }
+  },
+  {
+    "id": "landing_site",
+    "weights": {
+      "slope": 1,
+      "roughness": 1,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 0
+    },
+    "search": {
+      "slope": 10,
+      "roughness": 15,
+      "temperature": null,
+      "ice": null,
+      "rock": null
+    },
+    "measured": [],
+    "serves": {
+      "es": "Elegir un sitio de alunizaje por pendiente y rugosidad.",
+      "en": "Pick a landing site by slope and roughness.",
+      "fr": "Choisir un site d'alunissage selon la pente et la rugosité.",
+      "it": "Scegliere un sito di allunaggio per pendenza e rugosità."
+    },
+    "source": "preset",
+    "voice": {
+      "profesional": {
+        "es": "Elegir un sitio de alunizaje por pendiente y rugosidad.",
+        "en": "Pick a landing site by slope and roughness.",
+        "fr": "Choisir un site d'alunissage selon la pente et la rugosité.",
+        "it": "Scegliere un sito di allunaggio per pendenza e rugosità."
+      },
+      "aficionado": {
+        "es": "Elegir un lugar para aterrizar que no esté muy empinado ni muy irregular.",
+        "en": "Pick a landing spot that is not too steep and not too rough.",
+        "fr": "Choisir un endroit pour atterrir qui ne soit ni trop pentu ni trop irrégulier.",
+        "it": "Scegliere un posto per atterrare che non sia troppo ripido né troppo irregolare."
+      }
+    }
+  },
+  {
+    "id": "polar_ice",
+    "weights": {
+      "slope": 0,
+      "roughness": 0,
+      "temperature": 1,
+      "ice": 1,
+      "rock": 0
+    },
+    "search": {
+      "slope": null,
+      "roughness": null,
+      "temperature": -140,
+      "ice": 1,
+      "rock": null
+    },
+    "measured": [],
+    "serves": {
+      "es": "Buscar un análogo de trampa de hielo polar.",
+      "en": "Find an analog of a polar ice trap.",
+      "fr": "Chercher un analogue de piège à glace polaire.",
+      "it": "Cercare un analogo di trappola di ghiaccio polare."
+    },
+    "source": "preset",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de trampa de hielo polar.",
+        "en": "Find an analog of a polar ice trap.",
+        "fr": "Chercher un analogue de piège à glace polaire.",
+        "it": "Cercare un analogo di trappola di ghiaccio polare."
+      },
+      "aficionado": {
+        "es": "Buscar en la Tierra un lugar parecido a un rincón del polo lunar donde el hielo queda atrapado.",
+        "en": "Find a place on Earth like a lunar polar corner where ice stays trapped.",
+        "fr": "Chercher sur Terre un endroit semblable à un coin du pôle lunaire où la glace reste piégée.",
+        "it": "Cercare sulla Terra un posto simile a un angolo del polo lunare dove il ghiaccio resta intrappolato."
+      }
+    }
+  },
+  {
+    "id": "sample_basalt",
+    "weights": {
+      "slope": 0.3,
+      "roughness": 0.2,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": 5,
+      "roughness": 10,
+      "temperature": null,
+      "ice": null,
+      "rock": "vb"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Muestrear basalto de mare.",
+      "en": "Sample mare basalt.",
+      "fr": "Échantillonner du basalte de mare.",
+      "it": "Campionare basalto di mare."
+    },
+    "source": "preset",
+    "voice": {
+      "profesional": {
+        "es": "Muestrear basalto de mare.",
+        "en": "Sample mare basalt.",
+        "fr": "Échantillonner du basalte de mare.",
+        "it": "Campionare basalto di mare."
+      },
+      "aficionado": {
+        "es": "Buscar roca volcánica como la de los mares de la Luna para sacar una muestra.",
+        "en": "Look for volcanic rock like the Moon's dark plains so you can take a sample.",
+        "fr": "Chercher une roche volcanique comme celle des mers de la Lune pour en prendre un échantillon.",
+        "it": "Cercare roccia vulcanica come quella dei mari della Luna per prelevarne un campione."
+      }
+    }
+  },
+  {
+    "id": "floor_sample",
+    "weights": {
+      "slope": 0.3,
+      "roughness": 1,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": 3,
+      "roughness": 5,
+      "temperature": null,
+      "ice": null,
+      "rock": null
+    },
+    "measured": [],
+    "serves": {
+      "es": "Extraer y analizar el piso: importan más la roca y la rugosidad que la pendiente.",
+      "en": "Sample and analyze the ground: rock and roughness matter more than slope.",
+      "fr": "Extraire et analyser le sol : la roche et la rugosité comptent plus que la pente.",
+      "it": "Estrarre e analizzare il suolo: roccia e rugosità contano più della pendenza."
+    },
+    "source": "preset",
+    "voice": {
+      "profesional": {
+        "es": "Extraer y analizar el piso: importan más la roca y la rugosidad que la pendiente.",
+        "en": "Sample and analyze the ground: rock and roughness matter more than slope.",
+        "fr": "Extraire et analyser le sol : la roche et la rugosité comptent plus que la pente.",
+        "it": "Estrarre e analizzare il suolo: roccia e rugosità contano più della pendenza."
+      },
+      "aficionado": {
+        "es": "Mirar el suelo de cerca: importa más de qué está hecho y qué tan áspero es que si hay cuesta.",
+        "en": "Look at the ground up close: what it is made of and how rough it is matter more than the slope.",
+        "fr": "Regarder le sol de près : sa nature et sa rugosité comptent plus que la pente.",
+        "it": "Guardare il suolo da vicino: conta più di cosa è fatto e quanto è ruvido che se c'è pendenza."
+      }
+    }
+  },
+  {
+    "id": "viper_ice_prospect",
+    "weights": {
+      "slope": 0.6,
+      "roughness": 0.5,
+      "temperature": 0.8,
+      "ice": 1,
+      "rock": 0
+    },
+    "search": {
+      "slope": 15,
+      "roughness": 20,
+      "temperature": -140,
+      "ice": 1,
+      "rock": null
+    },
+    "measured": [
+      "slope"
+    ],
+    "serves": {
+      "es": "Prospectar hielo polar con un rover.",
+      "en": "Prospect for polar ice with a rover.",
+      "fr": "Prospecter la glace polaire avec un rover.",
+      "it": "Prospectare ghiaccio polare con un rover."
+    },
+    "source": "https://ntrs.nasa.gov/api/citations/20220000441/downloads/viper-mobility-2022-01-27.pdf",
+    "voice": {
+      "profesional": {
+        "es": "Prospectar hielo polar con un rover.",
+        "en": "Prospect for polar ice with a rover.",
+        "fr": "Prospecter la glace polaire avec un rover.",
+        "it": "Prospectare ghiaccio polare con un rover."
+      },
+      "aficionado": {
+        "es": "Buscar hielo en una zona polar usando un rover, como la misión VIPER.",
+        "en": "Look for ice in a polar area with a rover, the way the VIPER mission would.",
+        "fr": "Chercher de la glace dans une zone polaire avec un rover, comme la mission VIPER.",
+        "it": "Cercare ghiaccio in una zona polare con un rover, come farebbe la missione VIPER."
+      }
+    }
+  },
+  {
+    "id": "artemis_polar_landing",
+    "weights": {
+      "slope": 1,
+      "roughness": 0.8,
+      "temperature": 0,
+      "ice": 0.5,
+      "rock": 0
+    },
+    "search": {
+      "slope": 10,
+      "roughness": 15,
+      "temperature": null,
+      "ice": 1,
+      "rock": null
+    },
+    "measured": [
+      "slope"
+    ],
+    "serves": {
+      "es": "Elegir un aterrizaje polar seguro con acceso a volátiles.",
+      "en": "Pick a safe polar landing with access to volatiles.",
+      "fr": "Choisir un atterrissage polaire sûr avec accès aux volatils.",
+      "it": "Scegliere un atterraggio polare sicuro con accesso ai volatili."
+    },
+    "source": "https://ntrs.nasa.gov/api/citations/20240009596/downloads/ArtemisHLSUpdate_2024.pdf",
+    "voice": {
+      "profesional": {
+        "es": "Elegir un aterrizaje polar seguro con acceso a volátiles.",
+        "en": "Pick a safe polar landing with access to volatiles.",
+        "fr": "Choisir un atterrissage polaire sûr avec accès aux volatils.",
+        "it": "Scegliere un atterraggio polare sicuro con accesso ai volatili."
+      },
+      "aficionado": {
+        "es": "Elegir un aterrizaje en el polo que sea seguro y quede cerca del hielo.",
+        "en": "Pick a polar landing that is safe and close to ice.",
+        "fr": "Choisir un atterrissage au pôle qui soit sûr et proche de la glace.",
+        "it": "Scegliere un atterraggio al polo che sia sicuro e vicino al ghiaccio."
+      }
+    }
+  },
+  {
+    "id": "sample_pyroclastic",
+    "weights": {
+      "slope": 0,
+      "roughness": 0.2,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": null,
+      "roughness": 8,
+      "temperature": null,
+      "ice": null,
+      "rock": "py"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Buscar un análogo de depósito piroclástico.",
+      "en": "Find an analog of a pyroclastic deposit.",
+      "fr": "Chercher un analogue de dépôt pyroclastique.",
+      "it": "Cercare un analogo di deposito piroclastico."
+    },
+    "source": "https://curator.jsc.nasa.gov/lunar/lsc/74220.pdf",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de depósito piroclástico.",
+        "en": "Find an analog of a pyroclastic deposit.",
+        "fr": "Chercher un analogue de dépôt pyroclastique.",
+        "it": "Cercare un analogo di deposito piroclastico."
+      },
+      "aficionado": {
+        "es": "Buscar suelo de ceniza volcánica, parecido al suelo naranja de la Luna.",
+        "en": "Look for volcanic ash ground, like the orange soil on the Moon.",
+        "fr": "Chercher un sol de cendre volcanique, comme le sol orange de la Lune.",
+        "it": "Cercare un suolo di cenere vulcanica, come il suolo arancione della Luna."
+      }
+    }
+  },
+  {
+    "id": "spa_norite",
+    "weights": {
+      "slope": 0.3,
+      "roughness": 0.5,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": 4,
+      "roughness": 8,
+      "temperature": null,
+      "ice": null,
+      "rock": "pb"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Buscar un análogo de norita del Polo Sur-Aitken, no basalto de mare.",
+      "en": "Find a South Pole-Aitken norite analog, not mare basalt.",
+      "fr": "Chercher un analogue de norite du bassin Pôle Sud-Aitken, pas du basalte de mare.",
+      "it": "Cercare un analogo di norite del Polo Sud-Aitken, non basalto di mare."
+    },
+    "source": "https://doi.org/10.1093/nsr/nwz183",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de norita del Polo Sur-Aitken, no basalto de mare.",
+        "en": "Find a South Pole-Aitken norite analog, not mare basalt.",
+        "fr": "Chercher un analogue de norite du bassin Pôle Sud-Aitken, pas du basalte de mare.",
+        "it": "Cercare un analogo di norite del Polo Sud-Aitken, non basalto di mare."
+      },
+      "aficionado": {
+        "es": "Buscar una roca profunda como la de la cuenca Polo Sur-Aitken, no la roca volcánica de los mares.",
+        "en": "Look for deep crust rock like the South Pole-Aitken basin, not the volcanic rock of the dark plains.",
+        "fr": "Chercher une roche profonde comme celle du bassin Pôle Sud-Aitken, pas la roche volcanique des mers.",
+        "it": "Cercare una roccia profonda come quella del bacino Polo Sud-Aitken, non la roccia vulcanica dei mari."
+      }
+    }
+  },
+  {
+    "id": "hadley_rille",
+    "weights": {
+      "slope": 1,
+      "roughness": 0.6,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 0.8
+    },
+    "search": {
+      "slope": 25,
+      "roughness": 12,
+      "temperature": null,
+      "ice": null,
+      "rock": "vb"
+    },
+    "measured": [
+      "slope"
+    ],
+    "serves": {
+      "es": "Buscar un análogo de pared de rille.",
+      "en": "Find a rille-wall analog.",
+      "fr": "Chercher un analogue de paroi de rille.",
+      "it": "Cercare un analogo di parete di rille."
+    },
+    "source": "https://www.apollojournals.org/alsj/a15/a15lsp.pdf",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de pared de rille.",
+        "en": "Find a rille-wall analog.",
+        "fr": "Chercher un analogue de paroi de rille.",
+        "it": "Cercare un analogo di parete di rille."
+      },
+      "aficionado": {
+        "es": "Buscar un lugar parecido a la pared de un canal lunar, como el de Hadley.",
+        "en": "Find a place like the wall of a lunar channel, such as Hadley.",
+        "fr": "Chercher un endroit semblable à la paroi d'un chenal lunaire, comme Hadley.",
+        "it": "Cercare un posto simile alla parete di un canale lunare, come Hadley."
+      }
+    }
+  },
+  {
+    "id": "surveyor_regolith",
+    "weights": {
+      "slope": 0.4,
+      "roughness": 0.5,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 1
+    },
+    "search": {
+      "slope": 3,
+      "roughness": 6,
+      "temperature": null,
+      "ice": null,
+      "rock": "su"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Buscar un análogo de regolito suelto.",
+      "en": "Find a loose-regolith analog.",
+      "fr": "Chercher un analogue de régolithe meuble.",
+      "it": "Cercare un analogo di regolite sciolta."
+    },
+    "source": "https://doi.org/10.1029/JB076i032p07833",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de regolito suelto.",
+        "en": "Find a loose-regolith analog.",
+        "fr": "Chercher un analogue de régolithe meuble.",
+        "it": "Cercare un analogo di regolite sciolta."
+      },
+      "aficionado": {
+        "es": "Buscar suelo suelto, como el polvo que pisaron las naves Surveyor.",
+        "en": "Look for loose soil, like the dust the Surveyor craft landed on.",
+        "fr": "Chercher un sol meuble, comme la poussière où se sont posées les sondes Surveyor.",
+        "it": "Cercare suolo sciolto, come la polvere su cui si posarono le sonde Surveyor."
+      }
+    }
+  },
+  {
+    "id": "light_mantle",
+    "weights": {
+      "slope": 0.9,
+      "roughness": 0.4,
+      "temperature": 0,
+      "ice": 0,
+      "rock": 0.8
+    },
+    "search": {
+      "slope": 15,
+      "roughness": 10,
+      "temperature": null,
+      "ice": null,
+      "rock": "su"
+    },
+    "measured": [],
+    "serves": {
+      "es": "Buscar un análogo de avalancha de regolito.",
+      "en": "Find a regolith-avalanche analog.",
+      "fr": "Chercher un analogue d'avalanche de régolithe.",
+      "it": "Cercare un analogo di valanga di regolite."
+    },
+    "source": "https://doi.org/10.1029/2024je008556",
+    "voice": {
+      "profesional": {
+        "es": "Buscar un análogo de avalancha de regolito.",
+        "en": "Find a regolith-avalanche analog.",
+        "fr": "Chercher un analogue d'avalanche de régolithe.",
+        "it": "Cercare un analogo di valanga di regolite."
+      },
+      "aficionado": {
+        "es": "Buscar un lugar parecido a un derrumbe de polvo lunar.",
+        "en": "Find a place like a landslide of lunar dust.",
+        "fr": "Chercher un endroit semblable à un éboulement de poussière lunaire.",
+        "it": "Cercare un posto simile a una frana di polvere lunare."
+      }
+    }
+  }
 ]

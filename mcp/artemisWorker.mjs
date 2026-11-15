@@ -6,9 +6,9 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(__dirname, '..');
 export const DEFAULT_PYTHON = path.join(REPO_ROOT, '.venv/bin/python');
-export const DEFAULT_WORKER_SCRIPT = path.join(REPO_ROOT, 'backend/app/workers/gurvich_search.py');
+export const DEFAULT_WORKER_SCRIPT = path.join(REPO_ROOT, 'backend/app/workers/artemis_search.py');
 
-export class GurvichSearchWorker {
+export class ArtemisSearchWorker {
   constructor({ python = DEFAULT_PYTHON, script = DEFAULT_WORKER_SCRIPT, env = process.env } = {}) {
     this.python = python;
     this.script = script;

@@ -5,7 +5,7 @@ import { getCopy } from '../i18n';
 import type { Language } from '../i18n';
 import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
-import { formatDelta, formatValue, percent } from '../score';
+import { formatDelta, formatValue, percent, truncated } from '../score';
 import type { ActivityPreset, Grade, VariableInfo } from '../score';
 import type { LunarSelection } from './MoonPage';
 import { extraCopy, extraValue } from '../data/earthMeasurements';
@@ -60,6 +60,74 @@ function variableLabel(copy: ReturnType<typeof getCopy>, id: string): string {
 	return known[id] ?? id;
 }
 
+const BREAKDOWN_SLICE_COLORS: Record<string, string> = {
+	slope: '#7dffe1',
+	roughness: '#f0c14a',
+	temperature: '#9fd4c4',
+	ice: '#c9a86a',
+	rock: '#e07a4a',
+};
+
+function polarToCartesian(cx: number, cy: number, radius: number, angleDeg: number) {
+	const angleRad = ((angleDeg - 90) * Math.PI) / 180;
+	return { x: cx + radius * Math.cos(angleRad), y: cy + radius * Math.sin(angleRad) };
+}
+
+function pieWedgePath(cx: number, cy: number, radius: number, startDeg: number, endDeg: number) {
+	if (endDeg - startDeg >= 359.99) {
+		return `M ${cx} ${cy - radius} A ${radius} ${radius} 0 1 1 ${cx - 0.001} ${cy - radius} Z`;
+	}
+	const start = polarToCartesian(cx, cy, radius, endDeg);
+	const end = polarToCartesian(cx, cy, radius, startDeg);
+	const largeArc = endDeg - startDeg > 180 ? 1 : 0;
+	return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y} Z`;
+}
+
+type BreakdownSlice = {
+	id: string;
+	name: string;
+	color: string;
+	share: number;
+	shareLabel: string;
+	score: number;
+	similarityLabel: string;
+	startDeg: number;
+	endDeg: number;
+};
+
+function breakdownSlices(
+	variables: VariableInfo[],
+	scores: Record<string, number>,
+	copy: ReturnType<typeof getCopy>,
+): BreakdownSlice[] {
+	const active = variables.filter((variable) => typeof scores[variable.id] === 'number');
+	const scoreSum = active.reduce((sum, variable) => sum + scores[variable.id]!, 0);
+	if (scoreSum <= 0 || active.length === 0) return [];
+	let cursor = 0;
+	return active.map((variable) => {
+		const score = scores[variable.id]!;
+		const share = score / scoreSum;
+		const span = share * 360;
+		const startDeg = cursor;
+		const endDeg = cursor + span;
+		cursor = endDeg;
+		const shareLabel = truncated(share * 100, 1);
+		const similarityLabel = (score * 100).toFixed(1);
+		const name = variableLabel(copy, variable.id);
+		return {
+			id: variable.id,
+			name,
+			color: BREAKDOWN_SLICE_COLORS[variable.id] ?? '#8fa2b8',
+			share,
+			shareLabel,
+			score,
+			similarityLabel,
+			startDeg,
+			endDeg,
+		};
+	});
+}
+
 /** What the Earth cell holds for a variable, in the panel's own column names. */
 function cellValue(cell: EarthCell, id: string): number | string | null {
 	switch (id) {
@@ -76,14 +144,6 @@ function cellValue(cell: EarthCell, id: string): number | string | null {
 		default:
 			return null;
 	}
-}
-
-/** The sentence next to the percentage, cut where the score says it hurts. */
-function scorePhrase(copy: ReturnType<typeof getCopy>, score: number | undefined, name: string): string {
-	if (typeof score !== 'number') return '';
-	if (score >= 0.75) return copy.scoreHigh(name);
-	if (score < 0.4) return copy.scoreLow(name);
-	return copy.scoreMid(name);
 }
 
 function formatMeters(value: number | null, noData: string, digits = 0) {
@@ -353,38 +413,81 @@ export default function PointPanel({ place, lunar, onClose, language, variables,
 							})}
 						</section>
 					)}
-					{place.scores && Object.keys(place.scores).length > 0 && (
+					{place.scores && Object.keys(place.scores).length > 0 && (() => {
+						const slices = breakdownSlices(variables, place.scores, copy);
+						return (
 						<section className="breakdown">
 							<h4>{copy.breakdown}</h4>
-							<ul>
-								{variables.map((variable) => {
-									const name = variableLabel(copy, variable.id);
-									const score = place.scores?.[variable.id];
-									const grade = place.grades?.[variable.id];
-									const delta = place.deltas?.[variable.id];
-									const change = typeof delta === 'number' && variable.unit && variable.unit !== 'class'
-										? ` · ${formatDelta(delta, variable.unit)}`
-										: '';
-									const phrase = scorePhrase(copy, score, name);
-									return (
-										<li key={variable.id}>
-											<span className="breakdown-name">
-												{name}
-												{grade && <span className={`grade grade-${grade}`}>{grade}</span>}
-											</span>
-											<span>
-													{score === undefined ? copy.noData : `${(score * 100).toFixed(1)}%${change}`}
-												{phrase ? ` · ${phrase}` : ''}
-											</span>
-										</li>
-									);
-								})}
-							</ul>
+							{slices.length > 0 && (
+								<div className="breakdown-pie">
+									<svg className="breakdown-pie-chart" viewBox="0 0 100 100" role="img" aria-hidden>
+										{slices.map((slice) => (
+											<path
+												key={slice.id}
+												d={pieWedgePath(50, 50, 42, slice.startDeg, slice.endDeg)}
+												fill={slice.color}
+												aria-label={copy.breakdownPieSlice(slice.name, slice.shareLabel)}
+											/>
+										))}
+									</svg>
+									<ul className="breakdown-pie-legend">
+										{slices.map((slice) => {
+											const variable = variables.find((v) => v.id === slice.id);
+											const delta = place.deltas?.[slice.id];
+											const showDelta =
+												typeof delta === 'number' &&
+												variable?.unit &&
+												variable.unit !== 'class';
+											return (
+												<li key={slice.id}>
+													<span
+														className="breakdown-pie-swatch"
+														style={{ backgroundColor: slice.color }}
+														aria-hidden
+													/>
+													<div className="breakdown-pie-item">
+														<div className="breakdown-pie-item-row">
+															<span className="breakdown-pie-label">{slice.name}</span>
+															<span className="breakdown-pie-share">{slice.shareLabel}%</span>
+														</div>
+														<div className="breakdown-pie-meta">
+															<span className="breakdown-pie-similarity">
+																{copy.similarity}: {slice.similarityLabel}%
+															</span>
+															{showDelta && (
+																<span className="breakdown-pie-delta">
+																	{copy.differsBy} {formatDelta(delta, variable.unit)}
+																</span>
+															)}
+														</div>
+													</div>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
+							)}
+							{variables.some((variable) => place.scores?.[variable.id] === undefined) && (
+								<ul>
+									{variables
+										.filter((variable) => place.scores?.[variable.id] === undefined)
+										.map((variable) => {
+											const name = variableLabel(copy, variable.id);
+											return (
+												<li key={variable.id}>
+													<span className="breakdown-name">{name}</span>
+													<span>{copy.noData}</span>
+												</li>
+											);
+										})}
+								</ul>
+							)}
 							{variables.some((variable) => variable.tier === 'C') && (
 								<p className="muted warn">{copy.unalikeWarning}</p>
 							)}
 						</section>
-					)}
+						);
+					})()}
 					{place.activity && (
 						<p className="muted activity-line">
 							{copy.activityLabel}:{' '}

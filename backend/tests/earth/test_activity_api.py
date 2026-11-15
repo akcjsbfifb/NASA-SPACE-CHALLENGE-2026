@@ -18,7 +18,7 @@ from app.main import app  # noqa: E402
 from app.services import search_state  # noqa: E402
 from app.services.earth import similarity  # noqa: E402
 from app.services.earth.similarity import EarthIndex  # noqa: E402
-from app.workers import gurvich_search  # noqa: E402
+from app.workers import artemis_search  # noqa: E402
 
 CATALOG = json.loads((REPO_ROOT / "mcp" / "activities.json").read_text())
 CATALOG_IDS = [preset["id"] for preset in CATALOG]
@@ -48,6 +48,19 @@ def test_activities_returns_the_catalog_without_loading_the_grid(monkeypatch):
     body = response.json()
     assert [preset["id"] for preset in body["activities"]] == CATALOG_IDS
     assert search_state._index is None
+
+
+def test_put_audience_writes_the_choice(tmp_path, monkeypatch):
+    import app.api.search as search_routes
+
+    target = tmp_path / "audience.json"
+    monkeypatch.setattr(search_routes, "audience_path", lambda: target)
+    with TestClient(app) as client:
+        response = client.put("/audience", json={"audience": "aficionado", "language": "es"})
+        rejected = client.put("/audience", json={"audience": "nope", "language": "es"})
+    assert response.status_code == 200
+    assert json.loads(target.read_text()) == {"audience": "aficionado", "language": "es"}
+    assert rejected.status_code == 400
 
 
 def test_activity_brings_weights_and_values(server):
@@ -161,11 +174,11 @@ def test_search_writes_the_shortlist_when_it_succeeds(server):
 
 
 def _run_worker(payload: dict, index: EarthIndex, monkeypatch) -> dict:
-    monkeypatch.setattr(gurvich_search, "_try_remote_search", lambda _payload: None)
-    monkeypatch.setattr(gurvich_search, "_write_shortlist", lambda result: result)
-    monkeypatch.setattr(gurvich_search, "_index", index)
-    monkeypatch.setenv("GURVICH_NOTIFY_URL", "")
-    return gurvich_search._handle_line(json.dumps(payload))
+    monkeypatch.setattr(artemis_search, "_try_remote_search", lambda _payload: None)
+    monkeypatch.setattr(artemis_search, "_write_shortlist", lambda result: result)
+    monkeypatch.setattr(artemis_search, "_index", index)
+    monkeypatch.setenv("ARTEMIS_NOTIFY_URL", "")
+    return artemis_search._handle_line(json.dumps(payload))
 
 
 def test_worker_resolves_activity_locally(tiny_index: EarthIndex, monkeypatch):

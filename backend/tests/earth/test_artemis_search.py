@@ -1,8 +1,9 @@
-"""gurvich_search worker: stdin protocol, single EarthIndex, temp shortlist."""
+"""artemis_search worker: stdin protocol, single EarthIndex, temp shortlist."""
 
 from __future__ import annotations
 
 import json
+import os
 import socket
 import subprocess
 import sys
@@ -22,7 +23,7 @@ sys.path.insert(0, str(TESTS))
 from app.cli.extract_earth_columns import extract  # noqa: E402
 from test_earth_columns_mmap import _synthetic_parquet  # noqa: E402
 
-WORKER = BACKEND / "app" / "workers" / "gurvich_search.py"
+WORKER = BACKEND / "app" / "workers" / "artemis_search.py"
 PYTHON = Path(sys.executable)
 
 
@@ -84,13 +85,28 @@ def fake_search_server():
         thread.join(timeout=2)
 
 
+def test_worker_imports_app_when_launched_from_repo_root():
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    script = json.dumps(str(WORKER))
+    result = subprocess.run(
+        [str(PYTHON), "-c", f"import runpy; runpy.run_path({script}, run_name='probe')"],
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 def _run_worker(columns_dir: Path, shortlist_path: Path, extra_env: dict | None = None):
     env = {
         **__import__("os").environ,
-        "GURVICH_COLUMNS_DIR": str(columns_dir),
-        "GURVICH_SHORTLIST": str(shortlist_path),
-        "GURVICH_NOTIFY_URL": "",
-        "GURVICH_SEARCH_BASE": "http://127.0.0.1:9",
+        "ARTEMIS_COLUMNS_DIR": str(columns_dir),
+        "ARTEMIS_SHORTLIST": str(shortlist_path),
+        "ARTEMIS_NOTIFY_URL": "",
+        "ARTEMIS_SEARCH_BASE": "http://127.0.0.1:9",
     }
     if extra_env:
         env.update(extra_env)
@@ -169,7 +185,7 @@ def test_worker_missing_columns_on_local_search(tmp_path):
     proc = _run_worker(
         missing,
         tmp_path / "shortlist.json",
-        {"GURVICH_SEARCH_BASE": "http://127.0.0.1:9"},
+        {"ARTEMIS_SEARCH_BASE": "http://127.0.0.1:9"},
     )
     try:
         body = _exchange(proc, {"slope": 5.0, "precision": 0.5})
@@ -187,7 +203,7 @@ def test_worker_uses_remote_search_without_earth_index(fake_search_server, tmp_p
     proc = _run_worker(
         tmp_path / "no_columns",
         shortlist,
-        {"GURVICH_SEARCH_BASE": base},
+        {"ARTEMIS_SEARCH_BASE": base},
     )
     try:
         body = _exchange(proc, {"slope": 5.0, "precision": 0.6})

@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from app.config import get_settings
 
+from app.config import get_settings
 from app.services.earth.activities import VARIABLES, ActivityError, load_catalog, resolve
 from app.services.earth.similarity import parse_criteria, write_shortlist
 from app.services import notify
@@ -30,6 +31,13 @@ class EnrichmentPoint(BaseModel):
 
 class EnrichmentRequest(BaseModel):
     candidates: list[EnrichmentPoint] = Field(min_length=1, max_length=50)
+
+AUDIENCES = frozenset({"profesional", "aficionado"})
+AUDIENCE_LANGUAGES = frozenset({"es", "en", "fr", "it"})
+
+
+def audience_path() -> Path:
+    return get_settings().paths.shortlist.parent / "audience.json"
 
 
 def _optional_float(raw: str | None) -> float | None:
@@ -122,6 +130,21 @@ def enrich(request: EnrichmentRequest) -> JSONResponse:
         return JSONResponse(result)
     finally:
         _enrichment_lock.release()
+@router.put("/audience")
+async def put_audience(request: Request) -> JSONResponse:
+    try:
+        body = json.loads((await request.body()).decode() or "{}")
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    if not isinstance(body, dict):
+        return JSONResponse({"error": "body must be a JSON object"}, status_code=400)
+    audience = body.get("audience")
+    language = body.get("language")
+    if audience not in AUDIENCES or language not in AUDIENCE_LANGUAGES:
+        return JSONResponse({"error": "bad_audience"}, status_code=400)
+    path = audience_path()
+    path.write_text(json.dumps({"audience": audience, "language": language}))
+    return JSONResponse({"audience": audience, "language": language})
 
 
 @router.get("/search")
@@ -161,12 +184,12 @@ def search(request: Request) -> JSONResponse:
 @router.post("/notify")
 async def notify_endpoint(
     request: Request,
-    x_gurvich_notify_token: Annotated[str | None, Header()] = None,
+    x_artemis_notify_token: Annotated[str | None, Header()] = None,
 ) -> JSONResponse:
     length = int(request.headers.get("content-length", "0") or "0")
     if length > notify.MAX_NOTIFY_BODY:
         return JSONResponse({"error": "payload too large"}, status_code=413)
-    token = x_gurvich_notify_token or ""
+    token = x_artemis_notify_token or ""
     if not notify.NOTIFY_TOKEN or token != notify.NOTIFY_TOKEN:
         return JSONResponse({"error": "unauthorized"}, status_code=401)
     try:

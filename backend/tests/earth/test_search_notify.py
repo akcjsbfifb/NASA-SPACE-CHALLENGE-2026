@@ -35,7 +35,7 @@ def test_notify_reaches_sse_client(notify_client):
             content=json.dumps(body),
             headers={
                 "Content-Type": "application/json",
-                "X-Gurvich-Notify-Token": notify.NOTIFY_TOKEN,
+                "X-Artemis-Notify-Token": notify.NOTIFY_TOKEN,
             },
         )
         assert response.status_code == 200
@@ -63,7 +63,7 @@ def test_notify_payload_over_limit_returns_413(notify_client):
         content=b"{}",
         headers={
             "Content-Type": "application/json",
-            "X-Gurvich-Notify-Token": notify.NOTIFY_TOKEN,
+            "X-Artemis-Notify-Token": notify.NOTIFY_TOKEN,
             "Content-Length": str(notify.MAX_NOTIFY_BODY + 1),
         },
     )
@@ -77,7 +77,7 @@ def test_notify_without_listeners(notify_client):
         content=json.dumps({"returned": 0, "points": []}),
         headers={
             "Content-Type": "application/json",
-            "X-Gurvich-Notify-Token": notify.NOTIFY_TOKEN,
+            "X-Artemis-Notify-Token": notify.NOTIFY_TOKEN,
         },
     )
     assert response.status_code == 200
