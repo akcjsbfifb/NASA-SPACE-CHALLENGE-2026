@@ -30,6 +30,11 @@
   letter-spacing: 0.12em;
 }
 
+.language-selects {
+  display: flex;
+  gap: 8px;
+}
+
 .language-select {
   padding: 6px 8px;
   color: var(--text-primary);

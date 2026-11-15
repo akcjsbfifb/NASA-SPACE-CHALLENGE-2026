@@ -6,15 +6,16 @@ import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import * as z from 'zod/v4';
 import { applyFilters, buildFilterRulesText, validateFilters } from './applyFilters.mjs';
 import {
-  GurvichSearchWorker,
+  ArtemisSearchWorker,
   buscarWithWorker,
   DEFAULT_PYTHON,
   DEFAULT_WORKER_SCRIPT,
-} from './gurvichWorker.mjs';
+} from './artemisWorker.mjs';
+import { AUDIENCES, LANGUAGES, composeReply } from './reply.mjs';
 
 const FILTER_RULES_TEXT = buildFilterRulesText();
 const BUSCAR_INSTRUCTIONS =
-  'buscar ejecuta la misma consulta que la UI de búsqueda y escribe data/earth/shortlist.json; no recalcula vía aplicar_filtros. La primera llamada de la sesión puntúa toda la grilla terrestre en memoria; las siguientes reutilizan el proceso persistente. aplicar_filtros no recalcula closeness: solo filtra la shortlist ya escrita.';
+  'buscar ejecuta la misma consulta que la UI de búsqueda y escribe data/earth/shortlist.json; no recalcula vía aplicar_filtros. La primera llamada de la sesión puntúa toda la grilla terrestre en memoria; las siguientes reutilizan el proceso persistente. aplicar_filtros no recalcula closeness: solo filtra la shortlist ya escrita. La respuesta visible al usuario es el campo reply, completo, sin acortar y sin reescribir.';
 const ACTIVITY_RULES_TEXT = `Pesos: weights es un extra. Si la frase no pide una importancia distinta y no cae en una actividad, no mandes weights. Si cae en una actividad, manda solo activity: todo preset trae valores de búsqueda. Si además nombra un código o un valor, manda ese argumento explícito; pisa al preset solo en esa clave. No inventes números. rock es un código USGS, nunca la palabra basalto. vb es basalto, py es piroclástico, pb es plutónico básico (norita/gabro en este catálogo), su es sedimento suelto.
 
 Primera regla que coincida:
@@ -37,11 +38,11 @@ const SERVER_INSTRUCTIONS = `${FILTER_RULES_TEXT} ${BUSCAR_INSTRUCTIONS} ${ACTIV
 const shortlistPath = new URL('../data/earth/shortlist.json', import.meta.url);
 const filteredPath = new URL('../data/earth/filtered.json', import.meta.url);
 const activitiesPath = new URL('./activities.json', import.meta.url);
+const audiencePath = new URL('../data/earth/audience.json', import.meta.url);
 
 // The enum comes from the catalog itself; a hand-written list would drift from activities.json.
-const ACTIVITY_IDS = JSON.parse(readFileSync(toFsPath(activitiesPath), 'utf8')).map(
-  (entry) => entry.id,
-);
+const ACTIVITY_CATALOG = JSON.parse(readFileSync(toFsPath(activitiesPath), 'utf8'));
+const ACTIVITY_IDS = ACTIVITY_CATALOG.map((entry) => entry.id);
 
 const SOURCE = 'data/earth/shortlist.json';
 
@@ -120,6 +121,12 @@ const buscarInputSchema = z.object({
       'Activity preset id from mcp/activities.json. The preset supplies the search values; send no numbers with it unless the phrase named one.',
     ),
   weights: weightsInputSchema,
+  audience: z
+    .enum(AUDIENCES)
+    .optional()
+    .describe(
+      'Tone for the reply field. profesional or aficionado. Omit to use data/earth/audience.json, which the UI writes.',
+    ),
 });
 
 function toFsPath(fileUrl) {
@@ -241,30 +248,43 @@ const BUSCAR_SUMMARY_KEYS = [
   'shortlist_error',
 ];
 
-export function summarizeBuscarResult(body) {
+export function readAudience(fileUrl = audiencePath) {
+  const fallback = { audience: 'profesional', language: 'es' };
+  try {
+    const parsed = JSON.parse(readFileSync(toFsPath(fileUrl), 'utf8'));
+    return {
+      audience: AUDIENCES.includes(parsed.audience) ? parsed.audience : fallback.audience,
+      language: LANGUAGES.includes(parsed.language) ? parsed.language : fallback.language,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+export function summarizeBuscarResult(body, context = {}) {
   if (!body || typeof body !== 'object') return body;
   if (body.error) return { error: body.error };
   const summary = {};
   for (const key of BUSCAR_SUMMARY_KEYS) {
     if (body[key] !== undefined) summary[key] = body[key];
   }
-  if (Array.isArray(body.points)) {
-    summary.points = body.points.slice(0, 8);
-  }
+  const points = Array.isArray(body.points) ? body.points : [];
+  if (points.length) summary.points = points.slice(0, 8);
+  summary.reply = composeReply({ ...summary, points }, context);
   return summary;
 }
 
 export function createServer(options = {}) {
   const worker =
     options.worker ??
-    new GurvichSearchWorker({
+    new ArtemisSearchWorker({
       python: options.python ?? DEFAULT_PYTHON,
       script: options.workerScript ?? DEFAULT_WORKER_SCRIPT,
       env: options.workerEnv ?? process.env,
     });
 
   const server = new McpServer(
-    { name: 'gurvich', version: '0.1.0' },
+    { name: 'artemis', version: '0.1.0' },
     {
       instructions: SERVER_INSTRUCTIONS,
       maxToolInputElements: 1024,
@@ -335,7 +355,14 @@ export function createServer(options = {}) {
         return errorResult(error?.message ?? String(error));
       }
       if (body && typeof body === 'object' && body.error) return errorResult(body.error);
-      return jsonResult(summarizeBuscarResult(body));
+      const preference = readAudience();
+      const audience = AUDIENCES.includes(args.audience) ? args.audience : preference.audience;
+      return jsonResult(summarizeBuscarResult(body, {
+        audience,
+        language: preference.language,
+        request: payload,
+        catalog: ACTIVITY_CATALOG,
+      }));
     },
   );
 
@@ -347,7 +374,7 @@ export {
   buildBuscarPayload,
   buscarInputSchema,
   buscarWithWorker,
-  GurvichSearchWorker,
+  ArtemisSearchWorker,
 };
 
 async function main() {

@@ -2,6 +2,9 @@ export type Language = 'es' | 'en' | 'fr' | 'it';
 
 type TranslationStrings = {
 	language: string;
+	audience: string;
+	audienceProfesional: string;
+	audienceAficionado: string;
 	pageTitle: string;
 	objective: string;
 	objectiveDescription: string;
@@ -75,7 +78,10 @@ type TranslationStrings = {
 const translations = {
 	es: {
 		language: 'Idioma',
-		pageTitle: 'ORBITAL',
+		audience: 'Público',
+		audienceProfesional: 'Profesional',
+		audienceAficionado: 'Aficionado',
+		pageTitle: 'ARTEMIS',
 		objective: 'Objetivo',
 		objectiveDescription: 'El promedio usa las variables del contrato de análogos. Cada una declara cuánto se puede comparar.',
 		slope: 'Pendiente',
@@ -171,7 +177,10 @@ const translations = {
 	},
 	en: {
 		language: 'Language',
-		pageTitle: 'ORBITAL',
+		audience: 'Audience',
+		audienceProfesional: 'Professional',
+		audienceAficionado: 'Enthusiast',
+		pageTitle: 'ARTEMIS',
 		objective: 'Target',
 		objectiveDescription: 'The average uses the variables in the analog contract. Each one declares how comparable it is.',
 		slope: 'Slope',
@@ -267,7 +276,10 @@ const translations = {
 	},
 	fr: {
 		language: 'Langue',
-		pageTitle: 'ORBITAL',
+		audience: 'Public',
+		audienceProfesional: 'Professionnel',
+		audienceAficionado: 'Passionné',
+		pageTitle: 'ARTEMIS',
 		objective: 'Objectif',
 		objectiveDescription: 'La moyenne utilise les variables du contrat d’analogues. Chacune indique son niveau de comparabilité.',
 		slope: 'Pente',
@@ -363,7 +375,10 @@ const translations = {
 	},
 	it: {
 		language: 'Lingua',
-		pageTitle: 'ORBITAL',
+		audience: 'Pubblico',
+		audienceProfesional: 'Professionista',
+		audienceAficionado: 'Appassionato',
+		pageTitle: 'ARTEMIS',
 		objective: 'Obiettivo',
 		objectiveDescription: 'La media usa le variabili del contratto degli analoghi. Ognuna dichiara quanto è comparabile.',
 		slope: 'Pendenza',
@@ -465,4 +480,10 @@ export function getCopy(language: Language): TranslationStrings {
 
 export function isLanguage(value: string): value is Language {
 	return value === 'es' || value === 'en' || value === 'fr' || value === 'it';
+}
+
+export type Audience = 'profesional' | 'aficionado';
+
+export function isAudience(value: string): value is Audience {
+	return value === 'profesional' || value === 'aficionado';
 }

@@ -91,7 +91,7 @@ test('SERVER_INSTRUCTIONS carries the twelve rule ids in order and the preset ru
 });
 
 test('filtered.json keeps activity and weights copied from the shortlist', () => {
-  const dir = mkdtempSync(path.join(tmpdir(), 'gurvich-activities-'));
+  const dir = mkdtempSync(path.join(tmpdir(), 'artemis-activities-'));
   const shortlistPath = pathToFileURL(path.join(dir, 'shortlist.json'));
   const filteredPath = pathToFileURL(path.join(dir, 'filtered.json'));
   const weights = { slope: 0.5, roughness: 1, temperature: 0, ice: 0, rock: 1 };

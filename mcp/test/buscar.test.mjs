@@ -3,10 +3,10 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { InMemoryTransport, LATEST_PROTOCOL_VERSION } from '@modelcontextprotocol/server';
-import { GurvichSearchWorker, buscarWithWorker } from '../gurvichWorker.mjs';
+import { ArtemisSearchWorker, buscarWithWorker } from '../artemisWorker.mjs';
 import { buildBuscarPayload, createServer, summarizeBuscarResult } from '../index.mjs';
 
-const fakeWorkerScript = fileURLToPath(new URL('./fake_gurvich_worker.mjs', import.meta.url));
+const fakeWorkerScript = fileURLToPath(new URL('./fake_artemis_worker.mjs', import.meta.url));
 
 function parseToolJson(result) {
   assert.equal(result.result.content[0].type, 'text');
@@ -72,7 +72,7 @@ test('summarizeBuscarResult keeps at most eight points', () => {
 });
 
 test('buscarWithWorker returns JSON from fake worker', async () => {
-  const worker = new GurvichSearchWorker({
+  const worker = new ArtemisSearchWorker({
     python: process.execPath,
     script: fakeWorkerScript,
   });
@@ -86,7 +86,7 @@ test('buscarWithWorker returns JSON from fake worker', async () => {
 });
 
 test('MCP buscar tool forwards fake worker response', async () => {
-  const worker = new GurvichSearchWorker({
+  const worker = new ArtemisSearchWorker({
     python: process.execPath,
     script: fakeWorkerScript,
   });

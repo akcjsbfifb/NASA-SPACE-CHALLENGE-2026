@@ -18,8 +18,8 @@ import type {
 
 import { SEARCH_API } from './searchApi';
 import { subscribeSearchEvents } from './searchEvents';
-import { getCopy, isLanguage } from './i18n';
-import type { Language } from './i18n';
+import { getCopy, isAudience, isLanguage } from './i18n';
+import type { Audience, Language } from './i18n';
 
 import { percent, worstDelta } from './score';
 import type { ActivityPreset, Grade, MatchLevel, ScoreDetail, VariableInfo } from './score';
@@ -110,6 +110,8 @@ function App() {
 
 	const [page, setPage] = useState<'moon' | 'earth'>(pageFromHash);
 	const [language, setLanguage] = useState<Language>('es');
+	const [audience, setAudience] = useState<Audience>('profesional');
+	const [preferenceReady, setPreferenceReady] = useState(false);
 	const copy = getCopy(language);
 	const [location, setLocation] = useState<GlobeClickEvent | null>(null);
 
@@ -149,6 +151,23 @@ function App() {
 		document.documentElement.lang = language;
 		document.title = copy.pageTitle;
 	}, [copy.pageTitle, language]);
+	useEffect(() => {
+		const storedLanguage = localStorage.getItem('artemis.language');
+		const storedAudience = localStorage.getItem('artemis.audience');
+		if (storedLanguage && isLanguage(storedLanguage)) setLanguage(storedLanguage);
+		if (storedAudience && isAudience(storedAudience)) setAudience(storedAudience);
+		setPreferenceReady(true);
+	}, []);
+	useEffect(() => {
+		if (!preferenceReady) return;
+		localStorage.setItem('artemis.language', language);
+		localStorage.setItem('artemis.audience', audience);
+		fetch(`${SEARCH_API}/audience`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ audience, language }),
+		}).catch(() => {});
+	}, [preferenceReady, audience, language]);
 
 	// The catalog is the only source of activity labels: no `activity.<id>` keys.
 	useEffect(() => {
@@ -375,7 +394,7 @@ function App() {
 	return (
 		<main className="app">
 		<header className="topbar">
-		<strong className="brand">ORBITAL</strong>
+		<strong className="brand">ARTEMIS</strong>
 		<nav className="page-nav" aria-label="Cuerpo">
 			<button type="button" aria-current={page === 'moon' ? 'page' : undefined} onClick={() => openPage('moon')}>
 				Luna
@@ -384,6 +403,7 @@ function App() {
 				Tierra
 			</button>
 		</nav>
+			<div className="language-selects">
 			<select
 				className="language-select"
 				aria-label={copy.language}
@@ -398,6 +418,19 @@ function App() {
 				<option value="fr">Français</option>
 				<option value="it">Italiano</option>
 			</select>
+			<select
+				className="language-select"
+				aria-label={copy.audience}
+				value={audience}
+				onChange={(event) => {
+					const selectedAudience = event.target.value;
+					if (isAudience(selectedAudience)) setAudience(selectedAudience);
+				}}
+			>
+				<option value="profesional">{copy.audienceProfesional}</option>
+				<option value="aficionado">{copy.audienceAficionado}</option>
+			</select>
+			</div>
 		</header>
 
 		<div className="workspace">

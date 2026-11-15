@@ -183,7 +183,7 @@ test('MCP tools/call aplicar_filtros unknown country is unknown_id isError', asy
 test('MCP initialize and tools/list expose catalog and buscar tools', async () => {
   const rules = buildFilterRulesText();
   await withClient(async ({ rpc, init }) => {
-    assert.equal(init.result.serverInfo.name, 'gurvich');
+    assert.equal(init.result.serverInfo.name, 'artemis');
     assert.equal(init.result.serverInfo.version, '0.1.0');
     assert.match(init.result.instructions, new RegExp(rules.slice(0, 40)));
     assert.match(init.result.instructions, /buscar ejecuta la misma consulta que la UI/i);
@@ -290,7 +290,7 @@ test('stdio server starts and answers initialize plus tools/list', async () => {
       })}\n`,
     );
     const init = await waitFor(1);
-    assert.equal(init.result.serverInfo.name, 'gurvich');
+    assert.equal(init.result.serverInfo.name, 'artemis');
     child.stdin.write(`${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`);
     child.stdin.write(
       `${JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })}\n`,
