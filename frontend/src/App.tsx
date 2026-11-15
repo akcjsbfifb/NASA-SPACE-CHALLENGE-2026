@@ -6,6 +6,7 @@ import type { EarthAnalog, EarthAnalogSet, LunarSelection } from './components/M
 import PointPanel from './components/PointPanel';
 import PrecisionDial from './components/PrecisionDial';
 import type { SelectedPlace } from './components/PointPanel';
+import type { AdditionalMeasurements } from './data/earthMeasurements';
 
 import type {
 	GlobeController,
@@ -61,6 +62,8 @@ type SearchPoint = ScoreDetail & {
 	grades?: Record<string, Grade>;
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
+	additional_measurements?: AdditionalMeasurements;
+	coordinates_original?: { lat: number; lon: number };
 };
 
 type SearchResponse = {
@@ -133,6 +136,7 @@ function App() {
 	const [summary, setSummary] = useState<SearchSummary>({ type: 'initial' });
 	const [busy, setBusy] = useState(false);
 	const [selection, setSelection] = useState<SelectedPlace | null>(null);
+	const [lunarOrigin, setLunarOrigin] = useState<LunarSelection | null>(null);
 
 	function openPage(next: 'moon' | 'earth') {
 		setPage(next);
@@ -204,6 +208,8 @@ function App() {
 					deltas: point.deltas,
 					target: point.target,
 					activity: point.activity ?? null,
+					additional_measurements: point.additional_measurements,
+					coordinates_original: point.coordinates_original,
 				}
 				: { lat, lng },
 		);
@@ -292,6 +298,7 @@ function App() {
 	}, []);
 
 	async function search() {
+		setLunarOrigin(null);
 		setBusy(true);
 		setSummary({ type: 'searching' });
 		const params = new URLSearchParams({
@@ -324,6 +331,7 @@ function App() {
 		chosen?: EarthAnalog,
 	) {
 		if (lunar.sample.roughness === null) return;
+		setLunarOrigin(lunar);
 		setSlope(lunar.sample.slope === null ? '' : String(lunar.sample.slope));
 		setTmin('');
 		setIce('');
@@ -333,7 +341,7 @@ function App() {
 		// Earth. The footer button has no specific row, so it falls back to the
 		// closest point of the set.
 		const picked = chosen ?? analogs?.points[0];
-		setSelection(picked ? { lat: picked.lat, lng: picked.lon, closeness: picked.closeness } : null);
+		setSelection(picked ? { lat: picked.lat, lng: picked.lon, closeness: picked.closeness, coverage: picked.coverage, scores: picked.scores, deltas: picked.deltas, target: analogs?.target, additional_measurements: picked.additional_measurements, coordinates_original: picked.coordinates_original } : null);
 		setLocation(picked ? { lat: picked.lat, lng: picked.lon, altitude: 0 } : null);
 		openPage('earth');
 		if (analogs) {
@@ -403,7 +411,7 @@ function App() {
 
 		<div className="workspace">
 		{page === 'moon' ? (
-			<MoonPage precision={precision} onCompare={compareFromMoon} />
+			<MoonPage precision={precision} language={language} onCompare={compareFromMoon} />
 		) : (
 		<>
 
@@ -529,7 +537,7 @@ function App() {
 					(item) => Math.abs(item.lat - point.lat) < 0.001 && Math.abs(item.lon - point.lng) < 0.001,
 				);
 				selectPlace(point.lat, point.lng, hit); }} />
-			<PointPanel place={selection} onClose={() => setSelection(null)} language={language} variables={variables} activities={activities} />
+			<PointPanel place={selection} lunar={lunarOrigin} onClose={() => setSelection(null)} language={language} variables={variables} activities={activities} />
 		</section>
 
 		</>

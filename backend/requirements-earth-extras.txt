@@ -1,0 +1,2 @@
+# HDF4 reader for MOD11C3; rasterio is provided by requirements-lunar-geospatial.lock.txt.
+pyhdf==0.11.7

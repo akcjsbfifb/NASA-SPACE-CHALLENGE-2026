@@ -11,6 +11,9 @@ import {
 } from '../data/lunarLandings';
 import { SEARCH_API } from '../searchApi';
 import type { VariableInfo } from '../score';
+import type { Language } from '../i18n';
+import { extraCopy, extraValue } from '../data/earthMeasurements';
+import type { AdditionalMeasurements } from '../data/earthMeasurements';
 import { SELECTED_COLOR, SELECTED_PIN_SIZE } from '../theme';
 
 const MOON_GLOBE = {
@@ -46,6 +49,9 @@ export type EarthAnalog = {
 	tmin_c?: number | null;
 	ice_thickness_m?: number | null;
 	measurements?: Record<string, { value: number | null; unit: string; available: boolean; status: string; reason: string | null; source: string | null; method: string | null }>;
+	additional_measurements?: AdditionalMeasurements;
+	coordinates_original?: { lat: number; lon: number };
+	deltas?: Record<string, number>;
 };
 
 export type EarthAnalogSet = {
@@ -55,10 +61,12 @@ export type EarthAnalogSet = {
 	loosest: number | null;
 	points: EarthAnalog[];
 	variables_used?: VariableInfo[];
+	target?: Record<string, number | string | null>;
 };
 
 type MoonPageProps = {
 	precision: number;
+	language: Language;
 	onCompare: (
 		selection: LunarSelection,
 		analogs: EarthAnalogSet | null,
@@ -117,7 +125,8 @@ function pinsFor(picked: PickedPoint | null): GlobeMarker[] {
 	}];
 }
 
-export default function MoonPage({ precision, onCompare }: MoonPageProps) {
+export default function MoonPage({ precision, language, onCompare }: MoonPageProps) {
+	const extras = extraCopy[language];
 	const globe = useRef<GlobeController>(null);
 	const request = useRef(0);
 	const analogRequest = useRef(0);
@@ -129,6 +138,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 	const [analogs, setAnalogs] = useState<EarthAnalogSet | null>(null);
 	const [analogError, setAnalogError] = useState('');
 	const [analogState, setAnalogState] = useState<'idle' | 'loading' | 'ready'>('idle');
+	const [enrichment, setEnrichment] = useState<'idle' | 'loading' | 'ready' | 'failed'>('idle');
 
 	useEffect(() => {
 		globe.current?.setPoints('landings', pointsFor(picked));
@@ -159,6 +169,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 		setAnalogs(null);
 		setAnalogError('');
 		setAnalogState('loading');
+		setEnrichment('idle');
 		const params = new URLSearchParams({
 			roughness: String(sample.roughness),
 			precision: String(precision),
@@ -174,6 +185,22 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 				if (ticket !== analogRequest.current) return;
 				setAnalogs(body);
 				setAnalogState('ready');
+				if (!body.points.length) return;
+				setEnrichment('loading');
+				void fetch(`${SEARCH_API}/enrich`, {
+					method: 'POST', headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ candidates: body.points.slice(0, 50).map(p => p.coordinates_original ?? { lat: p.lat, lon: p.lon }) }),
+					signal: controller.signal,
+				}).then(async response => {
+					if (!response.ok) throw new Error('enrichment failed');
+					return response.json() as Promise<{ candidates: { lat: number; lon: number; additional_measurements: AdditionalMeasurements }[] }>;
+				}).then(data => {
+					if (ticket !== analogRequest.current) return;
+					setAnalogs(current => current ? { ...current, points: current.points.map((point, index) => ({ ...point, additional_measurements: data.candidates[index]?.additional_measurements })) } : current);
+					setEnrichment('ready');
+				}).catch(() => {
+					if (ticket === analogRequest.current && !controller.signal.aborted) setEnrichment('failed');
+				});
 			})
 			.catch((error: unknown) => {
 				if (ticket !== analogRequest.current || controller.signal.aborted) return;
@@ -310,6 +337,7 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 										{analogError && <p className="muted">{analogError}</p>}
 										{analogs && (
 											<>
+												<p className="muted">{extras.scope} {enrichment === 'loading' ? extras.loading : enrichment === 'failed' ? extras.failed : ''}</p>
 												<dl className="cell-facts">
 													<div>
 														<dt>Rugosidad usada</dt>
@@ -343,9 +371,9 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 																	<br />Rugosidad: Luna {sample.roughness} m · Tierra {point.measurements?.roughness?.value ?? 'sin dato'} m · {point.scores?.roughness === undefined ? 'sin puntaje' : percentText(point.scores.roughness)} · peso {analogs.variables_used?.find(v => v.id === 'roughness')?.weight ?? 'no utilizado'}
 																	<br />Tierra: {point.measurements?.slope?.source ?? 'fuente no disponible'}; Luna: LOLA. Comparaciones aproximadas.
 																	<br />Elevación LOLA: Luna {sample.elevation ?? 'sin dato'} m · Tierra ETOPO: {point.measurements?.elevation?.value ?? 'sin dato'} m · contextual.
-																	<br />Rocas Diviner RA: Luna {sample.measurements.rock_abundance?.value ?? 'sin dato'} fracción · Tierra: sin equivalente medido · contextual.
-																	<br />TBOL Diviner: Luna {sample.measurements.bolometric_temperature?.value ?? 'sin dato'} K · MODIS terrestre: no disponible · aproximada.
-																	<br />TREG Diviner: Luna {sample.measurements.regolith_temperature?.value ?? 'sin dato'} K · suelo ERA5 terrestre: no disponible · contextual.
+																	<br />{extras.soil}: {extras.lunar} RA {sample.measurements.rock_abundance?.value ?? extras.pending} · {extras.earth} {extraValue(point.additional_measurements?.coarse_fragments_0_to_5cm, extras.pending)} · {extras.context}, {extras.noScore}.
+																	<br />{extras.modis}: {extras.lunar} TBOL {sample.measurements.bolometric_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.surface_temperature_modis, extras.pending)} · {extras.approx}, {extras.noScore}.
+																	<br />{extras.era}: {extras.lunar} TREG {sample.measurements.regolith_temperature?.value ?? extras.pending} K · {extras.earth} {extraValue(point.additional_measurements?.soil_temperature_0_to_7cm, extras.pending)} · {extras.context}, {extras.noScore}.
 																	<br />Hidrógeno Lunar Prospector: Luna {sample.measurements.hydrogen_abundance_ppm?.value ?? 'sin dato'} ppm · Tierra: sin equivalente · contextual.
 																	<br />Contexto terrestre: mínima del aire del mes más frío WorldClim {point.tmin_c ?? 'sin dato'} °C · hielo ETOPO {point.ice_thickness_m ?? 'sin dato'} m · litología GLiM {point.rock}.
 														</button>

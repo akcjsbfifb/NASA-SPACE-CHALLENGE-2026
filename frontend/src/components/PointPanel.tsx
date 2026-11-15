@@ -7,6 +7,9 @@ import { locate, loadCountries } from '../data/geo';
 import type { PlaceInfo } from '../data/geo';
 import { formatDelta, formatValue, percent } from '../score';
 import type { ActivityPreset, Grade, VariableInfo } from '../score';
+import type { LunarSelection } from './MoonPage';
+import { extraCopy, extraValue } from '../data/earthMeasurements';
+import type { AdditionalMeasurements } from '../data/earthMeasurements';
 
 export type SelectedPlace = {
 	lat: number;
@@ -20,6 +23,8 @@ export type SelectedPlace = {
 	deltas?: Record<string, number>;
 	target?: Record<string, number | string | null>;
 	activity?: string | null;
+	additional_measurements?: AdditionalMeasurements;
+	coordinates_original?: { lat: number; lon: number };
 };
 
 type EarthCell = {
@@ -40,6 +45,7 @@ type PointPanelProps = {
 	language: Language;
 	variables: VariableInfo[];
 	activities: ActivityPreset[];
+	lunar: LunarSelection | null;
 };
 
 /** Labels come from i18n by id, with the raw id as a fallback for new variables. */
@@ -85,14 +91,43 @@ function formatMeters(value: number | null, noData: string, digits = 0) {
 	return `${value.toFixed(digits)} m`;
 }
 
-export default function PointPanel({ place, onClose, language, variables, activities }: PointPanelProps) {
+export default function PointPanel({ place, lunar, onClose, language, variables, activities }: PointPanelProps) {
 	const copy = getCopy(language);
+	const extra = extraCopy[language];
+	const [extraResult, setExtraResult] = useState<{ key: string; values: AdditionalMeasurements | null; failed: boolean } | null>(null);
+	const extraKey = place ? `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}` : '';
+	const additional = place?.additional_measurements ?? (extraResult?.key === extraKey ? extraResult.values : null);
+	const extraStatus = additional ? 'ready' : extraResult?.key === extraKey && extraResult.failed ? 'failed' : 'loading';
 	const [cell, setCell] = useState<EarthCell | null>(null);
 	const [cellError, setCellError] = useState(false);
 	const [sceneUrl, setSceneUrl] = useState('');
 	const [sceneSource, setSceneSource] = useState('');
 	const [imageError, setImageError] = useState(false);
 	const [where, setWhere] = useState<PlaceInfo | null | undefined>(undefined);
+
+	useEffect(() => {
+		if (!place || !lunar || place.additional_measurements) return;
+		const controller = new AbortController();
+		const key = `${place.coordinates_original?.lat ?? place.lat},${place.coordinates_original?.lon ?? place.lng}`;
+		const load = async () => {
+			for (let attempt = 0; attempt < 8; attempt++) {
+				const response = await fetch(`${SEARCH_API}/enrich`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ candidates: [place.coordinates_original ?? { lat: place.lat, lon: place.lng }] }), signal: controller.signal });
+				if (response.status === 429 && attempt < 7) {
+					await new Promise(resolve => setTimeout(resolve, 8000));
+					if (controller.signal.aborted) throw new Error('aborted');
+					continue;
+				}
+				if (!response.ok) throw new Error('enrichment failed');
+				return response.json() as Promise<{ candidates: { additional_measurements: AdditionalMeasurements }[] }>;
+			}
+			throw new Error('enrichment busy');
+		};
+		void load()
+			.then(data => { setExtraResult({ key, values: data.candidates[0]?.additional_measurements ?? null, failed: false }); })
+			.catch(() => { if (!controller.signal.aborted) setExtraResult({ key, values: null, failed: true }); });
+		return () => controller.abort();
+	}, [place, lunar]);
 
 	// Continent and country come from a bundled Natural Earth extract: no key,
 	// no quota, and it still answers over Antarctica and ice shelves.
@@ -275,6 +310,14 @@ export default function PointPanel({ place, onClose, language, variables, activi
 							<dd>{cell ? `${copy.rocks[cell.rock] ?? cell.rock} (${cell.rock})` : '…'}</dd>
 						</div>
 					</dl>
+					{lunar && <section className="compare">
+						<h4>{extra.title}</h4>
+						<p>{extra.scope} {extraStatus === 'loading' ? extra.loading : extraStatus === 'failed' ? extra.failed : ''}</p>
+						<p>{extra.modis}: {extra.lunar} TBOL {lunar.sample.measurements.bolometric_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.surface_temperature_modis, extra.pending)} · {extra.approx}, {extra.noScore}.</p>
+						<p>{extra.era}: {extra.lunar} TREG {lunar.sample.measurements.regolith_temperature?.value ?? extra.pending} K · {extra.earth} {extraValue(additional?.soil_temperature_0_to_7cm, extra.pending)} · {extra.context}, {extra.noScore}.</p>
+						<p>{extra.soil}: {extra.lunar} RA {lunar.sample.measurements.rock_abundance?.value ?? extra.pending} · {extra.earth} {extraValue(additional?.coarse_fragments_0_to_5cm, extra.pending)} · {extra.context}, {extra.noScore}.</p>
+						<p>Lunar Prospector H: {lunar.sample.measurements.hydrogen_abundance_ppm?.value ?? extra.pending} ppm · {extra.noScore}.</p>
+					</section>}
 					{place.scores && Object.keys(place.scores).length > 0 && (
 						<section className="compare">
 							<h4>{copy.compare}</h4>
@@ -330,7 +373,7 @@ export default function PointPanel({ place, onClose, language, variables, activi
 												{grade && <span className={`grade grade-${grade}`}>{grade}</span>}
 											</span>
 											<span>
-												{score === undefined ? copy.noData : `${percent(score, 1)}%${change}`}
+													{score === undefined ? copy.noData : `${(score * 100).toFixed(1)}%${change}`}
 												{phrase ? ` · ${phrase}` : ''}
 											</span>
 										</li>

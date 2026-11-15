@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sys
+import threading
+from pathlib import Path
 from queue import Empty
 from typing import Annotated
 
 from fastapi import APIRouter, Header, Query, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import BaseModel, Field
+from app.config import get_settings
 
 from app.services.earth.activities import VARIABLES, ActivityError, load_catalog, resolve
 from app.services.earth.similarity import parse_criteria, write_shortlist
@@ -15,6 +20,16 @@ from app.services import search_state
 from app.services import scene
 
 router = APIRouter(tags=["search"])
+_enrichment_lock = threading.BoundedSemaphore(1)
+
+
+class EnrichmentPoint(BaseModel):
+    lat: float = Field(ge=-90, le=90, allow_inf_nan=False)
+    lon: float = Field(ge=-180, le=180, allow_inf_nan=False)
+
+
+class EnrichmentRequest(BaseModel):
+    candidates: list[EnrichmentPoint] = Field(min_length=1, max_length=50)
 
 
 def _optional_float(raw: str | None) -> float | None:
@@ -76,6 +91,37 @@ def activities() -> JSONResponse:
     except (OSError, ValueError) as error:
         return JSONResponse({"error": str(error)}, status_code=500)
     return JSONResponse({"activities": catalog})
+
+
+@router.post("/enrich")
+def enrich(request: EnrichmentRequest) -> JSONResponse:
+    """Add contextual data after ranking, for at most 50 requested candidates."""
+    if not _enrichment_lock.acquire(blocking=False):
+        return JSONResponse({"error": "enrichment_busy"}, status_code=429)
+    try:
+        root = get_settings().paths.repo_root
+        processing = str(root / "backend" / "processing")
+        if processing not in sys.path:
+            sys.path.insert(0, processing)
+        try:
+            from earth_data.enrich import enrich_candidates
+        except ImportError:
+            return JSONResponse({"error": "earth_extras_not_installed"}, status_code=503)
+        path = get_settings().paths.raw_data / "earth"
+        result = enrich_candidates(
+            [point.model_dump() for point in request.candidates],
+            path / "modis" / "MOD11C3.A2025001.061.2025035172114.hdf",
+            "2025-01-01", "2025-01-31", path, limit=50,
+        )
+        # The complete hourly series remains in the cache; it need not be sent
+        # to the page for every candidate.
+        for candidate in result['candidates']:
+            soil = candidate['additional_measurements']['soil_temperature_0_to_7cm']
+            soil.pop('raw_hourly', None)
+        result['period'] = {'start': '2025-01-01', 'end': '2025-01-31', 'purpose': 'reproducible_example_not_climatology'}
+        return JSONResponse(result)
+    finally:
+        _enrichment_lock.release()
 
 
 @router.get("/search")
