@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import fcntl
 import json
+import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -11,6 +11,33 @@ from pathlib import Path
 MAX_ENTRIES = 50
 
 POINT_FIELDS = ("closeness", "rock", "scores", "grade")
+
+
+def _lock_exclusive(handle) -> None:
+    """Keep writers mutually exclusive. POSIX uses flock; Windows locks the first byte with msvcrt.
+    The Windows branch was not executed in this Linux session.
+    """
+    if sys.platform == "win32":
+        import msvcrt
+
+        handle.seek(0)
+        msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+        return
+    import fcntl
+
+    fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+
+
+def _unlock(handle) -> None:
+    if sys.platform == "win32":
+        import msvcrt
+
+        handle.seek(0)
+        msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        return
+    import fcntl
+
+    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def read_entries(path: Path) -> list[dict]:
@@ -36,13 +63,13 @@ def _write_locked(path: Path, entries: list[dict]) -> None:
         path.write_text('{"entries": []}', encoding="utf-8")
     payload = json.dumps({"entries": entries}, ensure_ascii=False, indent=2)
     with path.open("r+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        _lock_exclusive(handle)
         try:
             handle.seek(0)
             handle.write(payload)
             handle.truncate()
         finally:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            _unlock(handle)
 
 
 def append_entry(path: Path, entry: dict) -> dict:
@@ -50,7 +77,7 @@ def append_entry(path: Path, entry: dict) -> dict:
     if not path.exists():
         path.write_text('{"entries": []}', encoding="utf-8")
     with path.open("r+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        _lock_exclusive(handle)
         try:
             handle.seek(0)
             raw = handle.read()
@@ -66,7 +93,7 @@ def append_entry(path: Path, entry: dict) -> dict:
             handle.write(payload)
             handle.truncate()
         finally:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            _unlock(handle)
     return entry
 
 
