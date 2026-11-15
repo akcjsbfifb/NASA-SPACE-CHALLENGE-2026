@@ -30,6 +30,20 @@ export interface GlobePoint extends GeoCoordinates {
 }
 
 /**
+ * A marker drawn as a DOM pin over the globe.
+ *
+ * Unlike a point, it keeps its screen size at every zoom level, which is what
+ * an icon should do.  `size` is in pixels.
+ */
+export interface GlobeMarker extends GeoCoordinates {
+	id: string;
+	label?: string;
+	color?: string;
+	size?: number;
+	altitude?: number;
+}
+
+/**
  * A geographic polygon.  Coordinates follow GeoJSON ordering: [longitude, latitude]
  */
 export interface GlobePolygon {

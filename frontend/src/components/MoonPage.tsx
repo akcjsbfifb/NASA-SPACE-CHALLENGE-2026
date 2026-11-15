@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import InteractiveGlobe from './Globe/InteractiveGlobe';
 import type { GlobeController } from './Globe/globe.controller';
-import type { GlobeClickEvent, GlobePoint } from './Globe/globe.types';
+import type { GlobeClickEvent, GlobeMarker, GlobePoint } from './Globe/globe.types';
 import {
 	LUNAR_LANDINGS,
 	landingNear,
@@ -11,7 +11,7 @@ import {
 	type LunarSample,
 } from '../data/lunarLandings';
 import { percent } from '../score';
-import { SELECTED_COLOR } from '../theme';
+import { SELECTED_COLOR, SELECTED_PIN_SIZE } from '../theme';
 
 const MOON_GLOBE = {
 	initialView: { lat: 8, lng: 6, altitude: 2.45 },
@@ -80,28 +80,34 @@ type PickedPoint = {
 	siteId?: string;
 };
 
-function markersFor(picked: PickedPoint | null): GlobePoint[] {
-	const sites = LUNAR_LANDINGS.map((site) => ({
+/**
+ * Every landing except the picked one, which becomes a pin instead of a
+ * cylinder.  The others stay clickable cylinders.
+ */
+function pointsFor(picked: PickedPoint | null): GlobePoint[] {
+	return LUNAR_LANDINGS.filter((site) => site.id !== picked?.siteId).map((site) => ({
 		id: site.id,
 		lat: site.lat,
 		lng: site.lng,
 		label: `${site.mission} · ${site.name}`,
-		color: picked?.siteId === site.id ? SELECTED_COLOR : '#f0c14a',
-		size: picked?.siteId === site.id ? 0.42 : 0.28,
+		color: '#f0c14a',
+		size: 0.28,
 		altitude: 0.012,
 	}));
-	if (picked && !picked.siteId) {
-		sites.push({
-			id: 'custom',
-			lat: picked.lat,
-			lng: picked.lng,
-			label: picked.label,
-			color: SELECTED_COLOR,
-			size: 0.36,
-			altitude: 0.012,
-		});
-	}
-	return sites;
+}
+
+/** The picked site, or the free point, as a red pin. */
+function pinsFor(picked: PickedPoint | null): GlobeMarker[] {
+	if (!picked) return [];
+	return [{
+		id: 'picked',
+		lat: picked.lat,
+		lng: picked.lng,
+		label: picked.label,
+		color: SELECTED_COLOR,
+		size: SELECTED_PIN_SIZE,
+		altitude: 0.012,
+	}];
 }
 
 export default function MoonPage({ precision, onCompare }: MoonPageProps) {
@@ -118,7 +124,8 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 	const [analogState, setAnalogState] = useState<'idle' | 'loading' | 'ready'>('idle');
 
 	useEffect(() => {
-		globe.current?.setPoints('landings', markersFor(picked));
+		globe.current?.setPoints('landings', pointsFor(picked));
+		globe.current?.setMarkers('picked', pinsFor(picked));
 		const labeled = LUNAR_LANDINGS.find((site) => site.id === picked?.siteId);
 		globe.current?.setLabels(
 			'landings',

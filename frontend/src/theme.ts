@@ -6,8 +6,13 @@
  */
 export const SELECTED_COLOR = '#ff4438';
 
-/** Bigger and higher than every data point, so it is never buried. */
-export const SELECTED_SIZE = 0.45;
+/**
+ * The selection is a map pin drawn in the DOM overlay, so its size is in
+ * pixels and stays the same at every zoom level.
+ */
+export const SELECTED_PIN_SIZE = 34;
+
+/** Lifted off the surface so it is never buried in the texture behind it. */
 export const SELECTED_ALTITUDE = 0.03;
 
 /** Camera target used when a selection is made. */

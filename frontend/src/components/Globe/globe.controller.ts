@@ -2,6 +2,7 @@ import type {
 	GlobeView,
 	GlobeLayerId,
 	GlobePoint,
+	GlobeMarker,
 	GlobePolygon,
 	GlobeHeatmap,
 	GlobeLabel,
@@ -48,6 +49,14 @@ export interface GlobeController {
 	 * Remove a point by its ID.
 	 */
 	removePoint(layerId: GlobeLayerId, pointId: string): void;
+
+	/**
+	 * Replace all markers belonging to a named layer.
+	 *
+	 * Markers are DOM pins, not 3D points: they always face the camera and keep
+	 * their pixel size, and they hide when the globe turns them out of sight.
+	 */
+	setMarkers(layerId: GlobeLayerId, markers: GlobeMarker[]): void;
 
 	/**
 	 * Replace all polygons belonging to a named layer.
