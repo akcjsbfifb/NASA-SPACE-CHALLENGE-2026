@@ -9,10 +9,10 @@ venv:
 	$(PYTHON) -m pip install -r $(MAKEFILE_DIR)/requirements.txt
 
 dev:
-	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787 --log-level debug
+	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --timeout-graceful-shutdown 2 --host 127.0.0.1 --port 8787 --log-level debug
 
 release:
-	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --host 127.0.0.1 --port 8787
+	cd $(MAKEFILE_DIR) && $(VENV)/bin/uvicorn app.main:app --reload --timeout-graceful-shutdown 2 --host 127.0.0.1 --port 8787
 
 clean:
 	rm -rf $(VENV) $(MAKEFILE_DIR)/.pytest_cache

@@ -48,6 +48,7 @@ app.add_middleware(
     allow_credentials=settings.cors.allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_private_network=settings.cors.allow_private_network,
 )
 app.include_router(search_router)
 app.include_router(v1_router)

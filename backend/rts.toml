@@ -24,3 +24,5 @@ extract_earth_columns = ".venv/bin/python -m app.cli.extract_earth_columns"
 [cors]
 allow_origins = ["http://127.0.0.1:5173", "http://localhost:5173"]
 allow_credentials = false
+# Firefox PNA preflight for Vite (5173) → API (8787)
+allow_private_network = true

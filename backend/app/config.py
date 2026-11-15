@@ -45,6 +45,7 @@ class Commands(BaseModel):
 class Cors(BaseModel):
     allow_origins: list[str]
     allow_credentials: bool = False
+    allow_private_network: bool = True
 
 
 class Settings(BaseModel):
