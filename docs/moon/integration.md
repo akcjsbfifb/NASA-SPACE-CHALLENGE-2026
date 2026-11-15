@@ -38,7 +38,11 @@ positivo; se conserva −10° en el CSV y la normalización está en el JSON.
 
 El catálogo del compañero usa `id`, `lat`, `lng`: mapear a `site_id`,
 `latitude_deg`, `longitude_deg` y confirmar marco. Los dos sitios `*_test_only`
-son ejemplos; no se creó una lista alternativa de aterrizajes.
+siguen siendo ejemplos. Los seis alunizajes Apolo salen de
+`frontend/src/data/lunarLandings.ts`, llevan `is_example: false` y `source`, y
+se sirven por `GET /moon?site=apollo-11` sin originales NASA ni stack
+geoespacial. Ese `source` aclara que las coordenadas no se verificaron todavía
+contra un catálogo primario.
 
 ## Compatibilidad científica antes de asignar pesos
 
@@ -62,11 +66,13 @@ La referencia auditada de `main` es `ee5bde2`, ya incorporada por merge normal
 en `f2c16e5`; sus siete cambios eran frontend, sin cambios de backend. Review
 terrestre observada: `b84c253`, con columnas memmap. No se modificó ni integró.
 
-El buscador no importa CSV lunares: recibe `/search`. Main exige cinco
-parámetros slope/roughness/tmin/ice/rock; review admite métricas opcionales y
-su respuesta lunar aún necesita adoptar las variables nuevas. Hace falta un
-adaptador que lea disponibilidad y traduzca sólo variables comparables; no
-inventar los otros parámetros.
+El buscador no importa CSV lunares: recibe `/search`, con los nombres de
+variable que declara `data/earth/analogs.json` (y el alias `tmin` por
+compatibilidad). `/moon?site=<id>` lee el JSON publicado y devuelve las siete
+magnitudes con `available`, `status` y `reason`; una coordenada suelta sigue
+sampleando los rásters LOLA. El promedio sólo puede incluir variables que el
+contrato habilite: hoy la búsqueda desde la Luna manda únicamente rugosidad, y
+rugosidad está marcada como proxy (tier B), no como comparable.
 
 Este checkout no tiene Parquet terrestre ni `data/earth/columns/`. Su ejecución
 requiere los datos y el manifiesto generados por `extract_earth_columns.py` en

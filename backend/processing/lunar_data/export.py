@@ -158,6 +158,7 @@ def build_document(metadata, sites, registry, registry_path=None, sites_path=Non
             output_sites.append({
                 "id": site["id"], "name": site.get("name", site["id"]),
                 "is_example": site["is_example"],
+                "source": site.get("source"),
                 "requested_coordinates": {
                     "latitude_deg": site["latitude_deg"], "longitude_deg": site["longitude_deg"],
                     "longitude_direction": "positive_east",

@@ -272,9 +272,14 @@ export default function MoonPage({ precision, onCompare }: MoonPageProps) {
 										<dt>Rugosidad</dt>
 										<dd>{sample.roughness === null ? 'sin dato' : `${sample.roughness.toFixed(3)} m`}</dd>
 									</div>
+									<div>
+										<dt>Pendiente</dt>
+										<dd>{sample.slope === null ? 'sin dato' : `${sample.slope.toFixed(2)}°`}</dd>
+									</div>
 								</dl>
 								<p className="muted">
-									Pendiente, temperatura, hielo y roca no están en estos mapas. La comparación usa la rugosidad.
+									La comparación usa la rugosidad LDRM. Elevación y pendiente se muestran como contexto:
+									temperatura, roca e hidrógeno no tienen todavía equivalente terrestre validado.
 								</p>
 								{sample.roughness !== null && (
 									<>

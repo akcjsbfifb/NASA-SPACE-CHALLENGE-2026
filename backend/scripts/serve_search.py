@@ -18,6 +18,7 @@ from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, urlopen
 
 from similarity import EarthIndex, parse_criteria, write_shortlist
+from moon_sites import MoonSites
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend" / "processing"))
@@ -124,6 +125,20 @@ class MoonSampler:
 
 
 _moon: MoonSampler | None = None
+_moon_sites: MoonSites | None = None
+
+
+def moon_sites() -> MoonSites:
+    global _moon_sites
+    if _moon_sites is None:
+        _moon_sites = MoonSites()
+        print(
+            f"lunar sites ready: {len(_moon_sites.sites)}"
+            if not _moon_sites.error
+            else f"lunar sites unavailable: {_moon_sites.error}",
+            flush=True,
+        )
+    return _moon_sites
 
 
 def moon_sampler() -> MoonSampler:
@@ -254,6 +269,15 @@ class Handler(BaseHTTPRequestHandler):
         return float(values[0])
 
     def _moon(self, query: dict[str, list[str]]) -> None:
+        site_id = (query.get("site") or [""])[0]
+        if site_id:
+            sites = moon_sites()
+            sample = sites.find(site_id)
+            if sample is None:
+                self._send(404, {"error": f"unknown lunar site {site_id}"})
+                return
+            self._send(200, sample)
+            return
         try:
             lat, lon = self._coordinates(query)
             sample = moon_sampler().sample(lat, lon)
@@ -351,6 +375,8 @@ if __name__ == "__main__":
     init_notify_token()
     earth_index()
     moon_sampler()
-    server = ThreadingHTTPServer(("127.0.0.1", 8787), Handler)
-    print("search api http://127.0.0.1:8787/search", flush=True)
+    moon_sites()
+    port = int(os.environ.get("SEARCH_PORT", "8787"))
+    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    print(f"search api http://127.0.0.1:{port}/search", flush=True)
     server.serve_forever()

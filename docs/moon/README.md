@@ -1,8 +1,10 @@
 # Procesamiento lunar y datos compartidos
 
 Paquete único: `backend/processing/lunar_data/`, versión 0.3.0. No incorpora
-comparador, catálogo ni endpoints. Los dos sitios publicados son ejemplos,
-no ubicaciones definitivas. Iluminación polar permanece complementaria y pospuesta.
+comparador, catálogo ni endpoints. Dos sitios `*_test_only` siguen siendo
+ejemplos; los seis alunizajes Apolo viajan en `apollo_measurements.json` y
+`.csv` con valores LOLA reales y Diviner/hidrógeno declarados no configurados.
+Iluminación polar permanece complementaria y pospuesta.
 
 ## Consumir los resultados sin datos NASA
 

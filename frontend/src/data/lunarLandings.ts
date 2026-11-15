@@ -1,6 +1,7 @@
 export type LunarSample = {
 	elevation: number | null;
 	roughness: number | null;
+	slope: number | null;
 };
 
 export type LunarLanding = {
@@ -67,24 +68,27 @@ export const LUNAR_LANDINGS: LunarLanding[] = [
 type MoonResponse = {
 	elevation_m: number | null;
 	roughness_m: number | null;
+	slope_deg?: number | null;
 	error?: string;
 };
 
 export async function lookupLunarSample(
-	_siteId: string | undefined,
+	siteId: string | undefined,
 	lat: number,
 	lng: number,
 ): Promise<LunarSample> {
-	const params = new URLSearchParams({
-		lat: String(lat),
-		lon: String(lng),
-	});
+	// A known landing site is answered from the published JSON by id; a free
+	// click still samples the LOLA rasters by coordinate.
+	const params = siteId
+		? new URLSearchParams({ site: siteId })
+		: new URLSearchParams({ lat: String(lat), lon: String(lng) });
 	const response = await fetch(`http://127.0.0.1:8787/moon?${params}`);
 	const body = (await response.json()) as MoonResponse;
 	if (!response.ok) throw new Error(body.error || 'sin mediciones de este punto');
 	return {
 		elevation: body.elevation_m,
 		roughness: body.roughness_m,
+		slope: body.slope_deg ?? null,
 	};
 }
 
