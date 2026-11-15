@@ -22,15 +22,15 @@ Servidor MCP stdio para búsqueda de análogos terrestres, filtrado y lectura de
 
    El server es MCP por stdio (`node mcp/index.mjs`). Cursor, Claude Code y OpenCode lo lanzan igual. Lo único de Cursor es `.cursor/mcp.json`.
 
-   Cursor — `.cursor/mcp.json`:
+   Cursor — `.cursor/mcp.json`. `<repo>` es la raíz del proyecto, no un home:
 
    ```json
    {
      "mcpServers": {
        "artemis": {
          "command": "node",
-         "args": ["/home/nicolas/Documentos/NASA-SPACE-CHALLENGE-2026/mcp/index.mjs"],
-         "cwd": "/home/nicolas/Documentos/NASA-SPACE-CHALLENGE-2026/mcp"
+         "args": ["<repo>/mcp/index.mjs"],
+         "cwd": "<repo>/mcp"
        }
      }
    }
